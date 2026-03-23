@@ -1,13 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+const RAINBOW = ["#FF0000", "#FF7700", "#FFDD00", "#00CC00", "#0088FF", "#5500FF", "#CC00CC"];
+const LOGO = "AIBROMOTION";
+
+function randomColor() {
+  return RAINBOW[Math.floor(Math.random() * RAINBOW.length)];
+}
 
 export function Header() {
   const logoRef = useRef<HTMLHeadingElement>(null);
   const [logoVisible, setLogoVisible] = useState(false);
+  const [colors, setColors] = useState<Record<number, string>>({});
 
   useEffect(() => {
-    // Trigger on mount with a small delay for smoothness
     const t = setTimeout(() => setLogoVisible(true), 100);
     return () => clearTimeout(t);
+  }, []);
+
+  const handleEnter = useCallback((i: number) => {
+    setColors((prev) => ({ ...prev, [i]: randomColor() }));
+  }, []);
+
+  const handleLeave = useCallback((i: number) => {
+    setColors((prev) => {
+      const next = { ...prev };
+      delete next[i];
+      return next;
+    });
   }, []);
 
   return (
@@ -16,7 +35,7 @@ export function Header() {
       <div className="px-6 py-8 md:py-12 text-center overflow-hidden">
         <h1
           ref={logoRef}
-          className="font-logo leading-none tracking-wide text-black"
+          className="font-logo leading-none tracking-wide"
           style={{
             fontSize: "clamp(3rem, 12vw, 12rem)",
             opacity: logoVisible ? 1 : 0,
@@ -24,7 +43,21 @@ export function Header() {
             transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          AIBROMOTION
+          {LOGO.split("").map((char, i) => (
+            <span
+              key={i}
+              onMouseEnter={() => handleEnter(i)}
+              onMouseLeave={() => handleLeave(i)}
+              style={{
+                color: colors[i] || "#000000",
+                transition: "color 0.3s ease",
+                display: "inline-block",
+                cursor: "pointer",
+              }}
+            >
+              {char}
+            </span>
+          ))}
         </h1>
       </div>
 
