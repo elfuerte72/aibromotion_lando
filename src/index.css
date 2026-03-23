@@ -26,6 +26,7 @@
 @layer base {
   :root {
     --footer-h: 600px;
+    color-scheme: light only;
   }
 
   @media (min-width: 768px) {

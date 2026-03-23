@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -388,42 +388,257 @@ function TrustNumbers() {
   );
 }
 
-/* ── Integrations (cascade wave) ──────────────────────── */
+/* ── Integrations — Terminal Log ───────────────────────── */
+
+type LineState = "idle" | "typing" | "done";
+
+interface TerminalLine {
+  name: string;
+  state: LineState;
+  typedChars: number;
+}
+
+function useTerminalSequence(items: string[], isInView: boolean) {
+  const [lines, setLines] = useState<TerminalLine[]>(
+    items.map((name) => ({ name, state: "idle", typedChars: 0 }))
+  );
+  const [commandTyped, setCommandTyped] = useState(0);
+  const [phase, setPhase] = useState<"command" | "lines" | "done">("command");
+  const hasRun = useRef(false);
+
+  const command = "connecting services...";
+
+  useEffect(() => {
+    if (!isInView || hasRun.current) return;
+    hasRun.current = true;
+
+    let raf: number;
+    let currentLine = 0;
+    let charIndex = 0;
+    let commandIdx = 0;
+    let lastTime = 0;
+    let currentPhase: "command" | "lines" | "done" = "command";
+
+    const COMMAND_SPEED = 35;
+    const TYPE_SPEED = 25;
+    const LINE_PAUSE = 120;
+    const STATUS_DELAY = 80;
+
+    const step = (time: number) => {
+      if (!lastTime) lastTime = time;
+      const delta = time - lastTime;
+
+      if (currentPhase === "command") {
+        if (delta >= COMMAND_SPEED) {
+          lastTime = time;
+          commandIdx++;
+          setCommandTyped(commandIdx);
+          if (commandIdx >= command.length) {
+            currentPhase = "lines";
+            setPhase("lines");
+            lastTime = time;
+          }
+        }
+        raf = requestAnimationFrame(step);
+        return;
+      }
+
+      if (currentPhase === "lines") {
+        if (currentLine >= items.length) {
+          currentPhase = "done";
+          setPhase("done");
+          return;
+        }
+
+        const lineItem = items[currentLine];
+
+        if (charIndex <= lineItem.length) {
+          if (delta >= TYPE_SPEED) {
+            lastTime = time;
+            charIndex++;
+            const ci = charIndex;
+            const cl = currentLine;
+            setLines((prev) => {
+              const next = [...prev];
+              next[cl] = { ...next[cl], state: "typing", typedChars: ci };
+              return next;
+            });
+          }
+          raf = requestAnimationFrame(step);
+          return;
+        }
+
+        if (delta >= STATUS_DELAY) {
+          const cl = currentLine;
+          setLines((prev) => {
+            const next = [...prev];
+            next[cl] = { ...next[cl], state: "done" };
+            return next;
+          });
+          currentLine++;
+          charIndex = 0;
+          lastTime = time + LINE_PAUSE;
+        }
+
+        raf = requestAnimationFrame(step);
+      }
+    };
+
+    const timeout = setTimeout(() => {
+      raf = requestAnimationFrame(step);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+      cancelAnimationFrame(raf);
+    };
+  }, [isInView, command, items]);
+
+  return { lines, commandTyped, command, phase };
+}
 
 function Integrations() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const { lines, commandTyped, command, phase } = useTerminalSequence(
+    INTEGRATIONS,
+    isInView
+  );
+
+  const allDone = phase === "done";
 
   return (
     <div ref={ref}>
       <AnimatedDivider />
-      <div className="px-6 py-10 md:px-10 md:py-14">
-        <motion.p
-          className="font-body text-[10px] uppercase tracking-[0.2em] text-black/25 mb-6 text-center"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, ease: [...EASE] }}
-        >
-          Интеграции
-        </motion.p>
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-3xl mx-auto">
-          {INTEGRATIONS.map((name, i) => (
-            <motion.span
-              key={name}
-              initial={{ opacity: 0, scale: 0.8, y: 16 }}
-              animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.5,
-                delay: 0.1 + i * 0.04,
-                ease: [...EASE],
-              }}
-              className="font-body text-[11px] md:text-xs uppercase tracking-[0.1em] text-black/50 border border-black/10 rounded-full px-4 py-2 hover:text-black hover:border-black/30 transition-colors duration-300"
-            >
-              {name}
-            </motion.span>
-          ))}
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        {/* Left — Terminal */}
+        <div className="p-6 md:p-10 md:border-r border-black/10">
+          <div
+            className="w-full rounded-lg border border-black/10 overflow-hidden"
+            style={{ fontFamily: "var(--font-body)" }}
+          >
+            {/* Terminal title bar */}
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-black/10 bg-black/[0.02]">
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="text-[10px] uppercase tracking-[0.15em] text-black/25 ml-2">
+                integrations
+              </span>
+            </div>
+
+            {/* Terminal body */}
+            <div className="px-4 py-4 md:px-5 md:py-5 space-y-1">
+              {/* Command line */}
+              <div className="flex items-center gap-2 text-xs md:text-sm">
+                <span className="text-black/30 select-none">$</span>
+                <span className="text-black/70">
+                  {command.slice(0, commandTyped)}
+                </span>
+                {phase === "command" && (
+                  <span
+                    className="inline-block w-[6px] h-[14px] bg-black/60 ml-px"
+                    style={{ animation: "blink 0.8s step-end infinite" }}
+                  />
+                )}
+              </div>
+
+              {/* Integration lines */}
+              {lines.map((line, i) => {
+                if (line.state === "idle") return null;
+
+                const isDone = line.state === "done";
+                const displayName = isDone
+                  ? line.name
+                  : line.name.slice(0, line.typedChars);
+
+                const padded = displayName.padEnd(16, " ");
+
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center gap-2 text-xs md:text-sm"
+                  >
+                    <span
+                      className={`select-none transition-colors duration-200 ${isDone ? "text-black/50" : "text-black/20"}`}
+                    >
+                      {isDone ? "✓" : "⠋"}
+                    </span>
+                    <span
+                      className="text-black/60 whitespace-pre"
+                      style={{ minWidth: "10ch" }}
+                    >
+                      {padded}
+                    </span>
+                    <span
+                      className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-black/35" : "text-black/15"}`}
+                    >
+                      {isDone ? "connected" : "connecting..."}
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* Final status */}
+              {allDone && (
+                <motion.div
+                  className="flex items-center gap-2 text-xs md:text-sm pt-2 mt-2 border-t border-black/[0.06]"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, ease: [...EASE] }}
+                >
+                  <span className="text-black/30 select-none">$</span>
+                  <span className="text-black/40">
+                    {INTEGRATIONS.length} services ready
+                  </span>
+                  <span
+                    className="inline-block w-[6px] h-[14px] bg-black/40 ml-px"
+                    style={{ animation: "blink 0.8s step-end infinite" }}
+                  />
+                </motion.div>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Right — Quote */}
+        <motion.div
+          className="flex flex-col justify-center p-6 md:p-10 border-t md:border-t-0 border-black/10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
+        >
+          <blockquote>
+            <p
+              className="font-heading leading-[1.25] text-black/80 mb-6"
+              style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)" }}
+            >
+              &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
+            </p>
+            <footer className="font-body text-xs md:text-sm text-black/35">
+              <cite className="not-italic">
+                — Jensen Huang
+              </cite>
+              <span className="block text-[10px] uppercase tracking-[0.15em] text-black/20 mt-1">
+                CEO NVIDIA
+              </span>
+            </footer>
+          </blockquote>
+
+          <div className="mt-8 pt-6 border-t border-black/10">
+            <p className="font-body text-xs leading-relaxed text-black/40 max-w-sm">
+              Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
+            </p>
+          </div>
+        </motion.div>
       </div>
+
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 }
