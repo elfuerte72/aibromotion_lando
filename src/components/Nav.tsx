@@ -9,6 +9,12 @@ export function Nav() {
           About
         </a>
         <a
+          href="#automation"
+          className="font-body text-xs md:text-sm uppercase tracking-[0.15em] hover:opacity-60 transition-opacity"
+        >
+          Automation
+        </a>
+        <a
           href="#directions"
           className="font-body text-xs md:text-sm uppercase tracking-[0.15em] hover:opacity-60 transition-opacity"
         >
