@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 interface StatementBlockProps {
   text: string;
@@ -7,26 +8,12 @@ interface StatementBlockProps {
 
 export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 90%", "end 40%"],
+  });
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
+  const words = text.split(" ");
   const isRight = layout === "right";
 
   return (
@@ -40,15 +27,52 @@ export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
       <p
         className={`font-heading uppercase leading-[1.15] ${layout === "full" ? "max-w-5xl mx-auto text-center" : "max-w-lg"} ${isRight ? "md:ml-auto md:text-right" : ""}`}
         style={{
-          fontSize: layout === "full" ? "clamp(1.75rem, 4.5vw, 4rem)" : "clamp(1.5rem, 3.5vw, 2.75rem)",
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(40px)",
-          transition:
-            "opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1)",
+          fontSize:
+            layout === "full"
+              ? "clamp(1.75rem, 4.5vw, 4rem)"
+              : "clamp(1.5rem, 3.5vw, 2.75rem)",
         }}
       >
-        {text}
+        {words.map((word, i) => {
+          const wordStart = i / words.length;
+          const wordEnd = (i + 1) / words.length;
+
+          return (
+            <Word
+              key={i}
+              word={word}
+              progress={scrollYProgress}
+              range={[wordStart, wordEnd]}
+            />
+          );
+        })}
       </p>
     </div>
+  );
+}
+
+function Word({
+  word,
+  progress,
+  range,
+}: {
+  word: string;
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+  range: [number, number];
+}) {
+  const opacity = useTransform(progress, range, [0.12, 1]);
+  const color = useTransform(
+    progress,
+    range,
+    ["rgba(0,0,0,0.12)", "rgba(0,0,0,1)"]
+  );
+
+  return (
+    <motion.span
+      style={{ opacity, color }}
+      className="inline-block mr-[0.3em] transition-none"
+    >
+      {word}
+    </motion.span>
   );
 }

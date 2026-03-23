@@ -9,14 +9,14 @@ export function ProductGrid() {
     <section className="bg-white">
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Group 1: Hero image + Product video */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/hero.png"
             alt="Aibromotion showcase"
             type="image"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
             src="/media/robot.mov"
@@ -28,13 +28,11 @@ export function ProductGrid() {
         </ScrollReveal>
 
         {/* Statement 1: Text LEFT + Media RIGHT */}
-        <ScrollReveal>
-          <StatementBlock
-            text="Мы превращаем идеи в движение. Каждый проект — это история, рассказанная через свет, форму и ритм."
-            layout="left"
-          />
-        </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <StatementBlock
+          text="Мы превращаем идеи в движение. Каждый проект — это история, рассказанная через свет, форму и ритм."
+          layout="left"
+        />
+        <ScrollReveal variant="clip-reveal" delay={0.15}>
           <MediaCell
             src="/media/basket.mov"
             type="video"
@@ -42,13 +40,13 @@ export function ProductGrid() {
         </ScrollReveal>
 
         {/* Group 2: Link + Product video */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/done.mov"
             type="video"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
             src="/media/result.mov"
@@ -60,28 +58,26 @@ export function ProductGrid() {
         </ScrollReveal>
 
         {/* Statement 2: Media LEFT + Text RIGHT */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/truck.mov"
             type="video"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
-          <StatementBlock
-            text="Технологии — наш инструмент. Воображение — наш двигатель. Результат — визуальное высказывание."
-            layout="right"
-          />
-        </ScrollReveal>
+        <StatementBlock
+          text="Технологии — наш инструмент. Воображение — наш двигатель. Результат — визуальное высказывание."
+          layout="right"
+        />
 
         {/* Group 3: Image + Product video */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/gemini.png"
             alt="Aibromotion artwork"
             type="image"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
             src="/media/ready.mov"
@@ -99,13 +95,13 @@ export function ProductGrid() {
         />
 
         {/* Group 4: Video + Link with video */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/timeline3.mov"
             type="video"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal variant="clip-reveal" delay={0.15}>
           <MediaCell
             src="/media/heroes.mov"
             type="video"
@@ -113,13 +109,13 @@ export function ProductGrid() {
         </ScrollReveal>
 
         {/* Group 5: Video + Link to Instagram */}
-        <ScrollReveal>
+        <ScrollReveal variant="clip-reveal">
           <MediaCell
             src="/media/timeline.mov"
             type="video"
           />
         </ScrollReveal>
-        <ScrollReveal delay={0.15}>
+        <ScrollReveal delay={0.15} variant="fade-up">
           <LinkCell
             href="https://www.instagram.com/aibromotion/"
             label="Наш Instagram"

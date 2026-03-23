@@ -1,3 +1,4 @@
+import { ReactLenis } from "lenis/react";
 import { Nav } from "@/components/Nav";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
@@ -7,7 +8,15 @@ import { Footer } from "@/components/Footer";
 
 export default function App() {
   return (
-    <>
+    <ReactLenis
+      root
+      options={{
+        lerp: 0.1,
+        duration: 1.2,
+        smoothWheel: true,
+        wheelMultiplier: 1,
+      }}
+    >
       {/* Footer sits behind everything */}
       <Footer />
 
@@ -30,6 +39,6 @@ export default function App() {
           </main>
         </div>
       </div>
-    </>
+    </ReactLenis>
   );
 }
