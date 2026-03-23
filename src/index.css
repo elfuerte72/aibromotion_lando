@@ -24,6 +24,16 @@
 }
 
 @layer base {
+  :root {
+    --footer-h: 600px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --footer-h: 560px;
+    }
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -52,3 +62,4 @@
     max-width: 100%;
   }
 }
+

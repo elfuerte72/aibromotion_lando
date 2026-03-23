@@ -43,13 +43,9 @@ export function ProductGrid() {
 
         {/* Group 2: Link + Product video */}
         <ScrollReveal>
-          <LinkCell
-            href="https://maps.google.com"
-            label="Redirect to Google Maps"
-            bgColor="#ffffff"
-            textColor="#000000"
-            mediaSrc="/media/done.mov"
-            mediaType="video"
+          <MediaCell
+            src="/media/done.mov"
+            type="video"
           />
         </ScrollReveal>
         <ScrollReveal delay={0.15}>
@@ -110,13 +106,9 @@ export function ProductGrid() {
           />
         </ScrollReveal>
         <ScrollReveal delay={0.15}>
-          <LinkCell
-            href="https://substack.com"
-            label="Follow Us on Substack"
-            bgColor="#ffffff"
-            textColor="#000000"
-            mediaSrc="/media/heroes.mov"
-            mediaType="video"
+          <MediaCell
+            src="/media/heroes.mov"
+            type="video"
           />
         </ScrollReveal>
 
