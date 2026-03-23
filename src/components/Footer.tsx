@@ -24,32 +24,28 @@ export function Footer() {
 
   return (
     <footer
-      className="fixed bottom-0 left-0 w-full bg-[#252525] text-white"
+      className="fixed bottom-0 left-0 w-full text-white overflow-hidden"
       style={{ height: "var(--footer-h)", zIndex: 0 }}
     >
-      <div className="max-w-[1800px] mx-auto h-full flex flex-col justify-between">
-        {/* Top: CTA */}
-        <div className="flex-1 flex flex-col justify-center px-6 md:px-16 py-12">
-          <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-6">
-            What's next?
-          </p>
-          <a
-            href="mailto:hello@aibromotion.com"
-            className="group inline-block"
-          >
-            <h2
-              className="font-heading uppercase leading-[0.95] text-white group-hover:text-white/70 transition-colors duration-500"
-              style={{ fontSize: "clamp(2.2rem, 6vw, 5.5rem)" }}
-            >
-              LET'S CREATE
-              <br />
-              <span className="text-salmon">TOGETHER</span>
-            </h2>
-          </a>
-          <p className="font-body text-sm md:text-base text-white/40 mt-6 max-w-lg">
-            Есть идея? Напишите нам — мы превратим её в визуальное высказывание.
-          </p>
-        </div>
+      {/* Background image */}
+      <img
+        src="/media/footer-bg.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ objectPosition: "center 15%" }}
+        loading="lazy"
+        decoding="async"
+      />
+
+      {/* Gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#252525] via-[#252525]/70 to-black/40" />
+
+      {/* Extra bottom fade for seamless blend into contact rows */}
+      <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#252525] to-transparent" />
+
+      <div className="relative z-10 max-w-[1800px] mx-auto h-full flex flex-col justify-between">
+        {/* Top: spacer for image visibility */}
+        <div className="flex-1" />
 
         {/* Contact row */}
         <div className="grid grid-cols-1 md:grid-cols-3 border-t border-white/10">
