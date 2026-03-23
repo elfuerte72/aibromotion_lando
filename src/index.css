@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+
+  --color-dark: #252525;
+  --color-dark-alt: #1a1a1a;
+  --color-beige: #f0ebe0;
+  --color-burgundy: #6b1a1a;
+  --color-navy: #1a2664;
+  --color-olive: #8a9170;
+  --color-light-gray: #ebebeb;
+  --color-cream: #e8e0cf;
+  --color-dark-beige: #cfc8b8;
+  --color-light-cream: #ede8dc;
+  --color-salmon: #e8a898;
+
+  --font-heading: "Rubik", sans-serif;
+  --font-body: "Fragment Mono", monospace;
+  --font-logo: "Rubik Bubbles", cursive;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: #ffffff;
+    color: #000000;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
