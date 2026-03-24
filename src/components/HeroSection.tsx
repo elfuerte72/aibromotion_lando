@@ -16,8 +16,8 @@ export function HeroSection() {
   const [typedLength, setTypedLength] = useState(0);
   const [processingProgress, setProcessingProgress] = useState(0);
   const [resultRevealed, setResultRevealed] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
 
   // Intersection observer
   useEffect(() => {
