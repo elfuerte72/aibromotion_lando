@@ -2,8 +2,27 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 interface StatementBlockProps {
+  /** Supports **bold** markers — bold words render in salmon */
   text: string;
   layout?: "full" | "left" | "right";
+}
+
+/** Parse text with **bold** markers into word tokens */
+function parseWords(text: string): { text: string; bold: boolean }[] {
+  const result: { text: string; bold: boolean }[] = [];
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  for (const part of parts) {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      for (const w of part.slice(2, -2).split(" ").filter(Boolean)) {
+        result.push({ text: w, bold: true });
+      }
+    } else {
+      for (const w of part.split(" ").filter(Boolean)) {
+        result.push({ text: w, bold: false });
+      }
+    }
+  }
+  return result;
 }
 
 export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
@@ -13,15 +32,15 @@ export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
     offset: ["start 90%", "end 40%"],
   });
 
-  const words = text.split(" ");
+  const words = parseWords(text);
   const isRight = layout === "right";
 
   return (
     <div
       ref={ref}
       className={`
-        ${layout === "full" ? "col-span-1 md:col-span-2 px-6 py-20 md:px-10 md:py-28" : ""}
-        ${layout !== "full" ? "col-span-1 flex items-center px-6 py-16 md:px-10 md:py-20 border-b border-black/10" : ""}
+        ${layout === "full" ? "px-6 py-12 md:px-10 md:py-16" : ""}
+        ${layout !== "full" ? "col-span-1 flex items-center px-6 py-16 md:px-10 md:py-20" : ""}
       `}
     >
       <p
@@ -40,7 +59,8 @@ export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
           return (
             <Word
               key={i}
-              word={word}
+              word={word.text}
+              bold={word.bold}
               progress={scrollYProgress}
               range={[wordStart, wordEnd]}
             />
@@ -53,24 +73,29 @@ export function StatementBlock({ text, layout = "full" }: StatementBlockProps) {
 
 function Word({
   word,
+  bold,
   progress,
   range,
 }: {
   word: string;
+  bold: boolean;
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
   range: [number, number];
 }) {
   const opacity = useTransform(progress, range, [0.12, 1]);
+
+  // Bold words use salmon color, regular words use black
+  const baseColor = bold ? "rgba(232,168,152," : "rgba(0,0,0,";
   const color = useTransform(
     progress,
     range,
-    ["rgba(0,0,0,0.12)", "rgba(0,0,0,1)"]
+    [`${baseColor}0.12)`, `${baseColor}1)`]
   );
 
   return (
     <motion.span
       style={{ opacity, color }}
-      className="inline-block mr-[0.3em] transition-none"
+      className={`inline-block mr-[0.3em] transition-none ${bold ? "font-bold" : ""}`}
     >
       {word}
     </motion.span>
