@@ -57,38 +57,7 @@ export function ProductGrid() {
           />
         </ScrollReveal>
 
-        {/* Statement 2: Media LEFT + Text RIGHT */}
-        <ScrollReveal variant="clip-reveal">
-          <MediaCell
-            src="/media/truck.mp4"
-            type="video"
-          />
-        </ScrollReveal>
-        <StatementBlock
-          text="Технологии — наш инструмент. Воображение — наш двигатель. Результат — визуальное высказывание."
-          layout="right"
-        />
-
-        {/* Group 3: Image + Product video */}
-        <ScrollReveal variant="clip-reveal">
-          <MediaCell
-            src="/media/gemini.png"
-            alt="Aibromotion artwork"
-            type="image"
-          />
-        </ScrollReveal>
-        <ScrollReveal variant="clip-reveal" delay={0.15}>
-          <ProductCell
-            bgColor="#ffffff"
-            src="/media/ready.mp4"
-            label="Ready · Final"
-            textColor="#000000"
-            mediaType="video"
-            objectFit="cover"
-          />
-        </ScrollReveal>
-
-        {/* Statement 3: Full-width */}
+        {/* Statement 2: Full-width */}
         <StatementBlock
           text="Мы не следуем трендам — мы создаём визуальный язык, который говорит громче слов."
           layout="full"
