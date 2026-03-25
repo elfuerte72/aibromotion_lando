@@ -59,7 +59,7 @@ export function NewsletterCTA() {
             className="absolute inset-0"
           >
             <video
-              src="/media/truck.mov"
+              src="/media/truck.mp4"
               autoPlay
               loop
               muted

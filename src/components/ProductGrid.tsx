@@ -19,7 +19,7 @@ export function ProductGrid() {
         <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
-            src="/media/robot.mov"
+            src="/media/robot.mp4"
             label="Robot · Showreel"
             textColor="#000000"
             mediaType="video"
@@ -34,7 +34,7 @@ export function ProductGrid() {
         />
         <ScrollReveal variant="clip-reveal" delay={0.15}>
           <MediaCell
-            src="/media/basket.mov"
+            src="/media/basket.mp4"
             type="video"
           />
         </ScrollReveal>
@@ -42,14 +42,14 @@ export function ProductGrid() {
         {/* Group 2: Link + Product video */}
         <ScrollReveal variant="clip-reveal">
           <MediaCell
-            src="/media/done.mov"
+            src="/media/done.mp4"
             type="video"
           />
         </ScrollReveal>
         <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
-            src="/media/result.mov"
+            src="/media/result.mp4"
             label="Result · Preview"
             textColor="#000000"
             mediaType="video"
@@ -60,7 +60,7 @@ export function ProductGrid() {
         {/* Statement 2: Media LEFT + Text RIGHT */}
         <ScrollReveal variant="clip-reveal">
           <MediaCell
-            src="/media/truck.mov"
+            src="/media/truck.mp4"
             type="video"
           />
         </ScrollReveal>
@@ -80,7 +80,7 @@ export function ProductGrid() {
         <ScrollReveal variant="clip-reveal" delay={0.15}>
           <ProductCell
             bgColor="#ffffff"
-            src="/media/ready.mov"
+            src="/media/ready.mp4"
             label="Ready · Final"
             textColor="#000000"
             mediaType="video"
@@ -97,13 +97,13 @@ export function ProductGrid() {
         {/* Group 4: Video + Link with video */}
         <ScrollReveal variant="clip-reveal">
           <MediaCell
-            src="/media/timeline3.mov"
+            src="/media/timeline3.mp4"
             type="video"
           />
         </ScrollReveal>
         <ScrollReveal variant="clip-reveal" delay={0.15}>
           <MediaCell
-            src="/media/heroes.mov"
+            src="/media/heroes.mp4"
             type="video"
           />
         </ScrollReveal>
@@ -111,7 +111,7 @@ export function ProductGrid() {
         {/* Group 5: Video + Link to Instagram */}
         <ScrollReveal variant="clip-reveal">
           <MediaCell
-            src="/media/timeline.mov"
+            src="/media/timeline.mp4"
             type="video"
           />
         </ScrollReveal>
