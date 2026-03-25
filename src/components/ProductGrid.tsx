@@ -169,33 +169,32 @@ export function ProductGrid() {
         </FullVideoSection>
       </ScrollReveal>
 
-      {/* ── 7. Timeline — full-width video with text overlay ── */}
+      {/* ── 7. Timeline3 — video left, text right ── */}
+      <div className="px-6 md:px-16 lg:px-24 py-12 md:py-20">
+        <div className="grid md:grid-cols-[4fr_1fr] gap-8 md:gap-12 items-center">
+          <ScrollReveal variant="slide-left">
+            <ParallaxVideo src="/media/timeline3.mp4" aspect="portrait" />
+          </ScrollReveal>
+          <ScrollReveal variant="fade-up" delay={0.15}>
+            <StatementBlock
+              text="Контроль каждой **детали**. Точный тайминг, идеальная синхронизация."
+            />
+          </ScrollReveal>
+        </div>
+      </div>
+
+      {/* ── 8. Timeline — full-width video with text overlay ── */}
       <ScrollReveal variant="clip-reveal">
         <FullVideoSection src="/media/timeline.mp4" align="bottom">
           <p
             className="font-heading uppercase leading-[1.15] text-white max-w-3xl"
             style={{ fontSize: "clamp(1.5rem, 4vw, 3.5rem)" }}
           >
-            Контроль каждой{" "}
-            <strong className="font-bold text-[var(--color-salmon)]">детали</strong>.
-            Точный тайминг, идеальная синхронизация.
+            Ваша история заслуживает{" "}
+            <strong className="font-bold text-[var(--color-salmon)]">лучшего</strong>.
           </p>
         </FullVideoSection>
       </ScrollReveal>
-
-      {/* ── 9. Timeline3 — centered portrait + closing ── */}
-      <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 py-12 md:py-20">
-        <ScrollReveal variant="scale">
-          <div className="max-w-sm mx-auto">
-            <ParallaxVideo src="/media/timeline3.mp4" aspect="portrait" />
-          </div>
-        </ScrollReveal>
-        <div className="mt-8 md:mt-12">
-          <StatementBlock
-            text="Ваша история заслуживает **лучшего**."
-          />
-        </div>
-      </div>
 
     </section>
   );
