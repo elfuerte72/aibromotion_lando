@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 const RAINBOW = ["#FF0000", "#FF7700", "#FFDD00", "#00CC00", "#0088FF", "#5500FF", "#CC00CC"];
 const LOGO = "AIBROMOTION";
@@ -7,9 +8,21 @@ function randomColor() {
   return RAINBOW[Math.floor(Math.random() * RAINBOW.length)];
 }
 
+/** Scale factor — only the hovered letter swells */
+function getLetterScale(i: number, hoveredIndex: number | null): number {
+  return i === hoveredIndex ? 1.25 : 1;
+}
+
+/** Y offset — only the hovered letter pops up */
+function getLetterY(i: number, hoveredIndex: number | null): number {
+  return i === hoveredIndex ? -6 : 0;
+}
+
+const springTransition = { type: "spring" as const, stiffness: 400, damping: 15, mass: 0.8 };
+
 export function Header() {
-  const logoRef = useRef<HTMLHeadingElement>(null);
   const [logoVisible, setLogoVisible] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [colors, setColors] = useState<Record<number, string>>({});
 
   useEffect(() => {
@@ -18,10 +31,12 @@ export function Header() {
   }, []);
 
   const handleEnter = useCallback((i: number) => {
+    setHoveredIndex(i);
     setColors((prev) => ({ ...prev, [i]: randomColor() }));
   }, []);
 
   const handleLeave = useCallback((i: number) => {
+    setHoveredIndex(null);
     setColors((prev) => {
       const next = { ...prev };
       delete next[i];
@@ -34,7 +49,6 @@ export function Header() {
       {/* Logo */}
       <div className="px-6 py-8 md:py-12 text-center overflow-hidden">
         <h1
-          ref={logoRef}
           className="font-logo leading-none tracking-wide"
           style={{
             fontSize: "clamp(3rem, 12vw, 12rem)",
@@ -43,21 +57,38 @@ export function Header() {
             transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          {LOGO.split("").map((char, i) => (
-            <span
-              key={i}
-              onMouseEnter={() => handleEnter(i)}
-              onMouseLeave={() => handleLeave(i)}
-              style={{
-                color: colors[i] || "#000000",
-                transition: "color 0.3s ease",
-                display: "inline-block",
-                cursor: "pointer",
-              }}
-            >
-              {char}
-            </span>
-          ))}
+          {LOGO.split("").map((char, i) => {
+            const color = colors[i] || "#000000";
+            const isActive = colors[i] !== undefined;
+
+            return (
+              <motion.span
+                key={i}
+                onMouseEnter={() => handleEnter(i)}
+                onMouseLeave={() => handleLeave(i)}
+                animate={{
+                  scale: getLetterScale(i, hoveredIndex),
+                  y: getLetterY(i, hoveredIndex),
+                  color,
+                }}
+                transition={{
+                  scale: springTransition,
+                  y: springTransition,
+                  color: { duration: 0.3, ease: "easeOut" },
+                }}
+                style={{
+                  display: "inline-block",
+                  cursor: "pointer",
+                  textShadow: isActive
+                    ? `0 0 8px ${color}, 0 0 25px ${color}40`
+                    : "none",
+                  transition: "text-shadow 0.3s ease",
+                }}
+              >
+                {char}
+              </motion.span>
+            );
+          })}
         </h1>
       </div>
 
