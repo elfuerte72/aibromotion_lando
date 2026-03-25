@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Single-page landing for **AIBROMOTION** — an AI-powered motion/video production company. Dark cinematic aesthetic. Russian-language content with English UI labels.
+Single-page landing for **AIBROMOTION** — an AI-powered motion/video production company. Cinematic aesthetic with white main content and dark footer reveal. Russian-language content with English UI labels.
 
 Deployed on **Railway** (static site via Caddy) from `main` branch. GitHub repo: `elfuerte72/aibromotion_lando`.
 
@@ -37,10 +37,10 @@ npx vitest           # Run tests (jsdom, setup in src/test-setup.ts)
 - As user scrolls past main content, footer is revealed underneath
 
 **Page flow (top to bottom):**
-`Nav` (fixed top) → `Header` (logo + tagline) → `HeroSection` (3-column brief→AI→result animation) → `ProductGrid` (2-col media grid with `StatementBlock` text reveals) → `NewsletterCTA` (quote + parallax video) → `AutomationSection` (services, process steps, trust numbers, integrations terminal) → `Footer` (background image + contacts)
+`Nav` (fixed top) → `Header` (logo + tagline) → `HeroSection` (3-column brief→AI→result animation) → `ProductGrid` (storytelling scroll — one content piece per section, alternating full-width video overlays and portrait video + text grids) → `NewsletterCTA` (quote + parallax video) → `MarketingSection` → `AutomationSection` (services, process steps, trust numbers, integrations terminal) → `Footer` (background image + contacts)
 
 **Scroll animation system:**
-- `ScrollReveal` — wrapper component with 4 variants: `fade-up`, `fade`, `clip-reveal`, `scale`. Uses `useInView` with `once: true`
+- `ScrollReveal` — wrapper component with 6 variants: `fade-up`, `fade`, `clip-reveal`, `scale`, `slide-left`, `slide-right`. Uses `useInView` with `once: true`
 - `StatementBlock` / `NewsletterCTA` — word-by-word opacity reveal tied to `scrollYProgress`
 - `MediaCell` — parallax depth via `useTransform` on y and scale
 - `LogoMarquee` — velocity-based skew effect via `useVelocity` + `useSpring`

@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { ProductGrid } from "@/components/ProductGrid";
 import { NewsletterCTA } from "@/components/NewsletterCTA";
+import { MarketingSection } from "@/components/MarketingSection";
 import { AutomationSection } from "@/components/AutomationSection";
 import { Footer } from "@/components/Footer";
 
@@ -39,6 +40,7 @@ export default function App() {
             <NewsletterCTA />
           </main>
         </div>
+        <MarketingSection />
         <AutomationSection />
       </div>
     </ReactLenis>
