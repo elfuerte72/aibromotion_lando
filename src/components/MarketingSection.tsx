@@ -159,7 +159,7 @@ function LargeTitle() {
       ref={ref}
       className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-black"
     >
-      <div className="max-w-6xl mx-auto text-center md:text-left">
+      <div className="max-w-6xl mx-auto text-center">
         {/* Script title — handwriting clip-path reveal */}
         <div className="relative inline-block">
           <motion.h2
@@ -168,6 +168,7 @@ function LargeTitle() {
               fontSize: "clamp(4rem, 12vw, 10rem)",
               lineHeight: 1,
               clipPath,
+              paddingRight: "0.15em",
             }}
           >
             Маркетинг
@@ -187,7 +188,7 @@ function LargeTitle() {
 
         {/* Subtext */}
         <motion.p
-          className="font-body text-sm md:text-base text-black/40 mt-4 max-w-lg mx-auto md:mx-0"
+          className="font-body text-sm md:text-base text-black/40 mt-4 max-w-lg mx-auto"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
           Стратегия, контент и продвижение — в одном пакете.
