@@ -15,7 +15,6 @@ const TOP_OFFSET = 28;
 
 interface FunnelStep {
   title: string;
-  subtitle: string;
   desc: string;
   metrics: { value: string; label: string }[];
 }
@@ -23,7 +22,6 @@ interface FunnelStep {
 const FUNNEL_STEPS: FunnelStep[] = [
   {
     title: "Стратегия",
-    subtitle: "Research & Positioning",
     desc: "Глубокий анализ рынка, конкурентов и целевой аудитории. Формируем позиционирование и дорожную карту продвижения на основе данных.",
     metrics: [
       { value: "12+", label: "конкурентов анализируем" },
@@ -32,7 +30,6 @@ const FUNNEL_STEPS: FunnelStep[] = [
   },
   {
     title: "Контент",
-    subtitle: "AI-Powered Content",
     desc: "AI-видео, фото, копирайтинг, контент для соцсетей. Создаём визуальные высказывания, которые невозможно пролистать.",
     metrics: [
       { value: "500+", label: "единиц контента/мес" },
@@ -41,7 +38,6 @@ const FUNNEL_STEPS: FunnelStep[] = [
   },
   {
     title: "Продвижение",
-    subtitle: "Multi-Channel Promotion",
     desc: "SEO, SMM, таргетированная и контекстная реклама. Каждый канал работает в связке, усиливая общий эффект.",
     metrics: [
       { value: "4.8%", label: "средний CTR" },
@@ -50,7 +46,6 @@ const FUNNEL_STEPS: FunnelStep[] = [
   },
   {
     title: "Аналитика",
-    subtitle: "Data-Driven Optimization",
     desc: "Отслеживаем каждую метрику, проводим A/B тесты, оптимизируем воронку. Данные — основа каждого решения.",
     metrics: [
       { value: "15+", label: "A/B тестов в месяц" },
@@ -59,7 +54,6 @@ const FUNNEL_STEPS: FunnelStep[] = [
   },
   {
     title: "Результат",
-    subtitle: "Measurable Growth",
     desc: "Измеримый рост бизнеса. Полная прозрачность. Окупаемость в первые месяцы.",
     metrics: [
       { value: "2.5×", label: "рост выручки" },
@@ -269,10 +263,6 @@ function StackedCard({
 
         {/* Content — bottom-left */}
         <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16">
-          <p className={`font-body text-[10px] md:text-xs uppercase tracking-[0.15em] mb-3 ${textMuted}`}>
-            {step.subtitle}
-          </p>
-
           <h3
             className={`font-heading uppercase leading-[1.05] tracking-tight mb-4 ${textPrimary}`}
             style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
@@ -371,10 +361,6 @@ function MobileCard({
       />
 
       <div className="relative z-10 flex flex-col justify-end p-6 pt-32">
-        <p className={`font-body text-[10px] uppercase tracking-[0.15em] mb-2 ${textMuted}`}>
-          {step.subtitle}
-        </p>
-
         <h3
           className={`font-heading uppercase leading-[1.1] mb-3 ${textPrimary}`}
           style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)" }}

@@ -161,9 +161,11 @@ function RevealWord({
 function ServiceCard({
   service,
   index,
+  isHero = false,
 }: {
   service: (typeof SERVICES)[number];
   index: number;
+  isHero?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
@@ -172,6 +174,47 @@ function ServiceCard({
   const numericValue = numericMatch ? parseInt(numericMatch[0]) : 0;
   const suffix = service.metric.replace(/\d+/, "");
   const isCustom = "isCustomMetric" in service && service.isCustomMetric;
+
+  if (isHero) {
+    return (
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease: [...EASE] }}
+        className="bg-[#f8f8f7] rounded-2xl p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 min-h-[200px]"
+      >
+        <div className="md:max-w-[55%]">
+          <h3
+            className="font-heading uppercase leading-[1.15] mb-4"
+            style={{ fontSize: "clamp(1.4rem, 2.8vw, 2rem)" }}
+          >
+            {service.title}
+          </h3>
+          <p className="font-body text-xs md:text-sm leading-relaxed text-black/50 max-w-lg">
+            {service.desc}
+          </p>
+        </div>
+
+        <div className="md:text-right shrink-0">
+          <span
+            className="font-heading leading-none block text-black"
+            style={{ fontSize: "clamp(3rem, 6vw, 5rem)" }}
+          >
+            <AnimatedCounter
+              value={numericValue}
+              suffix={suffix}
+              isCustom={isCustom}
+              delay={0.3}
+            />
+          </span>
+          <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/40 mt-2 block">
+            {service.metricLabel}
+          </span>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -254,6 +297,63 @@ function ProcessSteps() {
   );
 }
 
+/* ── Showcase right-side text ─────────────────────────── */
+
+const SHOWCASE_BULLETS = [
+  "Автоматизация процессов от заявки до отчёта",
+  "AI-агенты, которые работают 24/7 без перерывов",
+  "Интеграция с вашими CRM, мессенджерами и таблицами",
+];
+
+function ShowcaseText() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+
+  return (
+    <div ref={ref} className="flex flex-col justify-center py-4">
+      <motion.p
+        className="font-body text-xs md:text-sm uppercase tracking-[0.2em] text-black/35 mb-4"
+        initial={{ opacity: 0, x: 30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.8, ease: [...EASE] }}
+      >
+        Как это работает
+      </motion.p>
+
+      <motion.h3
+        className="font-heading uppercase leading-[1.15] mb-6"
+        style={{ fontSize: "clamp(1.5rem, 3vw, 2.4rem)" }}
+        initial={{ opacity: 0, x: 30 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.1, ease: [...EASE] }}
+      >
+        Ваш бизнес на автопилоте
+      </motion.h3>
+
+      <div className="space-y-4">
+        {SHOWCASE_BULLETS.map((text, i) => (
+          <motion.div
+            key={i}
+            className="flex items-start gap-3"
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{
+              duration: 0.7,
+              delay: 0.2 + i * 0.12,
+              ease: [...EASE],
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-black/25 mt-2 shrink-0" />
+            <p className="font-body text-sm md:text-base leading-relaxed text-black/55">
+              {text}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── MacBook Pro mockup (devices.css style, pure Tailwind) ── */
 
 function MacBookShowcase({ children }: { children?: React.ReactNode }) {
@@ -266,7 +366,7 @@ function MacBookShowcase({ children }: { children?: React.ReactNode }) {
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 1, ease: [...EASE] }}
-      className="relative w-full max-w-[740px] mx-auto"
+      className="relative w-full"
       style={{ aspectRatio: "740 / 440" }}
     >
       {/* ── Screen bezel (Space Gray) ── */}
@@ -688,8 +788,8 @@ export function AutomationSection() {
       animate={sectionInView ? { opacity: 1 } : {}}
       transition={{ duration: 0.6, ease: [...EASE] }}
     >
+      {/* ── Headline (constrained) ── */}
       <div className="max-w-6xl mx-auto px-5 md:px-10">
-        {/* ── Headline ── */}
         <div
           ref={headlineRef}
           className="py-24 md:py-36 border-t border-black/10"
@@ -708,17 +808,35 @@ export function AutomationSection() {
             ))}
           </p>
         </div>
+      </div>
 
-        {/* ── MacBook showcase ── */}
-        <div className="mb-24 md:mb-32">
+      {/* ── MacBook showcase — wide split layout ── */}
+      <div className="max-w-[90rem] mx-auto px-5 md:px-12 mb-24 md:mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-8 md:gap-16 items-center">
+          {/* Left — MacBook */}
           <MacBookShowcase />
-        </div>
 
-        {/* ── Service cards (2×2 grid) ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
-          {SERVICES.map((service, i) => (
-            <ServiceCard key={service.title} service={service} index={i} />
-          ))}
+          {/* Right — animated text */}
+          <ShowcaseText />
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-5 md:px-10">
+
+        {/* ── Service cards — bento grid ── */}
+        <div className="space-y-5 mb-20">
+          {/* Hero card — full width */}
+          <ServiceCard
+            service={SERVICES[3]}
+            index={0}
+            isHero
+          />
+          {/* 3 cards row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {SERVICES.slice(0, 3).map((service, i) => (
+              <ServiceCard key={service.title} service={service} index={i + 1} />
+            ))}
+          </div>
         </div>
 
         {/* ── Statement ── */}
