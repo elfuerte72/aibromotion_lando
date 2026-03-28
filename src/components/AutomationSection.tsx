@@ -39,17 +39,14 @@ const SERVICES = [
 
 const STEPS = [
   {
-    num: "01",
-    title: "Брифинг",
+    title: "Идея",
     desc: "Разбираем вашу задачу, находим процессы, которые можно передать AI",
   },
   {
-    num: "02",
     title: "Прототип",
     desc: "Собираем рабочую версию за дни, а не месяцы. Вы видите результат сразу",
   },
   {
-    num: "03",
     title: "Запуск",
     desc: "Подключаем к вашим системам, обучаем команду, сопровождаем после старта",
   },
@@ -76,7 +73,7 @@ const TRUST_NUMBERS = [
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/* ── Animated counter (delayed start) ─────────────────── */
+/* ── Animated counter ───────────────────────────────── */
 
 function AnimatedCounter({
   value,
@@ -159,53 +156,7 @@ function RevealWord({
   );
 }
 
-function WordByWordBlock({ text }: { text: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 90%", "end 40%"],
-  });
-  const words = text.split(" ");
-
-  return (
-    <div ref={ref} className="px-6 py-16 md:px-10 md:py-24">
-      <p
-        className="font-heading uppercase leading-[1.1] max-w-5xl mx-auto text-center"
-        style={{ fontSize: "clamp(1.5rem, 4vw, 3.75rem)" }}
-      >
-        {words.map((word, i) => (
-          <RevealWord
-            key={i}
-            word={word}
-            progress={scrollYProgress}
-            range={[i / words.length, (i + 1) / words.length]}
-          />
-        ))}
-      </p>
-    </div>
-  );
-}
-
-/* ── Animated divider ─────────────────────────────────── */
-
-function AnimatedDivider() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
-
-  return (
-    <div ref={ref} className="overflow-hidden">
-      <motion.div
-        className="h-px bg-black/10"
-        initial={{ scaleX: 0 }}
-        animate={isInView ? { scaleX: 1 } : {}}
-        transition={{ duration: 1.2, ease: [...EASE] }}
-        style={{ transformOrigin: "left" }}
-      />
-    </div>
-  );
-}
-
-/* ── Service card (alternating direction) ─────────────── */
+/* ── Service card — rounded Merlin style ─────────────── */
 
 function ServiceCard({
   service,
@@ -222,30 +173,22 @@ function ServiceCard({
   const suffix = service.metric.replace(/\d+/, "");
   const isCustom = "isCustomMetric" in service && service.isCustomMetric;
 
-  const isEven = index % 2 === 0;
-  // Alternate: even cards slide from left, odd from right
-  const xOffset = isEven ? -30 : 30;
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: xOffset }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
-        duration: 0.9,
-        delay: index * 0.08,
+        duration: 0.8,
+        delay: index * 0.1,
         ease: [...EASE],
       }}
-      className={`
-        flex flex-col justify-between p-6 md:p-10 min-h-[300px] md:min-h-[380px]
-        border-b border-black/10
-        ${isEven ? "md:border-r" : ""}
-      `}
+      className="bg-[#f8f8f7] rounded-2xl p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
     >
       <div>
         <h3
           className="font-heading uppercase leading-[1.15] mb-4"
-          style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}
+          style={{ fontSize: "clamp(1.2rem, 2.2vw, 1.6rem)" }}
         >
           {service.title}
         </h3>
@@ -254,8 +197,7 @@ function ServiceCard({
         </p>
       </div>
 
-      {/* Metric — delayed after card appears */}
-      <div className="mt-8 pt-6 border-t border-black/10">
+      <div className="mt-8 pt-6 border-t border-black/[0.06]">
         <span
           className="font-heading leading-none block text-black"
           style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
@@ -267,7 +209,7 @@ function ServiceCard({
             delay={0.4 + index * 0.08}
           />
         </span>
-        <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/40 mt-1 block">
+        <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/40 mt-2 block">
           {service.metricLabel}
         </span>
       </div>
@@ -275,62 +217,34 @@ function ServiceCard({
   );
 }
 
-/* ── Process steps with connecting line ───────────────── */
+/* ── Process steps — clean, no numbering ─────────────── */
 
 function ProcessSteps() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
 
   return (
-    <div ref={ref}>
-      <AnimatedDivider />
-      <div className="grid grid-cols-1 md:grid-cols-3 relative">
-        {/* Connecting line (desktop only) */}
-        <motion.div
-          className="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-px bg-black/[0.06] -translate-y-1/2 pointer-events-none"
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : {}}
-          transition={{ duration: 1.4, delay: 0.3, ease: [...EASE] }}
-          style={{ transformOrigin: "left" }}
-        />
-
+    <div ref={ref} className="bg-[#f8f8f7] rounded-3xl p-8 md:p-14">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
         {STEPS.map((step, i) => (
           <motion.div
-            key={step.num}
-            initial={{ opacity: 0, clipPath: "inset(15% 15% 15% 15%)" }}
-            animate={
-              isInView
-                ? { opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }
-                : {}
-            }
+            key={step.title}
+            initial={{ opacity: 0, y: 25 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{
-              duration: 0.9,
-              delay: i * 0.2,
+              duration: 0.8,
+              delay: i * 0.15,
               ease: [...EASE],
             }}
-            className={`relative p-6 md:p-10 ${i < 2 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}
+            className="text-center"
           >
-            {/* Step dot */}
-            <motion.div
-              className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black/20"
-              initial={{ scale: 0 }}
-              animate={isInView ? { scale: 1 } : {}}
-              transition={{
-                duration: 0.5,
-                delay: 0.5 + i * 0.2,
-                ease: [...EASE],
-              }}
-            />
-            <span className="font-body text-[10px] uppercase tracking-[0.2em] text-black/25">
-              Шаг {step.num}
-            </span>
             <h4
-              className="font-heading uppercase leading-[1.15] mt-3 mb-3"
-              style={{ fontSize: "clamp(1.1rem, 2vw, 1.5rem)" }}
+              className="font-heading uppercase leading-[1.15] mb-3"
+              style={{ fontSize: "clamp(1.1rem, 2vw, 1.4rem)" }}
             >
               {step.title}
             </h4>
-            <p className="font-body text-xs md:text-sm leading-relaxed text-black/40 max-w-xs">
+            <p className="font-body text-xs md:text-sm leading-relaxed text-black/45 max-w-xs mx-auto">
               {step.desc}
             </p>
           </motion.div>
@@ -340,50 +254,140 @@ function ProcessSteps() {
   );
 }
 
-/* ── Trust numbers (scale entrance + parallax) ────────── */
+/* ── MacBook Pro mockup (devices.css style, pure Tailwind) ── */
+
+function MacBookShowcase({ children }: { children?: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 1, ease: [...EASE] }}
+      className="relative w-full max-w-[740px] mx-auto"
+      style={{ aspectRatio: "740 / 440" }}
+    >
+      {/* ── Screen bezel (Space Gray) ── */}
+      <div
+        className="relative z-[1] mx-auto overflow-hidden rounded-[20px] border-2 border-[#c8cacb]"
+        style={{
+          background: "#0d0d0d",
+          width: "83.5%",
+          height: "calc(100% - 24px)",
+          padding: "9px 9px 23px",
+        }}
+      >
+        {/* Screen content */}
+        <div className="relative w-full h-full rounded-[10px] border-2 border-[#121212] overflow-hidden bg-[#f5f5f7]">
+          {children || (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="text-center px-8">
+                <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-black/[0.04] flex items-center justify-center mx-auto mb-5">
+                  <svg
+                    className="w-7 h-7 md:w-9 md:h-9 text-black/15"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+                    />
+                  </svg>
+                </div>
+                <p className="font-heading uppercase text-sm md:text-base text-black/20 tracking-[0.12em]">
+                  Демо автоматизации
+                </p>
+                <p className="font-body text-[10px] md:text-xs text-black/15 mt-2">
+                  Скоро здесь будет демонстрация
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom chin gradient */}
+        <div
+          className="absolute right-0 bottom-0 left-0 h-6"
+          style={{ background: "linear-gradient(to bottom, #272727, #0d0d0d)" }}
+        />
+      </div>
+
+      {/* ── Notch ── */}
+      <div
+        className="absolute z-[2] left-1/2 -translate-x-1/2 rounded-b bg-[#0d0d0d]"
+        style={{ top: "11px", width: "64px", height: "12px" }}
+      />
+
+      {/* ── Base / hinge ── */}
+      <div
+        className="relative z-[9] -mt-2.5 w-full rounded-[2px_2px_12px_12px] border border-[#a0a3a7] border-t-0"
+        style={{
+          height: "24px",
+          background: "radial-gradient(circle, #e2e3e4 85%, #c8cacb 100%)",
+          boxShadow: "inset 0 -2px 8px 0 #6c7074",
+        }}
+      >
+        {/* Trackpad indent */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-[10px]"
+          style={{
+            width: "120px",
+            height: "10px",
+            boxShadow: "inset 0 0 4px 2px #babdbf",
+          }}
+        />
+      </div>
+
+      {/* ── Rubber feet ── */}
+      <div className="absolute -bottom-[2px] left-12 h-[2px] w-10 rounded-b-full bg-neutral-600" />
+      <div className="absolute -bottom-[2px] right-12 h-[2px] w-10 rounded-b-full bg-neutral-600" />
+
+      {/* ── Shadow ── */}
+      <div className="absolute -bottom-4 left-[10%] right-[10%] h-8 bg-black/[0.06] blur-2xl rounded-full" />
+    </motion.div>
+  );
+}
+
+/* ── Trust numbers — soft card ──────────────────────── */
 
 function TrustNumbers() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
-
   return (
-    <div ref={ref}>
-      <AnimatedDivider />
-      <motion.div style={{ y }} className="grid grid-cols-1 md:grid-cols-3">
-        {TRUST_NUMBERS.map((item, i) => (
-          <motion.div
-            key={item.label}
-            initial={{ opacity: 0, scale: 0.88 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{
-              duration: 0.9,
-              delay: i * 0.15,
-              ease: [...EASE],
-            }}
-            className={`px-6 py-10 md:px-10 md:py-14 text-center ${i < 2 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}
+    <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {TRUST_NUMBERS.map((item, i) => (
+        <motion.div
+          key={item.label}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{
+            duration: 0.8,
+            delay: i * 0.12,
+            ease: [...EASE],
+          }}
+          className="bg-[#f8f8f7] rounded-2xl px-6 py-10 md:px-8 md:py-14 text-center"
+        >
+          <span
+            className="font-heading leading-none block text-black"
+            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
           >
-            <span
-              className="font-heading leading-none block text-black"
-              style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
-            >
-              <AnimatedCounter
-                value={item.value}
-                suffix={item.suffix}
-                delay={0.3 + i * 0.15}
-              />
-            </span>
-            <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/35 mt-2 block">
-              {item.label}
-            </span>
-          </motion.div>
-        ))}
-      </motion.div>
+            <AnimatedCounter
+              value={item.value}
+              suffix={item.suffix}
+              delay={0.3 + i * 0.15}
+            />
+          </span>
+          <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/35 mt-3 block">
+            {item.label}
+          </span>
+        </motion.div>
+      ))}
     </div>
   );
 }
@@ -508,130 +512,130 @@ function Integrations() {
   const allDone = phase === "done";
 
   return (
-    <div ref={ref}>
-      <AnimatedDivider />
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Left — Terminal */}
-        <div className="p-6 md:p-10 md:border-r border-black/10">
-          <div
-            className="w-full rounded-lg border border-black/10 overflow-hidden"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
-            {/* Terminal title bar */}
-            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-black/10 bg-black/[0.02]">
-              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
-              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
-              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
-              <span className="text-[10px] uppercase tracking-[0.15em] text-black/25 ml-2">
-                integrations
+    <div
+      ref={ref}
+      className="grid grid-cols-1 md:grid-cols-2 gap-5"
+    >
+      {/* Left — Terminal */}
+      <div className="bg-[#f8f8f7] rounded-2xl p-6 md:p-10">
+        <div
+          className="w-full rounded-xl border border-black/[0.06] bg-white overflow-hidden"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          {/* Terminal title bar */}
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-black/[0.06]">
+            <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+            <span className="w-3 h-3 rounded-full bg-[#febc2e]" />
+            <span className="w-3 h-3 rounded-full bg-[#28c840]" />
+            <span className="text-[10px] uppercase tracking-[0.15em] text-black/30 ml-3">
+              integrations
+            </span>
+          </div>
+
+          {/* Terminal body */}
+          <div className="px-5 py-5 space-y-1.5">
+            {/* Command line */}
+            <div className="flex items-center gap-2 text-xs md:text-sm">
+              <span className="text-black/30 select-none">$</span>
+              <span className="text-black/70">
+                {command.slice(0, commandTyped)}
               </span>
-            </div>
-
-            {/* Terminal body */}
-            <div className="px-4 py-4 md:px-5 md:py-5 space-y-1">
-              {/* Command line */}
-              <div className="flex items-center gap-2 text-xs md:text-sm">
-                <span className="text-black/30 select-none">$</span>
-                <span className="text-black/70">
-                  {command.slice(0, commandTyped)}
-                </span>
-                {phase === "command" && (
-                  <span
-                    className="inline-block w-[6px] h-[14px] bg-black/60 ml-px"
-                    style={{ animation: "blink 0.8s step-end infinite" }}
-                  />
-                )}
-              </div>
-
-              {/* Integration lines */}
-              {lines.map((line, i) => {
-                if (line.state === "idle") return null;
-
-                const isDone = line.state === "done";
-                const displayName = isDone
-                  ? line.name
-                  : line.name.slice(0, line.typedChars);
-
-                const padded = displayName.padEnd(16, " ");
-
-                return (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 text-xs md:text-sm"
-                  >
-                    <span
-                      className={`select-none transition-colors duration-200 ${isDone ? "text-black/50" : "text-black/20"}`}
-                    >
-                      {isDone ? "✓" : "⠋"}
-                    </span>
-                    <span
-                      className="text-black/60 whitespace-pre"
-                      style={{ minWidth: "10ch" }}
-                    >
-                      {padded}
-                    </span>
-                    <span
-                      className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-black/35" : "text-black/15"}`}
-                    >
-                      {isDone ? "connected" : "connecting..."}
-                    </span>
-                  </div>
-                );
-              })}
-
-              {/* Final status */}
-              {allDone && (
-                <motion.div
-                  className="flex items-center gap-2 text-xs md:text-sm pt-2 mt-2 border-t border-black/[0.06]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, ease: [...EASE] }}
-                >
-                  <span className="text-black/30 select-none">$</span>
-                  <span className="text-black/40">
-                    {INTEGRATIONS.length} services ready
-                  </span>
-                  <span
-                    className="inline-block w-[6px] h-[14px] bg-black/40 ml-px"
-                    style={{ animation: "blink 0.8s step-end infinite" }}
-                  />
-                </motion.div>
+              {phase === "command" && (
+                <span
+                  className="inline-block w-[6px] h-[14px] bg-black/60 ml-px"
+                  style={{ animation: "blink 0.8s step-end infinite" }}
+                />
               )}
             </div>
+
+            {/* Integration lines */}
+            {lines.map((line, i) => {
+              if (line.state === "idle") return null;
+
+              const isDone = line.state === "done";
+              const displayName = isDone
+                ? line.name
+                : line.name.slice(0, line.typedChars);
+
+              const padded = displayName.padEnd(16, " ");
+
+              return (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 text-xs md:text-sm"
+                >
+                  <span
+                    className={`select-none transition-colors duration-200 ${isDone ? "text-[#28c840]" : "text-black/20"}`}
+                  >
+                    {isDone ? "✓" : "⠋"}
+                  </span>
+                  <span
+                    className="text-black/60 whitespace-pre"
+                    style={{ minWidth: "10ch" }}
+                  >
+                    {padded}
+                  </span>
+                  <span
+                    className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-black/35" : "text-black/15"}`}
+                  >
+                    {isDone ? "connected" : "connecting..."}
+                  </span>
+                </div>
+              );
+            })}
+
+            {/* Final status */}
+            {allDone && (
+              <motion.div
+                className="flex items-center gap-2 text-xs md:text-sm pt-3 mt-3 border-t border-black/[0.06]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, ease: [...EASE] }}
+              >
+                <span className="text-black/30 select-none">$</span>
+                <span className="text-black/40">
+                  {INTEGRATIONS.length} services ready
+                </span>
+                <span
+                  className="inline-block w-[6px] h-[14px] bg-black/40 ml-px"
+                  style={{ animation: "blink 0.8s step-end infinite" }}
+                />
+              </motion.div>
+            )}
           </div>
         </div>
-
-        {/* Right — Quote */}
-        <motion.div
-          className="flex flex-col justify-center p-6 md:p-10 border-t md:border-t-0 border-black/10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
-        >
-          <blockquote>
-            <p
-              className="font-heading leading-[1.25] text-black/80 mb-6"
-              style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)" }}
-            >
-              &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
-            </p>
-            <footer className="font-body text-xs md:text-sm text-black/35">
-              <cite className="not-italic">
-                — Jensen Huang
-              </cite>
-              <span className="block text-[10px] uppercase tracking-[0.15em] text-black/20 mt-1">
-                CEO NVIDIA
-              </span>
-            </footer>
-          </blockquote>
-
-          <div className="mt-8 pt-6 border-t border-black/10">
-            <p className="font-body text-xs leading-relaxed text-black/40 max-w-sm">
-              Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
-            </p>
-          </div>
-        </motion.div>
       </div>
+
+      {/* Right — Quote */}
+      <motion.div
+        className="bg-[#f8f8f7] rounded-2xl flex flex-col justify-center p-8 md:p-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
+      >
+        <blockquote>
+          <p
+            className="font-heading leading-[1.25] text-black/80 mb-6"
+            style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)" }}
+          >
+            &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
+          </p>
+          <footer className="font-body text-xs md:text-sm text-black/35">
+            <cite className="not-italic">
+              — Jensen Huang
+            </cite>
+            <span className="block text-[10px] uppercase tracking-[0.15em] text-black/20 mt-1">
+              CEO NVIDIA
+            </span>
+          </footer>
+        </blockquote>
+
+        <div className="mt-8 pt-6 border-t border-black/[0.06]">
+          <p className="font-body text-xs leading-relaxed text-black/40 max-w-sm">
+            Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
+          </p>
+        </div>
+      </motion.div>
 
       <style>{`
         @keyframes blink {
@@ -648,7 +652,9 @@ function Integrations() {
 export function AutomationSection() {
   const headlineRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const statementRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+
   const sectionInView = useInView(sectionRef, {
     once: true,
     margin: "-5% 0px",
@@ -660,9 +666,18 @@ export function AutomationSection() {
     offset: ["start 90%", "end 40%"],
   });
 
+  const { scrollYProgress: statementProgress } = useScroll({
+    target: statementRef,
+    offset: ["start 90%", "end 40%"],
+  });
+
   const headlineText =
     "Мы автоматизируем бизнес. Создаём AI-агентов. Под ключ.";
-  const words = headlineText.split(" ");
+  const headlineWords = headlineText.split(" ");
+
+  const statementText =
+    "Ваша команда занимается стратегией — рутину берёт на себя AI.";
+  const statementWords = statementText.split(" ");
 
   return (
     <motion.section
@@ -673,61 +688,90 @@ export function AutomationSection() {
       animate={sectionInView ? { opacity: 1 } : {}}
       transition={{ duration: 0.6, ease: [...EASE] }}
     >
-      {/* ── Headline ── */}
-      <div
-        ref={headlineRef}
-        className="px-6 py-20 md:px-10 md:py-28 border-t border-black"
-      >
-        <p
-          className="font-heading uppercase leading-[1.1] text-center max-w-5xl mx-auto"
-          style={{ fontSize: "clamp(1.75rem, 4.5vw, 4rem)" }}
+      <div className="max-w-6xl mx-auto px-5 md:px-10">
+        {/* ── Headline ── */}
+        <div
+          ref={headlineRef}
+          className="py-24 md:py-36 border-t border-black/10"
         >
-          {words.map((word, i) => (
-            <RevealWord
-              key={i}
-              word={word}
-              progress={scrollYProgress}
-              range={[i / words.length, (i + 1) / words.length]}
-            />
-          ))}
-        </p>
-      </div>
-
-      {/* ── Service cards (2×2) ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2">
-        {SERVICES.map((service, i) => (
-          <ServiceCard key={service.title} service={service} index={i} />
-        ))}
-      </div>
-
-      {/* ── Statement ── */}
-      <WordByWordBlock text="Ваша команда занимается стратегией — рутину берёт на себя AI." />
-
-      {/* ── How it works ── */}
-      <ProcessSteps />
-
-      {/* ── Trust numbers ── */}
-      <TrustNumbers />
-
-      {/* ── Integrations ── */}
-      <Integrations />
-
-      {/* ── CTA (own inView) ── */}
-      <div ref={ctaRef}>
-        <AnimatedDivider />
-        <motion.div
-          className="px-6 py-12 md:px-10 md:py-16 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, delay: 0.15, ease: [...EASE] }}
-        >
-          <a
-            href="mailto:hello@aibromotion.com"
-            className="inline-block font-heading text-sm md:text-base uppercase tracking-[0.1em] border border-black px-8 py-4 hover:bg-black hover:text-white transition-colors duration-300"
+          <p
+            className="font-heading uppercase leading-[1.1] text-center max-w-5xl mx-auto"
+            style={{ fontSize: "clamp(1.75rem, 4.5vw, 4rem)" }}
           >
-            Обсудить автоматизацию
-          </a>
-        </motion.div>
+            {headlineWords.map((word, i) => (
+              <RevealWord
+                key={i}
+                word={word}
+                progress={scrollYProgress}
+                range={[i / headlineWords.length, (i + 1) / headlineWords.length]}
+              />
+            ))}
+          </p>
+        </div>
+
+        {/* ── MacBook showcase ── */}
+        <div className="mb-24 md:mb-32">
+          <MacBookShowcase />
+        </div>
+
+        {/* ── Service cards (2×2 grid) ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
+          {SERVICES.map((service, i) => (
+            <ServiceCard key={service.title} service={service} index={i} />
+          ))}
+        </div>
+
+        {/* ── Statement ── */}
+        <div ref={statementRef} className="py-16 md:py-24">
+          <p
+            className="font-heading uppercase leading-[1.1] max-w-5xl mx-auto text-center"
+            style={{ fontSize: "clamp(1.5rem, 4vw, 3.75rem)" }}
+          >
+            {statementWords.map((word, i) => (
+              <RevealWord
+                key={i}
+                word={word}
+                progress={statementProgress}
+                range={[
+                  i / statementWords.length,
+                  (i + 1) / statementWords.length,
+                ]}
+              />
+            ))}
+          </p>
+        </div>
+
+        {/* ── How it works ── */}
+        <div className="mb-20">
+          <ProcessSteps />
+        </div>
+
+        {/* ── Trust numbers ── */}
+        <div className="mb-20">
+          <TrustNumbers />
+        </div>
+
+        {/* ── Integrations ── */}
+        <div className="mb-20">
+          <Integrations />
+        </div>
+
+        {/* ── CTA ── */}
+        <div ref={ctaRef} className="pb-20">
+          <motion.div
+            className="text-center py-14 md:py-20"
+            initial={{ opacity: 0, y: 30 }}
+            animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.15, ease: [...EASE] }}
+          >
+            <a
+              href="mailto:hello@aibromotion.com"
+              className="inline-block font-heading text-sm md:text-base uppercase tracking-[0.08em] bg-black text-white px-10 py-5 rounded-full hover:bg-black/85 transition-colors duration-300"
+            >
+              Обсудить автоматизацию
+            </a>
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   );
