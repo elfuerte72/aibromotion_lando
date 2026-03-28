@@ -1,5 +1,11 @@
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  useSpring,
+} from "framer-motion";
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -68,204 +74,9 @@ const TRUST_NUMBERS = [
   { value: 14, suffix: " дней", label: "среднее время до запуска" },
 ];
 
-/* ── Circuit board SVG background ─────────────────────── */
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-function CircuitBoardBg() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-      {/* Ambient glow orbs */}
-      <div
-        className="absolute -top-[10%] right-[15%] w-[500px] h-[400px] rounded-full"
-        style={{
-          background: "radial-gradient(ellipse, rgba(70,100,220,0.1) 0%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
-      />
-      <div
-        className="absolute top-[40%] -left-[5%] w-[450px] h-[350px] rounded-full"
-        style={{
-          background: "radial-gradient(ellipse, rgba(50,70,180,0.08) 0%, transparent 70%)",
-          filter: "blur(100px)",
-        }}
-      />
-      <div
-        className="absolute bottom-[15%] right-[20%] w-[400px] h-[300px] rounded-full"
-        style={{
-          background: "radial-gradient(ellipse, rgba(80,120,255,0.06) 0%, transparent 70%)",
-          filter: "blur(70px)",
-        }}
-      />
-
-      {/* Circuit board pattern */}
-      <svg
-        className="absolute inset-0 w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ opacity: 0.12 }}
-      >
-        <defs>
-          {/* Small grid pattern */}
-          <pattern id="cb-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <rect width="40" height="40" fill="none" />
-            <rect x="0" y="0" width="1" height="1" rx="0.5" fill="rgba(140,170,255,0.5)" />
-          </pattern>
-
-          {/* Chip pattern */}
-          <pattern id="cb-chips" width="320" height="280" patternUnits="userSpaceOnUse">
-            <rect width="320" height="280" fill="none" />
-            {/* Horizontal traces */}
-            <line x1="0" y1="40" x2="80" y2="40" stroke="rgba(140,170,255,0.4)" strokeWidth="0.5" />
-            <line x1="120" y1="40" x2="320" y2="40" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="0" y1="140" x2="60" y2="140" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="200" y1="140" x2="320" y2="140" stroke="rgba(140,170,255,0.4)" strokeWidth="0.5" />
-            <line x1="0" y1="240" x2="140" y2="240" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="180" y1="240" x2="320" y2="240" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-
-            {/* Vertical traces */}
-            <line x1="80" y1="0" x2="80" y2="60" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="160" y1="80" x2="160" y2="200" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="240" y1="0" x2="240" y2="80" stroke="rgba(140,170,255,0.35)" strokeWidth="0.5" />
-            <line x1="240" y1="200" x2="240" y2="280" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-
-            {/* Angled traces */}
-            <line x1="80" y1="40" x2="120" y2="80" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="60" y1="140" x2="100" y2="180" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="200" y1="140" x2="160" y2="180" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-
-            {/* Junction dots */}
-            <circle cx="80" cy="40" r="2" fill="rgba(140,170,255,0.5)" />
-            <circle cx="120" cy="40" r="1.5" fill="rgba(140,170,255,0.4)" />
-            <circle cx="240" cy="80" r="2" fill="rgba(140,170,255,0.4)" />
-            <circle cx="160" cy="80" r="1.5" fill="rgba(140,170,255,0.3)" />
-            <circle cx="60" cy="140" r="2" fill="rgba(140,170,255,0.4)" />
-            <circle cx="200" cy="140" r="2" fill="rgba(140,170,255,0.5)" />
-            <circle cx="160" cy="200" r="1.5" fill="rgba(140,170,255,0.35)" />
-            <circle cx="100" cy="180" r="1.5" fill="rgba(140,170,255,0.3)" />
-
-            {/* Small chip rectangles */}
-            <rect x="90" y="95" width="24" height="14" rx="2" stroke="rgba(140,170,255,0.35)" strokeWidth="0.5" fill="none" />
-            <rect x="92" y="97" width="20" height="10" rx="1" fill="rgba(140,170,255,0.06)" />
-
-            <rect x="220" y="170" width="20" height="12" rx="2" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" fill="none" />
-            <rect x="222" y="172" width="16" height="8" rx="1" fill="rgba(140,170,255,0.05)" />
-
-            <rect x="30" y="200" width="28" height="16" rx="2" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" fill="none" />
-            {/* Chip pins */}
-            <line x1="36" y1="198" x2="36" y2="200" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="44" y1="198" x2="44" y2="200" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="52" y1="198" x2="52" y2="200" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="36" y1="216" x2="36" y2="218" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="44" y1="216" x2="44" y2="218" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-            <line x1="52" y1="216" x2="52" y2="218" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" />
-
-            {/* IC block top-right */}
-            <rect x="260" y="20" width="40" height="30" rx="3" stroke="rgba(140,170,255,0.3)" strokeWidth="0.5" fill="none" />
-            <line x1="266" y1="18" x2="266" y2="20" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="274" y1="18" x2="274" y2="20" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="282" y1="18" x2="282" y2="20" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="290" y1="18" x2="290" y2="20" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="266" y1="50" x2="266" y2="52" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="274" y1="50" x2="274" y2="52" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="282" y1="50" x2="282" y2="52" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-            <line x1="290" y1="50" x2="290" y2="52" stroke="rgba(140,170,255,0.25)" strokeWidth="0.5" />
-
-            {/* Small dot clusters */}
-            <circle cx="140" cy="250" r="1" fill="rgba(140,170,255,0.3)" />
-            <circle cx="148" cy="250" r="1" fill="rgba(140,170,255,0.3)" />
-            <circle cx="140" cy="258" r="1" fill="rgba(140,170,255,0.3)" />
-            <circle cx="148" cy="258" r="1" fill="rgba(140,170,255,0.3)" />
-
-            <circle cx="280" cy="120" r="1" fill="rgba(140,170,255,0.25)" />
-            <circle cx="288" cy="120" r="1" fill="rgba(140,170,255,0.25)" />
-            <circle cx="296" cy="120" r="1" fill="rgba(140,170,255,0.25)" />
-            <circle cx="280" cy="128" r="1" fill="rgba(140,170,255,0.25)" />
-            <circle cx="288" cy="128" r="1" fill="rgba(140,170,255,0.25)" />
-            <circle cx="296" cy="128" r="1" fill="rgba(140,170,255,0.25)" />
-          </pattern>
-        </defs>
-
-        <rect width="100%" height="100%" fill="url(#cb-grid)" />
-        <rect width="100%" height="100%" fill="url(#cb-chips)" />
-      </svg>
-    </div>
-  );
-}
-
-/* ── Dashboard chip (AuthKit style) ───────────────────── */
-
-const MODULES = [
-  { label: "Заявки", icon: "📥" },
-  { label: "AI-агент", icon: "🤖" },
-  { label: "Аналитика", icon: "📊" },
-  { label: "Интеграции", icon: "🔗" },
-  { label: "Отчёты", icon: "📋" },
-  { label: "Поддержка", icon: "💬" },
-];
-
-function DashboardChip() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
-
-  return (
-    <div ref={ref} className="flex justify-center px-6 py-14 md:py-20">
-      <motion.div
-        className="relative w-full max-w-2xl"
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {/* Outer glow */}
-        <div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
-          style={{
-            background: "radial-gradient(ellipse at center, rgba(80,110,220,0.12) 0%, transparent 70%)",
-            filter: "blur(40px)",
-            transform: "scale(1.5)",
-          }}
-        />
-
-        {/* Main panel */}
-        <div
-          className="relative rounded-2xl border border-white/[0.06] overflow-hidden"
-          style={{ background: "linear-gradient(180deg, rgba(17,22,56,0.7) 0%, rgba(10,14,39,0.85) 100%)" }}
-        >
-          {/* Top bar with subtle glow line */}
-          <div
-            className="h-px w-full"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(100,140,255,0.2), transparent)" }}
-          />
-
-          {/* Module grid */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-px bg-white/[0.03]">
-            {MODULES.map((mod, i) => (
-              <motion.div
-                key={mod.label}
-                className="flex flex-col items-center justify-center py-5 md:py-7 bg-[#0a0e27]/60"
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 + i * 0.08 }}
-              >
-                <span className="text-lg md:text-xl mb-2 grayscale opacity-50">{mod.icon}</span>
-                <span className="font-body text-[9px] md:text-[10px] uppercase tracking-[0.1em] text-white/30">
-                  {mod.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Central status bar */}
-          <div className="flex items-center justify-center gap-3 py-3 border-t border-white/[0.04]">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400/40" />
-            <span className="font-body text-[10px] uppercase tracking-[0.15em] text-white/20">
-              all systems operational
-            </span>
-          </div>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-/* ── Animated counter ─────────────────────────────────── */
+/* ── Animated counter (delayed start) ─────────────────── */
 
 function AnimatedCounter({
   value,
@@ -307,7 +118,7 @@ function AnimatedCounter({
         ref={ref}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={isInView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.8, delay, ease: [...EASE] }}
       >
         ∞
       </motion.span>
@@ -321,13 +132,80 @@ function AnimatedCounter({
   );
 }
 
-/* ── Divider ──────────────────────────────────────────── */
+/* ── Word-by-word reveal ──────────────────────────────── */
 
-function Divider() {
-  return <div className="h-px bg-white/[0.06]" />;
+function RevealWord({
+  word,
+  progress,
+  range,
+}: {
+  word: string;
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+  range: [number, number];
+}) {
+  const opacity = useTransform(progress, range, [0.12, 1]);
+  const color = useTransform(progress, range, [
+    "rgba(0,0,0,0.12)",
+    "rgba(0,0,0,1)",
+  ]);
+
+  return (
+    <motion.span
+      style={{ opacity, color }}
+      className="inline-block mr-[0.3em] transition-none"
+    >
+      {word}
+    </motion.span>
+  );
 }
 
-/* ── Service card ─────────────────────────────────────── */
+function WordByWordBlock({ text }: { text: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 90%", "end 40%"],
+  });
+  const words = text.split(" ");
+
+  return (
+    <div ref={ref} className="px-6 py-16 md:px-10 md:py-24">
+      <p
+        className="font-heading uppercase leading-[1.1] max-w-5xl mx-auto text-center"
+        style={{ fontSize: "clamp(1.5rem, 4vw, 3.75rem)" }}
+      >
+        {words.map((word, i) => (
+          <RevealWord
+            key={i}
+            word={word}
+            progress={scrollYProgress}
+            range={[i / words.length, (i + 1) / words.length]}
+          />
+        ))}
+      </p>
+    </div>
+  );
+}
+
+/* ── Animated divider ─────────────────────────────────── */
+
+function AnimatedDivider() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+
+  return (
+    <div ref={ref} className="overflow-hidden">
+      <motion.div
+        className="h-px bg-black/10"
+        initial={{ scaleX: 0 }}
+        animate={isInView ? { scaleX: 1 } : {}}
+        transition={{ duration: 1.2, ease: [...EASE] }}
+        style={{ transformOrigin: "left" }}
+      />
+    </div>
+  );
+}
+
+/* ── Service card (alternating direction) ─────────────── */
 
 function ServiceCard({
   service,
@@ -336,35 +214,50 @@ function ServiceCard({
   service: (typeof SERVICES)[number];
   index: number;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+
   const numericMatch = service.metric.match(/\d+/);
   const numericValue = numericMatch ? parseInt(numericMatch[0]) : 0;
   const suffix = service.metric.replace(/\d+/, "");
   const isCustom = "isCustomMetric" in service && service.isCustomMetric;
+
   const isEven = index % 2 === 0;
+  // Alternate: even cards slide from left, odd from right
+  const xOffset = isEven ? -30 : 30;
 
   return (
-    <div
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: xOffset }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{
+        duration: 0.9,
+        delay: index * 0.08,
+        ease: [...EASE],
+      }}
       className={`
         flex flex-col justify-between p-6 md:p-10 min-h-[300px] md:min-h-[380px]
-        border-b border-white/[0.06]
-        ${isEven ? "md:border-r md:border-r-white/[0.06]" : ""}
+        border-b border-black/10
+        ${isEven ? "md:border-r" : ""}
       `}
     >
       <div>
         <h3
-          className="font-heading uppercase leading-[1.15] mb-4 text-white/90"
+          className="font-heading uppercase leading-[1.15] mb-4"
           style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}
         >
           {service.title}
         </h3>
-        <p className="font-body text-xs md:text-sm leading-relaxed text-white/40 max-w-md">
+        <p className="font-body text-xs md:text-sm leading-relaxed text-black/50 max-w-md">
           {service.desc}
         </p>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-white/[0.06]">
+      {/* Metric — delayed after card appears */}
+      <div className="mt-8 pt-6 border-t border-black/10">
         <span
-          className="font-heading leading-none block text-blue-300/80"
+          className="font-heading leading-none block text-black"
           style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
         >
           <AnimatedCounter
@@ -374,59 +267,109 @@ function ServiceCard({
             delay={0.4 + index * 0.08}
           />
         </span>
-        <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-white/30 mt-1 block">
+        <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/40 mt-1 block">
           {service.metricLabel}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-/* ── Process steps ────────────────────────────────────── */
+/* ── Process steps with connecting line ───────────────── */
 
 function ProcessSteps() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+
   return (
-    <div>
-      <Divider />
-      <div className="grid grid-cols-1 md:grid-cols-3">
+    <div ref={ref}>
+      <AnimatedDivider />
+      <div className="grid grid-cols-1 md:grid-cols-3 relative">
+        {/* Connecting line (desktop only) */}
+        <motion.div
+          className="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-px bg-black/[0.06] -translate-y-1/2 pointer-events-none"
+          initial={{ scaleX: 0 }}
+          animate={isInView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.4, delay: 0.3, ease: [...EASE] }}
+          style={{ transformOrigin: "left" }}
+        />
+
         {STEPS.map((step, i) => (
-          <div
+          <motion.div
             key={step.num}
-            className={`relative p-6 md:p-10 ${i < 2 ? "border-b md:border-b-0 md:border-r border-white/[0.06]" : ""}`}
+            initial={{ opacity: 0, clipPath: "inset(15% 15% 15% 15%)" }}
+            animate={
+              isInView
+                ? { opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }
+                : {}
+            }
+            transition={{
+              duration: 0.9,
+              delay: i * 0.2,
+              ease: [...EASE],
+            }}
+            className={`relative p-6 md:p-10 ${i < 2 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}
           >
-            <span className="font-body text-[10px] uppercase tracking-[0.2em] text-blue-400/30">
+            {/* Step dot */}
+            <motion.div
+              className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black/20"
+              initial={{ scale: 0 }}
+              animate={isInView ? { scale: 1 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: 0.5 + i * 0.2,
+                ease: [...EASE],
+              }}
+            />
+            <span className="font-body text-[10px] uppercase tracking-[0.2em] text-black/25">
               Шаг {step.num}
             </span>
             <h4
-              className="font-heading uppercase leading-[1.15] mt-3 mb-3 text-white/90"
+              className="font-heading uppercase leading-[1.15] mt-3 mb-3"
               style={{ fontSize: "clamp(1.1rem, 2vw, 1.5rem)" }}
             >
               {step.title}
             </h4>
-            <p className="font-body text-xs md:text-sm leading-relaxed text-white/40 max-w-xs">
+            <p className="font-body text-xs md:text-sm leading-relaxed text-black/40 max-w-xs">
               {step.desc}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
   );
 }
 
-/* ── Trust numbers ────────────────────────────────────── */
+/* ── Trust numbers (scale entrance + parallax) ────────── */
 
 function TrustNumbers() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["3%", "-3%"]);
+
   return (
-    <div>
-      <Divider />
-      <div className="grid grid-cols-1 md:grid-cols-3">
+    <div ref={ref}>
+      <AnimatedDivider />
+      <motion.div style={{ y }} className="grid grid-cols-1 md:grid-cols-3">
         {TRUST_NUMBERS.map((item, i) => (
-          <div
+          <motion.div
             key={item.label}
-            className={`px-6 py-10 md:px-10 md:py-14 text-center ${i < 2 ? "border-b md:border-b-0 md:border-r border-white/[0.06]" : ""}`}
+            initial={{ opacity: 0, scale: 0.88 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{
+              duration: 0.9,
+              delay: i * 0.15,
+              ease: [...EASE],
+            }}
+            className={`px-6 py-10 md:px-10 md:py-14 text-center ${i < 2 ? "border-b md:border-b-0 md:border-r border-black/10" : ""}`}
           >
             <span
-              className="font-heading leading-none block text-white/90"
+              className="font-heading leading-none block text-black"
               style={{ fontSize: "clamp(2.5rem, 5vw, 4.5rem)" }}
             >
               <AnimatedCounter
@@ -435,17 +378,17 @@ function TrustNumbers() {
                 delay={0.3 + i * 0.15}
               />
             </span>
-            <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-white/30 mt-2 block">
+            <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.15em] text-black/35 mt-2 block">
               {item.label}
             </span>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
 
-/* ── Terminal ─────────────────────────────────────────── */
+/* ── Integrations — Terminal Log ───────────────────────── */
 
 type LineState = "idle" | "typing" | "done";
 
@@ -566,24 +509,20 @@ function Integrations() {
 
   return (
     <div ref={ref}>
-      <Divider />
+      <AnimatedDivider />
       <div className="grid grid-cols-1 md:grid-cols-2">
         {/* Left — Terminal */}
-        <div className="p-6 md:p-10 md:border-r border-white/[0.06]">
+        <div className="p-6 md:p-10 md:border-r border-black/10">
           <div
-            className="w-full rounded-lg border border-white/[0.06] overflow-hidden"
-            style={{
-              fontFamily: "var(--font-body)",
-              background: "rgba(10,14,39,0.6)",
-              backdropFilter: "blur(8px)",
-            }}
+            className="w-full rounded-lg border border-black/10 overflow-hidden"
+            style={{ fontFamily: "var(--font-body)" }}
           >
             {/* Terminal title bar */}
-            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.02]">
-              <span className="w-2.5 h-2.5 rounded-full bg-white/[0.08]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-white/[0.08]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-white/[0.08]" />
-              <span className="text-[10px] uppercase tracking-[0.15em] text-white/20 ml-2">
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b border-black/10 bg-black/[0.02]">
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="w-2.5 h-2.5 rounded-full bg-black/10" />
+              <span className="text-[10px] uppercase tracking-[0.15em] text-black/25 ml-2">
                 integrations
               </span>
             </div>
@@ -592,13 +531,13 @@ function Integrations() {
             <div className="px-4 py-4 md:px-5 md:py-5 space-y-1">
               {/* Command line */}
               <div className="flex items-center gap-2 text-xs md:text-sm">
-                <span className="text-blue-400/40 select-none">$</span>
-                <span className="text-blue-300/60">
+                <span className="text-black/30 select-none">$</span>
+                <span className="text-black/70">
                   {command.slice(0, commandTyped)}
                 </span>
                 {phase === "command" && (
                   <span
-                    className="inline-block w-[6px] h-[14px] bg-blue-300/50 ml-px"
+                    className="inline-block w-[6px] h-[14px] bg-black/60 ml-px"
                     style={{ animation: "blink 0.8s step-end infinite" }}
                   />
                 )}
@@ -621,18 +560,18 @@ function Integrations() {
                     className="flex items-center gap-2 text-xs md:text-sm"
                   >
                     <span
-                      className={`select-none transition-colors duration-200 ${isDone ? "text-blue-400/50" : "text-white/20"}`}
+                      className={`select-none transition-colors duration-200 ${isDone ? "text-black/50" : "text-black/20"}`}
                     >
                       {isDone ? "✓" : "⠋"}
                     </span>
                     <span
-                      className="text-white/50 whitespace-pre"
+                      className="text-black/60 whitespace-pre"
                       style={{ minWidth: "10ch" }}
                     >
                       {padded}
                     </span>
                     <span
-                      className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-blue-400/30" : "text-white/15"}`}
+                      className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-black/35" : "text-black/15"}`}
                     >
                       {isDone ? "connected" : "connecting..."}
                     </span>
@@ -643,17 +582,17 @@ function Integrations() {
               {/* Final status */}
               {allDone && (
                 <motion.div
-                  className="flex items-center gap-2 text-xs md:text-sm pt-2 mt-2 border-t border-white/[0.04]"
+                  className="flex items-center gap-2 text-xs md:text-sm pt-2 mt-2 border-t border-black/[0.06]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.5, ease: [...EASE] }}
                 >
-                  <span className="text-blue-400/30 select-none">$</span>
-                  <span className="text-blue-300/40">
+                  <span className="text-black/30 select-none">$</span>
+                  <span className="text-black/40">
                     {INTEGRATIONS.length} services ready
                   </span>
                   <span
-                    className="inline-block w-[6px] h-[14px] bg-blue-300/40 ml-px"
+                    className="inline-block w-[6px] h-[14px] bg-black/40 ml-px"
                     style={{ animation: "blink 0.8s step-end infinite" }}
                   />
                 </motion.div>
@@ -663,30 +602,35 @@ function Integrations() {
         </div>
 
         {/* Right — Quote */}
-        <div className="flex flex-col justify-center p-6 md:p-10 border-t md:border-t-0 border-white/[0.06]">
+        <motion.div
+          className="flex flex-col justify-center p-6 md:p-10 border-t md:border-t-0 border-black/10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
+        >
           <blockquote>
             <p
-              className="font-heading leading-[1.25] text-white/80 mb-6"
+              className="font-heading leading-[1.25] text-black/80 mb-6"
               style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.6rem)" }}
             >
               &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
             </p>
-            <footer className="font-body text-xs md:text-sm text-white/25">
+            <footer className="font-body text-xs md:text-sm text-black/35">
               <cite className="not-italic">
                 — Jensen Huang
               </cite>
-              <span className="block text-[10px] uppercase tracking-[0.15em] text-white/15 mt-1">
+              <span className="block text-[10px] uppercase tracking-[0.15em] text-black/20 mt-1">
                 CEO NVIDIA
               </span>
             </footer>
           </blockquote>
 
-          <div className="mt-8 pt-6 border-t border-white/[0.06]">
-            <p className="font-body text-xs leading-relaxed text-white/35 max-w-sm">
+          <div className="mt-8 pt-6 border-t border-black/10">
+            <p className="font-body text-xs leading-relaxed text-black/40 max-w-sm">
               Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <style>{`
@@ -699,54 +643,65 @@ function Integrations() {
   );
 }
 
-/* ── Statement block ──────────────────────────────────── */
-
-function StatementBlock({ text }: { text: string }) {
-  return (
-    <div className="px-6 py-16 md:px-10 md:py-24">
-      <p
-        className="font-heading uppercase leading-[1.1] max-w-5xl mx-auto text-center text-white/80"
-        style={{ fontSize: "clamp(1.5rem, 4vw, 3.75rem)" }}
-      >
-        {text}
-      </p>
-    </div>
-  );
-}
-
 /* ── Main section ─────────────────────────────────────── */
 
 export function AutomationSection() {
-  return (
-    <section
-      id="automation"
-      className="relative"
-      style={{ backgroundColor: "var(--color-deep-navy)" }}
-    >
-      <CircuitBoardBg />
+  const headlineRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const sectionInView = useInView(sectionRef, {
+    once: true,
+    margin: "-5% 0px",
+  });
+  const ctaInView = useInView(ctaRef, { once: true, margin: "-10% 0px" });
 
-      {/* ── Headline (minimal top padding — flows from SectionTransition) ── */}
-      <div className="relative px-6 pt-4 pb-6 md:px-10 md:pt-6 md:pb-10">
+  const { scrollYProgress } = useScroll({
+    target: headlineRef,
+    offset: ["start 90%", "end 40%"],
+  });
+
+  const headlineText =
+    "Мы автоматизируем бизнес. Создаём AI-агентов. Под ключ.";
+  const words = headlineText.split(" ");
+
+  return (
+    <motion.section
+      ref={sectionRef}
+      id="automation"
+      className="bg-white"
+      initial={{ opacity: 0 }}
+      animate={sectionInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.6, ease: [...EASE] }}
+    >
+      {/* ── Headline ── */}
+      <div
+        ref={headlineRef}
+        className="px-6 py-20 md:px-10 md:py-28 border-t border-black"
+      >
         <p
-          className="font-heading uppercase leading-[1.1] text-center max-w-5xl mx-auto text-white/90"
+          className="font-heading uppercase leading-[1.1] text-center max-w-5xl mx-auto"
           style={{ fontSize: "clamp(1.75rem, 4.5vw, 4rem)" }}
         >
-          Мы автоматизируем бизнес. Создаём AI-агентов. Под ключ.
+          {words.map((word, i) => (
+            <RevealWord
+              key={i}
+              word={word}
+              progress={scrollYProgress}
+              range={[i / words.length, (i + 1) / words.length]}
+            />
+          ))}
         </p>
       </div>
 
-      {/* ── Dashboard chip (AuthKit style) ── */}
-      <DashboardChip />
-
       {/* ── Service cards (2×2) ── */}
-      <div className="relative grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2">
         {SERVICES.map((service, i) => (
           <ServiceCard key={service.title} service={service} index={i} />
         ))}
       </div>
 
       {/* ── Statement ── */}
-      <StatementBlock text="Ваша команда занимается стратегией — рутину берёт на себя AI." />
+      <WordByWordBlock text="Ваша команда занимается стратегией — рутину берёт на себя AI." />
 
       {/* ── How it works ── */}
       <ProcessSteps />
@@ -757,18 +712,23 @@ export function AutomationSection() {
       {/* ── Integrations ── */}
       <Integrations />
 
-      {/* ── CTA ── */}
-      <div>
-        <Divider />
-        <div className="relative px-6 py-12 md:px-10 md:py-16 text-center">
+      {/* ── CTA (own inView) ── */}
+      <div ref={ctaRef}>
+        <AnimatedDivider />
+        <motion.div
+          className="px-6 py-12 md:px-10 md:py-16 text-center"
+          initial={{ opacity: 0, y: 30 }}
+          animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.15, ease: [...EASE] }}
+        >
           <a
             href="mailto:hello@aibromotion.com"
-            className="inline-block font-heading text-sm md:text-base uppercase tracking-[0.1em] text-white/80 border border-white/20 px-8 py-4 hover:bg-white/10 transition-colors duration-300"
+            className="inline-block font-heading text-sm md:text-base uppercase tracking-[0.1em] border border-black px-8 py-4 hover:bg-black hover:text-white transition-colors duration-300"
           >
             Обсудить автоматизацию
           </a>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
