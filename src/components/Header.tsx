@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -6,14 +6,8 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const RAINBOW = ["#FF0000", "#FF7700", "#FFDD00", "#00CC00", "#0088FF", "#5500FF", "#CC00CC"];
 const LOGO = "AIBROMOTION";
 
-const STATS = [
-  { value: 150, suffix: "+", label: "Процессов автоматизировано" },
-  { value: 500, suffix: "+", label: "Единиц контента создано" },
-  { value: 40, suffix: "+", label: "Бизнесов усилены с AI" },
-  { value: 10000, suffix: "+", label: "Часов сэкономлено клиентам" },
-];
-
-const SCRAMBLE_CHARS = "0123456789#$%&@!?";
+const TYPEWRITER_WORDS = ["Продакшен.", "Маркетинг.", "Автоматизация.", "AI-агенты."];
+const FINAL_TAGLINE = "От продакшена до полной автоматизации бизнеса";
 
 function randomColor() {
   return RAINBOW[Math.floor(Math.random() * RAINBOW.length)];
@@ -29,101 +23,66 @@ function getLetterY(i: number, hoveredIndex: number | null): number {
 
 const springTransition = { type: "spring" as const, stiffness: 400, damping: 15, mass: 0.8 };
 
-function useScrambleNumber(target: string, delay: number, active: boolean) {
-  const [display, setDisplay] = useState(target.replace(/[^\s]/g, " "));
-  const raf = useRef(0);
+function useTypewriterSequence(
+  words: string[],
+  active: boolean,
+  initialDelay: number,
+) {
+  const [display, setDisplay] = useState("");
+  const [isDone, setIsDone] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    if (!active) { setDisplay(target.replace(/[^\s]/g, " ")); return; }
+    if (!active) return;
 
-    const timeout = setTimeout(() => {
-      const chars = target.split("");
-      const settled = new Array(chars.length).fill(false);
-      const scrambleDuration = 800;
-      const settleStagger = scrambleDuration / chars.length;
-      const t0 = performance.now();
+    const TYPE_SPEED = 50;
+    const DELETE_SPEED = 30;
+    const PAUSE_AFTER_TYPE = 900;
+    const PAUSE_AFTER_DELETE = 200;
 
-      const tick = (now: number) => {
-        const elapsed = now - t0;
-        const result: string[] = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
+    let t = initialDelay;
 
-        for (let i = 0; i < chars.length; i++) {
-          const settleAt = i * settleStagger;
-          if (chars[i] === " " || chars[i] === "," || chars[i] === ".") {
-            result.push(chars[i]);
-            settled[i] = true;
-          } else if (elapsed > settleAt + 300) {
-            result.push(chars[i]);
-            settled[i] = true;
-          } else {
-            result.push(SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]);
-          }
-        }
+    timeouts.push(setTimeout(() => setIsTyping(true), initialDelay));
 
-        setDisplay(result.join(""));
-        if (!settled.every(Boolean)) {
-          raf.current = requestAnimationFrame(tick);
-        }
-      };
-      raf.current = requestAnimationFrame(tick);
-    }, delay);
+    for (const word of words) {
+      for (let i = 0; i <= word.length; i++) {
+        const text = word.slice(0, i);
+        timeouts.push(setTimeout(() => setDisplay(text), t));
+        t += TYPE_SPEED;
+      }
+      t += PAUSE_AFTER_TYPE;
+      for (let i = word.length; i >= 0; i--) {
+        const text = word.slice(0, i);
+        timeouts.push(setTimeout(() => setDisplay(text), t));
+        t += DELETE_SPEED;
+      }
+      t += PAUSE_AFTER_DELETE;
+    }
 
-    return () => { clearTimeout(timeout); cancelAnimationFrame(raf.current); };
-  }, [active, target, delay]);
+    timeouts.push(
+      setTimeout(() => {
+        setIsTyping(false);
+        setIsDone(true);
+      }, t),
+    );
 
-  return display;
-}
+    return () => timeouts.forEach(clearTimeout);
+  }, [active, words, initialDelay]);
 
-function formatStatValue(value: number): string {
-  if (value >= 10000) return `${Math.round(value / 1000)}K`;
-  if (value >= 1000) return `${(value / 1000).toFixed(1).replace(/\.0$/, "")}K`;
-  return `${value}`;
-}
-
-function StatItem({ stat, index, active }: {
-  stat: typeof STATS[number];
-  index: number;
-  active: boolean;
-}) {
-  const finalText = formatStatValue(stat.value) + stat.suffix;
-  const scrambled = useScrambleNumber(finalText, 1800 + index * 200, active);
-
-  return (
-    <div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={active ? { opacity: 1 } : {}}
-        transition={{ duration: 0.3, delay: 1.6 + index * 0.15 }}
-      >
-        <span
-          className="font-body text-2xl md:text-4xl tracking-tight text-dark block"
-          style={{ fontVariantNumeric: "tabular-nums", fontWeight: 300 }}
-        >
-          {scrambled}
-        </span>
-      </motion.div>
-      <motion.div
-        className="mt-1 overflow-hidden"
-        initial={{ clipPath: "inset(0 100% 0 0)" }}
-        animate={active ? { clipPath: "inset(0 0% 0 0)" } : {}}
-        transition={{
-          duration: 0.7,
-          delay: 2.0 + index * 0.15,
-          ease: [0.76, 0, 0.24, 1],
-        }}
-      >
-        <span className="font-body text-[9px] md:text-[11px] uppercase tracking-[0.15em] text-dark/40">
-          {stat.label}
-        </span>
-      </motion.div>
-    </div>
-  );
+  return { display, isDone, isTyping };
 }
 
 export function Header() {
   const [ready, setReady] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [colors, setColors] = useState<Record<number, string>>({});
+
+  const { display, isDone, isTyping } = useTypewriterSequence(
+    TYPEWRITER_WORDS,
+    ready,
+    1500,
+  );
 
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 200);
@@ -154,7 +113,8 @@ export function Header() {
             fontSize: "clamp(3rem, 12vw, 12rem)",
             opacity: ready ? 1 : 0,
             transform: ready ? "scale(1)" : "scale(0.85)",
-            transition: "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+            transition:
+              "opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
           {LOGO.split("").map((char, i) => {
@@ -192,47 +152,57 @@ export function Header() {
         </h1>
       </div>
 
-      {/* ── Stats + Quote ── */}
-      <div className="px-6 md:px-16 lg:px-24 pb-10 md:pb-16">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-20 items-end">
-          {/* Stats 2×2 */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-            {STATS.map((stat, i) => (
-              <StatItem key={stat.label} stat={stat} index={i} active={ready} />
-            ))}
-          </div>
+      {/* ── Typewriter → Tagline ── */}
+      <div className="px-6 md:px-16 lg:px-24 pb-12 md:pb-20 text-center">
+        <div className="relative min-h-[3rem] md:min-h-[4rem] flex items-center justify-center">
+          {/* Cycling words */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center"
+            animate={{ opacity: isDone ? 0 : 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <span className="font-body text-xl md:text-3xl lg:text-4xl text-dark/50 tracking-tight">
+              {display}
+              {isTyping && (
+                <motion.span
+                  className="inline-block w-[2px] h-[1.1em] bg-dark/40 ml-0.5 align-middle"
+                  animate={{ opacity: [1, 0] }}
+                  transition={{
+                    duration: 0.53,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                />
+              )}
+            </span>
+          </motion.div>
 
-          {/* Quote */}
-          <div className="flex flex-col max-w-lg">
+          {/* Final tagline */}
+          <motion.div
+            className="flex items-center gap-4 md:gap-6"
+            initial={{ opacity: 0, y: 6 }}
+            animate={isDone ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+          >
             <motion.div
-              className="h-px bg-dark/15"
-              initial={{ scaleX: 0, transformOrigin: "left" }}
-              animate={ready ? { scaleX: 1 } : {}}
-              transition={{ duration: 0.9, delay: 1.0, ease: EASE }}
-            />
-            <motion.div
-              className="py-5 md:py-6"
-              initial={{ clipPath: "inset(0 100% 0 0)" }}
-              animate={ready ? { clipPath: "inset(0 0% 0 0)" } : {}}
-              transition={{ duration: 1, delay: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            >
-              <p
-                className="font-script text-dark/90"
-                style={{ fontSize: "clamp(1.5rem, 3.5vw, 3rem)" }}
-              >
-                Мы создаём невозможное.
-              </p>
-              <p className="font-body text-sm md:text-base text-dark/50 mt-2 leading-relaxed">
-                AI и motion design объединяются, чтобы оживить любую идею.
-              </p>
-            </motion.div>
-            <motion.div
-              className="h-px bg-dark/15"
+              className="hidden md:block h-px w-12 bg-dark/20"
               initial={{ scaleX: 0, transformOrigin: "right" }}
-              animate={ready ? { scaleX: 1 } : {}}
-              transition={{ duration: 0.9, delay: 1.6, ease: EASE }}
+              animate={isDone ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
             />
-          </div>
+            <p
+              className="font-body text-dark/60 uppercase tracking-[0.15em]"
+              style={{ fontSize: "clamp(0.7rem, 1.6vw, 1rem)" }}
+            >
+              {FINAL_TAGLINE}
+            </p>
+            <motion.div
+              className="hidden md:block h-px w-12 bg-dark/20"
+              initial={{ scaleX: 0, transformOrigin: "left" }}
+              animate={isDone ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+            />
+          </motion.div>
         </div>
       </div>
     </header>
