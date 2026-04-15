@@ -4,21 +4,21 @@ const TEAM = [
   {
     name: "Максим",
     role: "AI & Автоматизация",
-    label: "Tech Director:",
+    label: "Тех. директор:",
     caption: "Строит системы, которые работают за вас",
     photo: "/media/Макс.png",
   },
   {
     name: "Антон",
     role: "Маркетинг & Креатив",
-    label: "Creative:",
+    label: "Маркетолог:",
     caption: "Превращает идеи в стратегии, которые работают",
     photo: "/media/Тоха.png",
   },
   {
     name: "Артем",
     role: "Видео & Контент",
-    label: "Editor:",
+    label: "Монтажёр:",
     caption: "Собирает кадры в истории, которые запоминаются",
     photo: "/media/Тема.png",
   },
@@ -60,9 +60,9 @@ export function AboutSection() {
         <span className="font-body text-xs uppercase tracking-[0.15em] text-black/50">
           About Us
         </span>
-        <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-dark">
-          Команда
-        </h2>
+        <p className="font-body text-sm md:text-base text-black/50 mt-3 max-w-2xl">
+          Мы — студия на стыке технологий и визуального сторителлинга. AI-автоматизация, продакшен и креативная стратегия — в одной команде.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3">
