@@ -89,30 +89,11 @@ function FullVideoSection({
   );
 }
 
+
 export function ProductGrid() {
   return (
     <section className="bg-white overflow-hidden">
-      {/* ── 1. Statement ── */}
-      <StatementBlock
-        text="Мы превращаем идеи в **движение**. Каждый проект — это история, рассказанная через свет, форму и ритм."
-        layout="full"
-      />
-
-      {/* ── 2. Robot — full-width video with text overlay ── */}
-      <ScrollReveal variant="clip-reveal">
-        <FullVideoSection src="/media/robot.mp4" align="bottom">
-          <p
-            className="font-heading uppercase leading-[1.15] text-white max-w-3xl"
-            style={{ fontSize: "clamp(1.5rem, 4vw, 3.5rem)" }}
-          >
-            Мы создаём{" "}
-            <strong className="font-bold text-[var(--color-salmon)]">невозможное</strong>.
-            AI и motion design объединяются, чтобы оживить любую идею.
-          </p>
-        </FullVideoSection>
-      </ScrollReveal>
-
-      {/* ── 3. Heroes — portrait video left, text right ── */}
+      {/* ── 1. Heroes — portrait video left, text right ── */}
       <div className="px-6 md:px-16 lg:px-24 py-12 md:py-20">
         <div className="grid md:grid-cols-[4fr_1fr] gap-8 md:gap-12 items-center">
           <ScrollReveal variant="slide-left">
@@ -120,7 +101,7 @@ export function ProductGrid() {
           </ScrollReveal>
           <ScrollReveal variant="fade-up" delay={0.15}>
             <StatementBlock
-              text="Каждый кадр — это **история**. Мы превращаем концепции в визуальные переживания."
+              text="Каждый кадр — это **история** Мы превращаем концепции в визуальные переживания"
             />
           </ScrollReveal>
         </div>
@@ -134,7 +115,7 @@ export function ProductGrid() {
             style={{ fontSize: "clamp(1.5rem, 4vw, 3.5rem)" }}
           >
             <strong className="font-bold text-[var(--color-salmon)]">Динамика</strong>{" "}
-            в каждом движении. Спорт, экшн, энергия — мы ловим момент.
+            в каждом движении. Спорт, экшн, энергия — мы ловим момент
           </p>
         </FullVideoSection>
       </ScrollReveal>
@@ -144,7 +125,7 @@ export function ProductGrid() {
         <div className="grid md:grid-cols-[1fr_4fr] gap-8 md:gap-12 items-center">
           <ScrollReveal variant="fade-up">
             <StatementBlock
-              text="От идеи до **результата**. Полный цикл продакшена с AI-ускорением."
+              text="От идеи до **результата** Полный цикл продакшена с AI-ускорением"
             />
             <p className="font-body text-sm md:text-base text-black/40 mt-4 max-w-md px-6 md:px-10">
               Мы берём на себя весь процесс — от концепта до финального рендера.
@@ -164,7 +145,7 @@ export function ProductGrid() {
             style={{ fontSize: "clamp(1.5rem, 4vw, 3.5rem)" }}
           >
             <strong className="font-bold text-[var(--color-salmon)]">Готово</strong>{" "}
-            быстрее, чем вы думали. AI автоматизирует рутину — мы фокусируемся на креативе.
+            быстрее, чем вы думали. AI автоматизирует рутину — мы фокусируемся на креативе
           </p>
         </FullVideoSection>
       </ScrollReveal>
@@ -177,7 +158,7 @@ export function ProductGrid() {
           </ScrollReveal>
           <ScrollReveal variant="fade-up" delay={0.15}>
             <StatementBlock
-              text="Контроль каждой **детали**. Точный тайминг, идеальная синхронизация."
+              text="Контроль каждой **детали** Точный тайминг, идеальная синхронизация"
             />
           </ScrollReveal>
         </div>
@@ -191,7 +172,7 @@ export function ProductGrid() {
             style={{ fontSize: "clamp(1.5rem, 4vw, 3.5rem)" }}
           >
             Ваша история заслуживает{" "}
-            <strong className="font-bold text-[var(--color-salmon)]">лучшего</strong>.
+            <strong className="font-bold text-[var(--color-salmon)]">лучшего</strong>
           </p>
         </FullVideoSection>
       </ScrollReveal>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420">
+  <!-- No background rect = transparent -->
+
+  <!-- "ai" — dark, compact, strong -->
+  <text
+    x="60"
+    y="238"
+    font-family="'Arial Black', 'Franklin Gothic Heavy', 'Haettenschweiler', sans-serif"
+    font-size="200"
+    font-weight="900"
+    fill="#1A1A1A"
+    letter-spacing="-8"
+  >ai</text>
+
+  <!-- Thin dark vertical divider between ai and bro -->
+  <rect x="258" y="58" width="4" height="185" fill="#1A1A1A" opacity="0.15"/>
+
+  <!-- "bro" — purple, dominant, powerful -->
+  <text
+    x="270"
+    y="238"
+    font-family="'Arial Black', 'Franklin Gothic Heavy', 'Haettenschweiler', sans-serif"
+    font-size="200"
+    font-weight="900"
+    fill="#8B2FC9"
+    letter-spacing="-8"
+  >bro</text>
+
+  <!-- Purple bar — left side, aligned under "ai" -->
+  <rect x="60" y="258" width="196" height="16" fill="#8B2FC9" rx="1"/>
+
+  <!-- Small dark square separator -->
+  <rect x="258" y="258" width="16" height="16" fill="#1A1A1A" opacity="0.9"/>
+
+  <!-- "MOTION" — dark, bold caps -->
+  <text
+    x="284"
+    y="274"
+    font-family="'Arial Black', 'Franklin Gothic Heavy', 'Haettenschweiler', sans-serif"
+    font-size="58"
+    font-weight="900"
+    fill="#1A1A1A"
+    letter-spacing="6"
+  >MOTION</text>
+
+  <!-- Tagline -->
+  <text
+    x="60"
+    y="330"
+    font-family="'Arial', 'Helvetica Neue', sans-serif"
+    font-size="13"
+    font-weight="400"
+    fill="#8B2FC9"
+    letter-spacing="4"
+    opacity="0.7"
+  >AI  ·  VIDEO  ·  MARKETING  ·  AUTOMATION</text>
+
+</svg>

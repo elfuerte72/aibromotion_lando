@@ -185,7 +185,7 @@ function LargeTitle() {
           className="font-body text-sm md:text-base text-black/40 mt-4 max-w-lg mx-auto"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
-          Стратегия, контент и продвижение — в одном пакете.
+          Стратегия, контент и продвижение — в одном пакете
         </motion.p>
       </div>
     </div>

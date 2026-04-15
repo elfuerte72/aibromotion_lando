@@ -1,11 +1,13 @@
 import { ReactLenis } from "lenis/react";
 import { Nav } from "@/components/Nav";
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
+
+import { CreativeTitle } from "@/components/CreativeTitle";
 import { ProductGrid } from "@/components/ProductGrid";
 import { NewsletterCTA } from "@/components/NewsletterCTA";
 import { MarketingSection } from "@/components/MarketingSection";
 import { AutomationSection } from "@/components/AutomationSection";
+import { AboutSection } from "@/components/AboutSection";
 
 import { Footer } from "@/components/Footer";
 
@@ -35,14 +37,15 @@ export default function App() {
         <Nav />
         <div className="max-w-[1800px] mx-auto">
           <Header />
-          <HeroSection />
           <main>
+            <CreativeTitle />
             <ProductGrid />
             <NewsletterCTA />
           </main>
         </div>
         <MarketingSection />
         <AutomationSection />
+        <AboutSection />
       </div>
     </ReactLenis>
   );

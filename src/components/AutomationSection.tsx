@@ -146,13 +146,19 @@ function RevealWord({
     "rgba(0,0,0,1)",
   ]);
 
+  const hasBreak = word.endsWith("\n");
+  const display = hasBreak ? word.slice(0, -1) : word;
+
   return (
-    <motion.span
-      style={{ opacity, color }}
-      className="inline-block mr-[0.3em] transition-none"
-    >
-      {word}
-    </motion.span>
+    <>
+      <motion.span
+        style={{ opacity, color }}
+        className="inline-block mr-[0.3em] transition-none"
+      >
+        {display}
+      </motion.span>
+      {hasBreak && <br />}
+    </>
   );
 }
 
@@ -382,31 +388,14 @@ function MacBookShowcase({ children }: { children?: React.ReactNode }) {
         {/* Screen content */}
         <div className="relative w-full h-full rounded-[10px] border-2 border-[#121212] overflow-hidden bg-[#f5f5f7]">
           {children || (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="text-center px-8">
-                <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-black/[0.04] flex items-center justify-center mx-auto mb-5">
-                  <svg
-                    className="w-7 h-7 md:w-9 md:h-9 text-black/15"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
-                    />
-                  </svg>
-                </div>
-                <p className="font-heading uppercase text-sm md:text-base text-black/20 tracking-[0.12em]">
-                  Демо автоматизации
-                </p>
-                <p className="font-body text-[10px] md:text-xs text-black/15 mt-2">
-                  Скоро здесь будет демонстрация
-                </p>
-              </div>
-            </div>
+            <video
+              src="/media/automation-demo.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            />
           )}
         </div>
 
@@ -771,12 +760,21 @@ export function AutomationSection() {
     offset: ["start 90%", "end 40%"],
   });
 
-  const headlineText =
-    "Мы автоматизируем бизнес. Создаём AI-агентов. Под ключ.";
-  const headlineWords = headlineText.split(" ");
+  const headlineLines = [
+    "Мы автоматизируем бизнес",
+    "Создаём AI-агентов",
+    "Под ключ",
+  ];
+  const headlineWords = headlineLines.flatMap((line, li) => {
+    const words = line.split(" ");
+    if (li < headlineLines.length - 1) {
+      words[words.length - 1] = words[words.length - 1] + "\n";
+    }
+    return words;
+  });
 
   const statementText =
-    "Ваша команда занимается стратегией — рутину берёт на себя AI.";
+    "Ваша команда занимается стратегией — рутину берёт на себя AI";
   const statementWords = statementText.split(" ");
 
   return (

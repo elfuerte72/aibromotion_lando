@@ -6,7 +6,7 @@ const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const RAINBOW = ["#FF0000", "#FF7700", "#FFDD00", "#00CC00", "#0088FF", "#5500FF", "#CC00CC"];
 const LOGO = "AIBROMOTION";
 
-const TYPEWRITER_WORDS = ["Продакшен.", "Маркетинг.", "Автоматизация.", "AI-агенты."];
+const TYPEWRITER_WORDS = ["Продакшен", "Маркетинг", "Автоматизация", "AI-агенты"];
 const FINAL_TAGLINE = "От продакшена до полной автоматизации бизнеса";
 
 function randomColor() {
