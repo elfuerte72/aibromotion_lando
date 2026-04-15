@@ -51,7 +51,7 @@ export function AboutSection() {
   });
 
   return (
-    <section ref={sectionRef} className="bg-white border-t border-black">
+    <section id="about" ref={sectionRef} className="bg-white border-t border-black">
       {/* Section heading */}
       <div
         className="px-6 md:px-10 pt-10 pb-6"

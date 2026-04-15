@@ -19,6 +19,7 @@ export function CreativeTitle() {
 
   return (
     <div
+      id="creative"
       ref={ref}
       className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-black"
     >
