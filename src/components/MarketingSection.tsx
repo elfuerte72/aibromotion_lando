@@ -6,6 +6,8 @@ import {
   useInView,
   type MotionValue,
 } from "framer-motion";
+import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
+import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -123,26 +125,17 @@ function TransitionBridge() {
   );
 }
 
-/* ── Large "Маркетинг" — handwriting reveal ──────────── */
+/* ── Large "Маркетинг" — tegaki handwriting ──────────── */
 
 function LargeTitle() {
   const ref = useRef<HTMLDivElement>(null);
+  const tegakiRef = useRef<TegakiRendererHandle>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 85%", "end 40%"],
   });
-
-  /* Clip-path: reveals text left-to-right like handwriting */
-  const clipRight = useTransform(scrollYProgress, [0, 0.55], [100, 0]);
-  const clipPath = useTransform(clipRight, (v) => `inset(-5% ${v}% -5% 0)`);
-
-  /* Pen cursor tracks the reveal edge */
-  const cursorX = useTransform(scrollYProgress, [0, 0.55], ["0%", "100%"]);
-  const cursorOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.05, 0.5, 0.55],
-    [0, 0.8, 0.8, 0]
-  );
 
   /* Subtitle fades in after handwriting completes */
   const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
@@ -154,33 +147,29 @@ function LargeTitle() {
       className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-black"
     >
       <div className="max-w-6xl mx-auto text-center">
-        {/* Script title — handwriting clip-path reveal */}
         <div className="relative inline-block">
-          <motion.h2
-            className="font-script text-salmon"
+          <TegakiRenderer
+            ref={tegakiRef}
+            font={caveatCyrillic}
+            time={
+              isInView
+                ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
+                : { mode: "controlled", value: 0 }
+            }
             style={{
               fontSize: "clamp(4rem, 12vw, 10rem)",
               lineHeight: 1,
-              clipPath,
-              paddingRight: "0.15em",
+              color: "var(--color-salmon)",
+            }}
+            effects={{
+              pressureWidth: { strength: 0.6 },
+              taper: { startLength: 0.1, endLength: 0.15 },
             }}
           >
             Маркетинг
-          </motion.h2>
-
-          {/* Animated pen cursor */}
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute bottom-[5%] w-[3px] rounded-full bg-salmon"
-            style={{
-              height: "0.85em",
-              left: cursorX,
-              opacity: cursorOpacity,
-            }}
-          />
+          </TegakiRenderer>
         </div>
 
-        {/* Subtext */}
         <motion.p
           className="font-body text-sm md:text-base text-black/40 mt-4 max-w-lg mx-auto"
           style={{ opacity: subtitleOpacity, y: subtitleY }}

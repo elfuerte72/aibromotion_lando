@@ -57,10 +57,7 @@ export function AboutSection() {
         className="px-6 md:px-10 pt-10 pb-6"
         style={entranceDelay(0)}
       >
-        <span className="font-body text-xs uppercase tracking-[0.15em] text-black/50">
-          About Us
-        </span>
-        <p className="font-body text-sm md:text-base text-black/50 mt-3 max-w-2xl">
+        <p className="font-body text-sm md:text-base text-black/50 max-w-2xl">
           Мы — студия на стыке технологий и визуального сторителлинга. AI-автоматизация, продакшен и креативная стратегия — в одной команде.
         </p>
       </div>

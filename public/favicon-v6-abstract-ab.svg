@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- Концепт 6: Abstract AB — геометрическое слияние A и B -->
+  <rect width="48" height="48" rx="10" fill="#252525"/>
+  <!-- Letter A (left half) -->
+  <path d="M8 40L20 8L24 18V40H20L20 34H13L10 40H8Z" fill="#e8a898"/>
+  <path d="M14.5 30H20V22L14.5 30Z" fill="#252525"/>
+  <!-- Letter B (right half, shares vertical with A) -->
+  <path d="M24 8H32C36 8 39 11 39 14.5C39 17 37.5 19 35.5 20C38 21 40 23.5 40 26.5C40 30.5 37 34 32.5 34H24V8Z" fill="#1a2664"/>
+  <path d="M28 12V19H31C33.5 19 35 17.5 35 15.5C35 13.5 33.5 12 31 12H28Z" fill="#252525"/>
+  <path d="M28 23V30H32C34.5 30 36 28.5 36 26.5C36 24.5 34.5 23 32 23H28Z" fill="#252525"/>
+</svg>

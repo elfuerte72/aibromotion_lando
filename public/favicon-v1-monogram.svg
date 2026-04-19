@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- Концепт 1: "A" Монограмма — стилизованная буква A с вырезом, salmon на тёмном фоне -->
+  <rect width="48" height="48" rx="10" fill="#252525"/>
+  <path d="M24 8L10 40h7l2.5-6h9L31 40h7L24 8z" fill="#e8a898"/>
+  <path d="M20.5 30L24 16l3.5 14h-7z" fill="#252525"/>
+</svg>

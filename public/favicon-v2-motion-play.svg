@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- Концепт 2: Motion Play — треугольник play с линиями движения -->
+  <rect width="48" height="48" rx="10" fill="#252525"/>
+  <!-- Motion lines -->
+  <line x1="8" y1="16" x2="16" y2="16" stroke="#e8a898" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="6" y1="24" x2="16" y2="24" stroke="#e8a898" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="8" y1="32" x2="16" y2="32" stroke="#e8a898" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <!-- Play triangle -->
+  <path d="M19 12L40 24L19 36V12Z" fill="#e8a898"/>
+</svg>
