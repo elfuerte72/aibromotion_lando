@@ -17,10 +17,13 @@
   --color-dark-beige: #cfc8b8;
   --color-light-cream: #ede8dc;
   --color-salmon: #e8a898;
+  --color-deep-navy: #0a0e27;
+  --color-deep-navy-light: #111638;
 
   --font-heading: "Rubik", sans-serif;
   --font-body: "Fragment Mono", monospace;
   --font-logo: "Rubik Bubbles", cursive;
+  --font-script: "Caveat", cursive;
 }
 
 @layer base {

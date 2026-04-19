@@ -11,7 +11,7 @@ interface ScrollRevealProps {
   className?: string;
   delay?: number;
   style?: CSSProperties;
-  variant?: "fade-up" | "fade" | "clip-reveal" | "scale";
+  variant?: "fade-up" | "fade" | "clip-reveal" | "scale" | "slide-left" | "slide-right";
 }
 
 const variants: Record<string, { hidden: Variant; visible: Variant }> = {
@@ -30,6 +30,14 @@ const variants: Record<string, { hidden: Variant; visible: Variant }> = {
   scale: {
     hidden: { opacity: 0, scale: 0.88 },
     visible: { opacity: 1, scale: 1 },
+  },
+  "slide-left": {
+    hidden: { opacity: 0, x: -80 },
+    visible: { opacity: 1, x: 0 },
+  },
+  "slide-right": {
+    hidden: { opacity: 0, x: 80 },
+    visible: { opacity: 1, x: 0 },
   },
 };
 

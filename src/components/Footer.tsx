@@ -1,26 +1,4 @@
-import { useCallback, useState } from "react";
-
-const RAINBOW = ["#FF0000", "#FF7700", "#FFDD00", "#00CC00", "#0088FF", "#5500FF", "#CC00CC"];
-const LOGO = "AIBROMOTION";
-
-function randomColor() {
-  return RAINBOW[Math.floor(Math.random() * RAINBOW.length)];
-}
-
 export function Footer() {
-  const [colors, setColors] = useState<Record<number, string>>({});
-
-  const handleEnter = useCallback((i: number) => {
-    setColors((prev) => ({ ...prev, [i]: randomColor() }));
-  }, []);
-
-  const handleLeave = useCallback((i: number) => {
-    setColors((prev) => {
-      const next = { ...prev };
-      delete next[i];
-      return next;
-    });
-  }, []);
 
   return (
     <footer
@@ -54,57 +32,50 @@ export function Footer() {
               Email
             </p>
             <a
-              href="mailto:hello@aibromotion.com"
+              href="mailto:aibromotion@yandex.com"
               className="font-body text-sm text-white/70 hover:text-white transition-colors"
             >
-              hello@aibromotion.com
+              aibromotion@yandex.com
             </a>
           </div>
           <div className="px-6 py-5 md:py-6 md:border-r border-white/10 text-center border-t md:border-t-0 border-white/10">
             <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-1">
-              Social
+              Телефон
             </p>
             <a
-              href="https://www.instagram.com/aibromotion/"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="tel:+79217771343"
               className="font-body text-sm text-white/70 hover:text-white transition-colors"
             >
-              @aibromotion
+              8 921 777-13-43
             </a>
           </div>
           <div className="px-6 py-5 md:py-6 text-center md:text-right border-t md:border-t-0 border-white/10">
             <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-1">
-              Based in
+              Мессенджер
             </p>
-            <span className="font-body text-sm text-white/70">
-              Worldwide · Remote
-            </span>
+            <a
+              href="https://max.ru/u/f9LHodD0cOI_SmX9Co8Gc-HUzTV_MKEmatXDazJ0SxWhKfTQmuXx1gyLWfs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-body text-sm text-white/70 hover:text-white transition-colors"
+            >
+              <img
+                src="/media/max-logo.webp"
+                alt="Max"
+                className="w-5 h-5 rounded"
+              />
+              Max
+            </a>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 px-6 py-5 md:px-16 border-t border-white/10">
-          <span
-            className="font-logo leading-none tracking-wide"
-            style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
-          >
-            {LOGO.split("").map((char, i) => (
-              <span
-                key={i}
-                onMouseEnter={() => handleEnter(i)}
-                onMouseLeave={() => handleLeave(i)}
-                style={{
-                  color: colors[i] || "rgba(255,255,255,0.2)",
-                  transition: "color 0.3s ease",
-                  display: "inline-block",
-                  cursor: "pointer",
-                }}
-              >
-                {char}
-              </span>
-            ))}
-          </span>
+          <img
+            src="/media/aibromotion-logo.png"
+            alt="AIBROMOTION"
+            className="h-[clamp(1.5rem,4vw,3rem)] w-auto opacity-20"
+          />
           <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.1em] text-white/30">
             © {new Date().getFullYear()} ALL RIGHTS RESERVED
           </p>

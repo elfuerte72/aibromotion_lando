@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- Концепт 3: AI Eye — кинематографический глаз -->
+  <rect width="48" height="48" rx="10" fill="#252525"/>
+  <!-- Eye shape -->
+  <path d="M6 24C6 24 14 12 24 12C34 12 42 24 42 24C42 24 34 36 24 36C14 36 6 24 6 24Z" stroke="#e8a898" stroke-width="2.5" fill="none"/>
+  <!-- Iris -->
+  <circle cx="24" cy="24" r="6" fill="#e8a898"/>
+  <!-- Pupil -->
+  <circle cx="24" cy="24" r="2.5" fill="#252525"/>
+  <!-- Light reflection -->
+  <circle cx="26" cy="22" r="1.2" fill="#fff" opacity="0.8"/>
+</svg>
