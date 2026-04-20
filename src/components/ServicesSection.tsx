@@ -15,11 +15,11 @@ type Service = {
 
 const SERVICES: Service[] = [
   { n: "01", t: "Видео", body: "Рекламные ролики, имиджевые фильмы, клипы. Съёмка, пост, цвет, звук. Полный цикл.", tags: ["Ads", "Film", "Motion"], media: { type: "video", src: "/media/ready.mp4" } },
-  { n: "02", t: "Креатив", body: "Стратегия, идея, сценарий, арт-дирекшн. От задачи к визуальной системе.", tags: ["Strategy", "Art", "Copy"], media: { type: "image", src: "/media/footer-bg.jpg" } },
-  { n: "03", t: "Маркетинг", body: "Performance-кампании, контент-план, дистрибуция. Запуск → тест → масштаб.", tags: ["Growth", "Paid", "SMM"] },
-  { n: "04", t: "ИИ-аватары", body: "Цифровые ведущие и амбассадоры. Синтез голоса, липсинк, 40 роликов за ночь.", tags: ["AI", "Voice", "Lip"], media: { type: "image", src: "/media/hero.png" } },
-  { n: "05", t: "AI-агенты", body: "Кастомные ассистенты для продаж, поддержки, HR. Интеграция с CRM, TG, WA.", tags: ["LLM", "Ops", "API"] },
-  { n: "06", t: "Автоматизация", body: "Оцифровка процессов от заявки до отчёта. Меньше рутины — выше ROI.", tags: ["Flow", "n8n", "API"] },
+  { n: "02", t: "Креатив", body: "Стратегия, идея, сценарий, арт-дирекшн. От задачи к визуальной системе.", tags: ["Strategy", "Art", "Copy"], media: { type: "image", src: "/media/footer-bg.webp" } },
+  { n: "03", t: "Маркетинг", body: "Performance-кампании, контент-план, дистрибуция. Запуск → тест → масштаб.", tags: ["Growth", "Paid", "SMM"], media: { type: "image", src: "/media/service-marketing.webp" } },
+  { n: "04", t: "ИИ-аватары", body: "Цифровые ведущие и амбассадоры. Синтез голоса, липсинк, 40 роликов за ночь.", tags: ["AI", "Voice", "Lip"], media: { type: "image", src: "/media/hero.webp" } },
+  { n: "05", t: "AI-агенты", body: "Кастомные ассистенты для продаж, поддержки, HR. Интеграция с CRM, TG, WA.", tags: ["LLM", "Ops", "API"], media: { type: "image", src: "/media/service-ai-agent.webp" } },
+  { n: "06", t: "Автоматизация", body: "Оцифровка процессов от заявки до отчёта. Меньше рутины — выше ROI.", tags: ["Flow", "n8n", "API"], media: { type: "image", src: "/media/service-automation.webp" } },
 ];
 
 export function ServicesSection() {
@@ -93,7 +93,7 @@ function ServiceCard({
       transition={{ duration: 0.9, delay: index * 0.06, ease }}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      className="group relative p-7 pt-10 border-r border-b border-ink last:lg:border-r-0 [&:nth-child(3)]:lg:border-r-0 min-h-[460px] flex flex-col justify-between overflow-hidden cursor-pointer max-lg:border-r-0"
+      className="group relative p-7 pt-10 border-r border-b border-ink last:lg:border-r-0 [&:nth-child(3)]:lg:border-r-0 min-h-[460px] flex flex-col justify-between overflow-hidden cursor-pointer max-lg:border-r-0 transition-colors duration-500 hover:text-paper"
     >
       {/* Hover bg slide (orange + optional media with duotone) */}
       <div className="absolute inset-0 bg-accent translate-y-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,0.85,0.15,1)] group-hover:translate-y-0 z-0 overflow-hidden">
@@ -125,7 +125,7 @@ function ServiceCard({
       {/* Content */}
       <div className="relative z-[1]">
         <div className="flex justify-between items-start">
-          <span className="font-mono text-xs font-medium tracking-[0.16em] text-muted group-hover:text-ink transition-colors">
+          <span className="font-mono text-xs font-medium tracking-[0.16em] text-muted group-hover:text-paper/70 transition-colors">
             [{s.n}]
           </span>
           <span className="w-12 h-12 border border-current grid place-items-center text-lg transition-all duration-400 group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:rotate-[-45deg] group-hover:bg-ink group-hover:text-accent">

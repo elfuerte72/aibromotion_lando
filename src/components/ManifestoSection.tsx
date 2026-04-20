@@ -5,8 +5,6 @@ const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const STATS = [
   { n: "128", t: "проектов" },
-  { n: "42", t: "клиентов с revisit" },
-  { n: "9", t: "стран" },
   { n: "6×", t: "средний ROI" },
 ];
 
@@ -70,7 +68,7 @@ export function ManifestoSection() {
           </div>
 
           {/* Stat strip */}
-          <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 border-t border-ink">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 border-t border-ink">
             {STATS.map((s, i) => (
               <Reveal key={s.t} delay={200 + i * 100}>
                 <div className="pt-6 px-5 border-r border-ink last:border-r-0 max-lg:border-b max-lg:border-ink max-lg:pb-6">

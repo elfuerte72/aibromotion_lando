@@ -54,7 +54,7 @@ export function Header() {
           className="relative aspect-[4/5] border border-ink overflow-hidden hero-portrait"
         >
           <img
-            src="/media/hero.png"
+            src="/media/hero.webp"
             alt=""
             className="w-full h-full object-cover grayscale-[0.2] contrast-[1.05] scale-[1.08] hero-portrait-img"
           />
@@ -87,15 +87,6 @@ export function Header() {
             {text}
           </motion.p>
         ))}
-        <a
-          href="#contact"
-          className="inline-flex items-center gap-3.5 px-7 py-5 bg-ink text-paper font-mono text-xs font-semibold tracking-[0.16em] uppercase transition-all hover:bg-accent hover:text-ink group"
-        >
-          Запустить проект
-          <span className="w-7 h-7 rounded-full bg-accent text-ink grid place-items-center transition-all duration-400 group-hover:rotate-[-45deg] group-hover:bg-ink group-hover:text-accent">
-            ↗
-          </span>
-        </a>
       </div>
 
       <style>{`
