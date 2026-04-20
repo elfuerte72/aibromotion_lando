@@ -1,15 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const TOPBAR_CELLS = [
-  { label: "Studio", value: "Aibromotion", accent: " / Moscow" },
-  { label: "Index", value: "N° 017 — 2026" },
-  { label: "Focus", value: "Video · AI · Ops" },
-  { label: "Projects", value: "128 закрыто" },
-  { label: "Languages", value: "RU · EN · ES" },
-  { label: "Status", value: "Open Q3 2026", live: true },
-];
-
 const FOOT_TEXTS = [
   "Креативная студия, видеопродакшн и лаборатория ИИ-инструментов — всё под одной крышей.",
   "Работаем с брендами, у которых высокий потолок амбиций и короткий дедлайн.",
@@ -35,21 +26,6 @@ export function Header() {
 
   return (
     <section className="min-h-screen pt-[92px] px-6 pb-6 relative overflow-hidden flex flex-col">
-      {/* Topbar stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 py-4 border-t border-b border-ink mb-12 font-mono text-[10px] font-medium tracking-[0.16em] uppercase">
-        {TOPBAR_CELLS.map((cell) => (
-          <div key={cell.label}>
-            <span className="block text-muted text-[9px] mb-1">{cell.label}</span>
-            <span>
-              {cell.live && (
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent mr-1.5 animate-[b2blink_1s_infinite]" />
-              )}
-              {cell.value}
-              {cell.accent && <span className="font-serif italic text-accent">{cell.accent}</span>}
-            </span>
-          </div>
-        ))}
-      </div>
 
       {/* Main: title + portrait */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-end mb-6">
@@ -90,10 +66,7 @@ export function Header() {
             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-[b2blink_1s_infinite]" /> LIVE
           </span>
           <span className="absolute bottom-3.5 left-3.5 font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-paper">
-            MOSCOW — 2026
-          </span>
-          <span className="absolute bottom-3.5 right-3.5 font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-paper">
-            01:42
+            St. Petersburg — 2026
           </span>
           <div className="absolute left-3.5 bottom-12 right-3.5 text-paper font-serif text-[clamp(24px,2.4vw,40px)] font-light tracking-tight leading-none">
             Каждый кадр — <em className="italic text-accent">бренд-задача</em>. Каждый пиксель — <em className="italic text-accent">вопрос.</em>

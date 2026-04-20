@@ -6,7 +6,6 @@ import { ManifestoSection } from "@/components/ManifestoSection";
 import { CreativeTitle } from "@/components/CreativeTitle";
 import { ShowreelSection } from "@/components/ShowreelSection";
 import { ServicesSection } from "@/components/ServicesSection";
-import { CasesSection } from "@/components/CasesSection";
 import { ProcessSection } from "@/components/ProcessSection";
 import { StackSection } from "@/components/StackSection";
 import { AutomationSection } from "@/components/AutomationSection";
@@ -30,11 +29,10 @@ export default function App() {
         <Header />
         <TickerSection />
         <ManifestoSection />
+        <ServicesSection />
+        <ProcessSection />
         <CreativeTitle />
         <ShowreelSection />
-        <ServicesSection />
-        <CasesSection />
-        <ProcessSection />
         <AutomationSection />
         <StackSection />
         <TeamSection />

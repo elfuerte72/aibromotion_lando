@@ -50,24 +50,6 @@ export function ShowreelSection() {
         />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,rgba(0,0,0,0.65)_90%)] pointer-events-none" />
 
-        {/* Corner labels */}
-        <span className="absolute top-3.5 left-3.5 font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-white/80 z-[3]">
-          ● REC — SR/2026
-        </span>
-        <span className="absolute top-3.5 right-3.5 font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-white/80 z-[3]">
-          01:27 / 01:42
-        </span>
-        <span className="absolute bottom-6 left-3.5 font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-white/80 z-[3]">
-          AIBRO/SR—04
-        </span>
-        <span className="absolute bottom-6 right-3.5 font-mono text-[11px] font-medium tracking-[0.16em] uppercase text-accent z-[3]">
-          TIMELINE EDIT
-        </span>
-
-        {/* Progress bar */}
-        <div className="absolute bottom-3.5 left-3.5 right-3.5 h-0.5 bg-white/20 z-[3]">
-          <div className="w-[38%] h-full bg-accent" />
-        </div>
       </div>
 
       {/* Mini thumbnails */}

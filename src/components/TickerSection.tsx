@@ -1,10 +1,11 @@
 const ITEMS = [
-  "Video production",
-  "Creative direction",
-  "Paid media",
-  "AI avatars",
-  "AI agents",
-  "Ops automation",
+  "Видеопродакшн",
+  "Креативное направление",
+  "Реклама",
+  "Маркетинг",
+  "ИИ-аватары",
+  "ИИ-агенты",
+  "Автоматизация",
 ];
 
 export function TickerSection() {

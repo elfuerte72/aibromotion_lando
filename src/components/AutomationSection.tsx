@@ -6,6 +6,8 @@ import {
   useInView,
   useSpring,
 } from "framer-motion";
+import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
+import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -132,35 +134,6 @@ function AnimatedCounter({
   );
 }
 
-/* ── Word-by-word reveal ──────────────────────────────── */
-
-function RevealWord({
-  word,
-  progress,
-  range,
-}: {
-  word: string;
-  progress: ReturnType<typeof useScroll>["scrollYProgress"];
-  range: [number, number];
-}) {
-  const opacity = useTransform(progress, range, [0.12, 1]);
-
-  const hasBreak = word.endsWith("\n");
-  const displayWord = hasBreak ? word.slice(0, -1) : word;
-
-  return (
-    <>
-      <motion.span
-        style={{ opacity }}
-        className="inline-block mr-[0.3em] transition-none"
-      >
-        {displayWord}
-      </motion.span>
-      {hasBreak && <br />}
-    </>
-  );
-}
-
 /* ── Service card — B2 style ────────────────────────── */
 
 function ServiceCard({
@@ -182,11 +155,7 @@ function ServiceCard({
 
   if (isHero) {
     return (
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, ease: [...EASE] }}
+      <div
         className="border border-ink p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 min-h-[200px]"
       >
         <div className="md:max-w-[55%]">
@@ -205,16 +174,12 @@ function ServiceCard({
             {service.metricLabel}
           </span>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [...EASE] }}
+    <div
       className="border border-ink p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
     >
       <div>
@@ -233,7 +198,7 @@ function ServiceCard({
           {service.metricLabel}
         </span>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -245,24 +210,18 @@ function ProcessSteps() {
 
   return (
     <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
-      {STEPS.map((step, i) => (
-        <motion.div
+      {STEPS.map((step) => (
+        <div
           key={step.title}
-          initial={{ opacity: 0, y: 25 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: i * 0.15, ease: [...EASE] }}
           className="border-r border-ink p-8 md:p-10 last:border-r-0 max-md:border-r-0 max-md:border-b max-md:border-ink"
         >
-          <div className="font-heading font-extrabold text-[80px] tracking-[-0.06em] leading-[0.8] outline-text mb-6">
-            {step.n}
-          </div>
           <h4 className="font-heading font-bold text-xl uppercase tracking-[-0.02em] mb-3">
             {step.title}
           </h4>
           <p className="text-sm leading-relaxed text-ink/50 max-w-xs">
             {step.desc}
           </p>
-        </motion.div>
+        </div>
       ))}
     </div>
   );
@@ -277,11 +236,8 @@ function TrustNumbers() {
   return (
     <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
       {TRUST_NUMBERS.map((item, i) => (
-        <motion.div
+        <div
           key={item.label}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: i * 0.12, ease: [...EASE] }}
           className="border-r border-ink px-8 py-12 md:py-16 text-center last:border-r-0 max-md:border-r-0 max-md:border-b max-md:border-ink"
         >
           <span className="font-serif italic font-light text-accent leading-none block text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.03em]">
@@ -290,7 +246,7 @@ function TrustNumbers() {
           <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] text-muted mt-3 block">
             {item.label}
           </span>
-        </motion.div>
+        </div>
       ))}
     </div>
   );
@@ -539,11 +495,7 @@ function MacBookShowcase() {
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 1, ease: [...EASE] }}
+    <div
       className="relative w-full"
       style={{ aspectRatio: "740 / 440" }}
     >
@@ -591,7 +543,7 @@ function MacBookShowcase() {
       <div className="absolute -bottom-[2px] left-12 h-[2px] w-10 rounded-b-full bg-neutral-600" />
       <div className="absolute -bottom-[2px] right-12 h-[2px] w-10 rounded-b-full bg-neutral-600" />
       <div className="absolute -bottom-4 left-[10%] right-[10%] h-8 bg-black/[0.06] blur-2xl rounded-full" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -609,39 +561,81 @@ function ShowcaseText() {
 
   return (
     <div ref={ref} className="flex flex-col justify-center py-4">
-      <motion.p
-        className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted mb-4"
-        initial={{ opacity: 0, x: 30 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, ease: [...EASE] }}
-      >
+      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted mb-4">
         Как это работает
-      </motion.p>
+      </p>
 
-      <motion.h3
-        className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.5rem,3vw,2.4rem)] mb-6"
-        initial={{ opacity: 0, x: 30 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.1, ease: [...EASE] }}
-      >
+      <h3 className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.5rem,3vw,2.4rem)] mb-6">
         Ваш бизнес на автопилоте
-      </motion.h3>
+      </h3>
 
       <div className="space-y-4">
         {SHOWCASE_BULLETS.map((text, i) => (
-          <motion.div
+          <div
             key={i}
             className="flex items-start gap-3"
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 + i * 0.12, ease: [...EASE] }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
             <p className="text-[15px] leading-relaxed text-ink/55">
               {text}
             </p>
-          </motion.div>
+          </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Tegaki title ────────────────────────────────────── */
+
+function AutomationTitle() {
+  const ref = useRef<HTMLDivElement>(null);
+  const tegakiRef = useRef<TegakiRendererHandle>(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 85%", "end 40%"],
+  });
+
+  const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
+  const subtitleY = useTransform(scrollYProgress, [0.5, 0.75], [15, 0]);
+
+  return (
+    <div
+      ref={ref}
+      className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-ink"
+    >
+      <div className="max-w-6xl mx-auto text-center">
+        <div className="relative inline-block">
+          <TegakiRenderer
+            ref={tegakiRef}
+            font={caveatCyrillic}
+            time={
+              isInView
+                ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
+                : { mode: "controlled", value: 0 }
+            }
+            style={{
+              fontSize: "clamp(4rem, 12vw, 10rem)",
+              lineHeight: 1,
+              color: "var(--accent)",
+            }}
+            effects={{
+              pressureWidth: { strength: 0.6 },
+              taper: { startLength: 0.1, endLength: 0.15 },
+            }}
+          >
+            Автоматизация
+          </TegakiRenderer>
+        </div>
+
+        <motion.p
+          className="font-mono text-sm md:text-base text-muted mt-4 max-w-lg mx-auto tracking-wide"
+          style={{ opacity: subtitleOpacity, y: subtitleY }}
+        >
+          AI-агенты, интеграции и бизнес-процессы под ключ
+        </motion.p>
       </div>
     </div>
   );
@@ -650,72 +644,20 @@ function ShowcaseText() {
 /* ── Main section ─────────────────────────────────────── */
 
 export function AutomationSection() {
-  const headlineRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const statementRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-
-  const sectionInView = useInView(sectionRef, { once: true, margin: "-5% 0px" });
-  const ctaInView = useInView(ctaRef, { once: true, margin: "-10% 0px" });
-
-  const { scrollYProgress } = useScroll({
-    target: headlineRef,
-    offset: ["start 90%", "end 40%"],
-  });
-
-  const { scrollYProgress: statementProgress } = useScroll({
-    target: statementRef,
-    offset: ["start 90%", "end 40%"],
-  });
-
-  const headlineLines = [
-    "Мы автоматизируем бизнес",
-    "Создаём AI-агентов",
-    "Под ключ",
-  ];
-  const headlineWords = headlineLines.flatMap((line, li) => {
-    const words = line.split(" ");
-    if (li < headlineLines.length - 1) {
-      words[words.length - 1] = words[words.length - 1] + "\n";
-    }
-    return words;
-  });
-
-  const statementText =
-    "Ваша команда занимается стратегией — рутину берёт на себя AI";
-  const statementWords = statementText.split(" ");
 
   return (
-    <motion.section
-      ref={sectionRef}
+    <section
       id="automation"
       className="bg-paper border-b border-ink"
-      initial={{ opacity: 0 }}
-      animate={sectionInView ? { opacity: 1 } : {}}
-      transition={{ duration: 0.6, ease: [...EASE] }}
     >
-      {/* ── Head ── */}
-      <div className="px-6 pt-[100px] pb-10 border-b border-ink">
-        <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-muted mb-4">
-          [09] Automation
-        </div>
-        <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(56px,9vw,160px)]">
-          Автомат<span className="font-serif italic font-light tracking-[-0.03em]">изация.</span>
-        </h2>
-      </div>
+      {/* ── Head — tegaki title ── */}
+      <AutomationTitle />
 
-      {/* ── Headline (word-by-word) ── */}
+      {/* ── Headline ── */}
       <div className="max-w-6xl mx-auto px-6">
-        <div ref={headlineRef} className="py-24 md:py-36">
+        <div className="py-24 md:py-36">
           <p className="font-heading font-extrabold uppercase leading-[1.1] text-center max-w-5xl mx-auto tracking-[-0.03em] text-[clamp(1.75rem,4.5vw,4rem)]">
-            {headlineWords.map((word, i) => (
-              <RevealWord
-                key={i}
-                word={word}
-                progress={scrollYProgress}
-                range={[i / headlineWords.length, (i + 1) / headlineWords.length]}
-              />
-            ))}
+            Мы автоматизируем бизнес<br />Создаём AI-агентов<br />Под ключ
           </p>
         </div>
       </div>
@@ -742,16 +684,9 @@ export function AutomationSection() {
         </div>
 
         {/* ── Statement ── */}
-        <div ref={statementRef} className="py-16 md:py-24">
+        <div className="py-16 md:py-24">
           <p className="font-heading font-extrabold uppercase leading-[1.1] max-w-5xl mx-auto text-center tracking-[-0.03em] text-[clamp(1.5rem,4vw,3.75rem)]">
-            {statementWords.map((word, i) => (
-              <RevealWord
-                key={i}
-                word={word}
-                progress={statementProgress}
-                range={[i / statementWords.length, (i + 1) / statementWords.length]}
-              />
-            ))}
+            Ваша команда занимается стратегией — рутину берёт на себя AI
           </p>
         </div>
 
@@ -770,26 +705,7 @@ export function AutomationSection() {
           <Integrations />
         </div>
 
-        {/* ── CTA ── */}
-        <div ref={ctaRef} className="pb-20">
-          <motion.div
-            className="text-center py-14 md:py-20"
-            initial={{ opacity: 0, y: 30 }}
-            animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.15, ease: [...EASE] }}
-          >
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-3.5 px-10 py-5 bg-ink text-paper font-mono text-xs font-semibold tracking-[0.16em] uppercase transition-all hover:bg-accent hover:text-ink"
-            >
-              Обсудить автоматизацию
-              <span className="w-7 h-7 rounded-full bg-accent text-ink grid place-items-center transition-all duration-400 group-hover:rotate-[-45deg]">
-                ↗
-              </span>
-            </a>
-          </motion.div>
-        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

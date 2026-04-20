@@ -13,11 +13,7 @@ export function Nav() {
 
   useEffect(() => {
     const upd = () => {
-      const d = new Date();
-      const hh = String(d.getUTCHours()).padStart(2, "0");
-      const mm = String(d.getUTCMinutes()).padStart(2, "0");
-      const ss = String(d.getUTCSeconds()).padStart(2, "0");
-      setTime(`${hh}:${mm}:${ss} UTC`);
+      setTime(new Date().toLocaleTimeString("ru-RU", { timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", second: "2-digit" }));
     };
     upd();
     const id = setInterval(upd, 1000);
@@ -64,8 +60,9 @@ export function Nav() {
         </a>
       </div>
 
-      <div className="hidden lg:block font-mono text-[11px] font-medium tracking-[0.14em] uppercase text-muted">
-        {time}
+      <div className="hidden lg:block font-mono text-[11px] font-medium tracking-[0.14em] uppercase text-muted text-right leading-tight">
+        <span className="block">{time}</span>
+        <span className="block text-[9px] text-accent">St. Petersburg</span>
       </div>
     </nav>
   );
