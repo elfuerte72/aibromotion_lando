@@ -3,13 +3,23 @@ import { motion, useInView } from "framer-motion";
 
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
-const SERVICES = [
-  { n: "01", g: "V", t: "Видео", body: "Рекламные ролики, имиджевые фильмы, клипы. Съёмка, пост, цвет, звук. Полный цикл.", tags: ["Ads", "Film", "Motion"] },
-  { n: "02", g: "C", t: "Креатив", body: "Стратегия, идея, сценарий, арт-дирекшн. От задачи к визуальной системе.", tags: ["Strategy", "Art", "Copy"] },
-  { n: "03", g: "M", t: "Маркетинг", body: "Performance-кампании, контент-план, дистрибуция. Запуск → тест → масштаб.", tags: ["Growth", "Paid", "SMM"] },
-  { n: "04", g: "A", t: "ИИ-аватары", body: "Цифровые ведущие и амбассадоры. Синтез голоса, липсинк, 40 роликов за ночь.", tags: ["AI", "Voice", "Lip"] },
-  { n: "05", g: "E", t: "AI-агенты", body: "Кастомные ассистенты для продаж, поддержки, HR. Интеграция с CRM, TG, WA.", tags: ["LLM", "Ops", "API"] },
-  { n: "06", g: "O", t: "Автоматизация", body: "Оцифровка процессов от заявки до отчёта. Меньше рутины — выше ROI.", tags: ["Flow", "n8n", "API"] },
+type Service = {
+  n: string;
+  t: string;
+  body: string;
+  tags: string[];
+  media?:
+    | { type: "video"; src: string }
+    | { type: "image"; src: string };
+};
+
+const SERVICES: Service[] = [
+  { n: "01", t: "Видео", body: "Рекламные ролики, имиджевые фильмы, клипы. Съёмка, пост, цвет, звук. Полный цикл.", tags: ["Ads", "Film", "Motion"], media: { type: "video", src: "/media/ready.mp4" } },
+  { n: "02", t: "Креатив", body: "Стратегия, идея, сценарий, арт-дирекшн. От задачи к визуальной системе.", tags: ["Strategy", "Art", "Copy"], media: { type: "image", src: "/media/footer-bg.jpg" } },
+  { n: "03", t: "Маркетинг", body: "Performance-кампании, контент-план, дистрибуция. Запуск → тест → масштаб.", tags: ["Growth", "Paid", "SMM"] },
+  { n: "04", t: "ИИ-аватары", body: "Цифровые ведущие и амбассадоры. Синтез голоса, липсинк, 40 роликов за ночь.", tags: ["AI", "Voice", "Lip"], media: { type: "image", src: "/media/hero.png" } },
+  { n: "05", t: "AI-агенты", body: "Кастомные ассистенты для продаж, поддержки, HR. Интеграция с CRM, TG, WA.", tags: ["LLM", "Ops", "API"] },
+  { n: "06", t: "Автоматизация", body: "Оцифровка процессов от заявки до отчёта. Меньше рутины — выше ROI.", tags: ["Flow", "n8n", "API"] },
 ];
 
 export function ServicesSection() {
@@ -54,11 +64,26 @@ function ServiceCard({
   service: s,
   index,
 }: {
-  service: (typeof SERVICES)[number];
+  service: Service;
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
+
+  const handleEnter = () => {
+    const v = videoRef.current;
+    if (v) {
+      v.currentTime = 0;
+      void v.play().catch(() => {});
+    }
+  };
+  const handleLeave = () => {
+    const v = videoRef.current;
+    if (v) {
+      v.pause();
+    }
+  };
 
   return (
     <motion.div
@@ -66,10 +91,36 @@ function ServiceCard({
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.9, delay: index * 0.06, ease }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
       className="group relative p-7 pt-10 border-r border-b border-ink last:lg:border-r-0 [&:nth-child(3)]:lg:border-r-0 min-h-[460px] flex flex-col justify-between overflow-hidden cursor-pointer max-lg:border-r-0"
     >
-      {/* Hover bg slide */}
-      <div className="absolute inset-0 bg-accent translate-y-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,0.85,0.15,1)] group-hover:translate-y-0 z-0" />
+      {/* Hover bg slide (orange + optional media with duotone) */}
+      <div className="absolute inset-0 bg-accent translate-y-full transition-transform duration-[600ms] ease-[cubic-bezier(0.2,0.85,0.15,1)] group-hover:translate-y-0 z-0 overflow-hidden">
+        {s.media?.type === "video" && (
+          <video
+            ref={videoRef}
+            src={s.media.src}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-0 transition-opacity duration-500 group-hover:opacity-100 [filter:grayscale(100%)_contrast(1.1)_brightness(1.05)]"
+          />
+        )}
+        {s.media?.type === "image" && (
+          <img
+            src={s.media.src}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-0 transition-opacity duration-500 group-hover:opacity-100 [filter:grayscale(100%)_contrast(1.1)_brightness(1.05)]"
+          />
+        )}
+        {/* Bottom dim gradient for text legibility over media */}
+        {s.media && (
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-accent to-transparent pointer-events-none" />
+        )}
+      </div>
 
       {/* Content */}
       <div className="relative z-[1]">
@@ -100,10 +151,6 @@ function ServiceCard({
         </div>
       </div>
 
-      {/* Decorative glyph */}
-      <span className="absolute right-5 bottom-5 font-serif italic font-light text-[96px] leading-none text-accent opacity-[0.18] transition-all duration-500 group-hover:opacity-50 group-hover:text-ink group-hover:translate-x-2.5 group-hover:-translate-y-2.5 group-hover:rotate-[-4deg] z-[1]">
-        {s.g}
-      </span>
     </motion.div>
   );
 }
