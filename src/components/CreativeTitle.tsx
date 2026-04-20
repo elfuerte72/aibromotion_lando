@@ -21,7 +21,7 @@ export function CreativeTitle() {
     <div
       id="creative"
       ref={ref}
-      className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-black"
+      className="px-6 pt-16 pb-10 md:px-10 md:pt-24 md:pb-14 border-t border-ink"
     >
       <div className="max-w-6xl mx-auto text-center">
         <div className="relative inline-block">
@@ -36,7 +36,7 @@ export function CreativeTitle() {
             style={{
               fontSize: "clamp(4rem, 12vw, 10rem)",
               lineHeight: 1,
-              color: "var(--color-salmon)",
+              color: "var(--accent)",
             }}
             effects={{
               pressureWidth: { strength: 0.6 },
@@ -48,7 +48,7 @@ export function CreativeTitle() {
         </div>
 
         <motion.p
-          className="font-body text-sm md:text-base text-black/40 mt-4 max-w-lg mx-auto"
+          className="font-mono text-sm md:text-base text-muted mt-4 max-w-lg mx-auto tracking-wide"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
           Продакшен, визуальные истории и AI-ускоренный контент

@@ -1,30 +1,28 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { useLenis } from "lenis/react";
 
-const NAV_ITEMS = [
-  { id: "creative", label: "Креатив" },
-  { id: "marketing", label: "Маркетинг" },
-  { id: "automation", label: "Автоматизация" },
-  { id: "about", label: "О компании" },
+const NAV_LINKS = [
+  { id: "showreel", label: "Работа" },
+  { id: "services", label: "Услуги" },
+  { id: "team", label: "Команда" },
 ];
 
 export function Nav() {
-  const [activeSection, setActiveSection] = useState<string>("");
+  const [time, setTime] = useState("");
   const lenis = useLenis();
 
-  /* Scroll spy — определяет активную секцию */
-  useLenis(() => {
-    const offset = 200;
-    for (const item of [...NAV_ITEMS].reverse()) {
-      const el = document.getElementById(item.id);
-      if (el && el.getBoundingClientRect().top <= offset) {
-        setActiveSection(item.id);
-        return;
-      }
-    }
-    setActiveSection("");
-  });
+  useEffect(() => {
+    const upd = () => {
+      const d = new Date();
+      const hh = String(d.getUTCHours()).padStart(2, "0");
+      const mm = String(d.getUTCMinutes()).padStart(2, "0");
+      const ss = String(d.getUTCSeconds()).padStart(2, "0");
+      setTime(`${hh}:${mm}:${ss} UTC`);
+    };
+    upd();
+    const id = setInterval(upd, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const handleClick = (e: React.MouseEvent, target: string) => {
     e.preventDefault();
@@ -36,25 +34,38 @@ export function Nav() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-black">
-      <div className="flex items-center justify-between px-6 py-5 md:px-10">
-        {NAV_ITEMS.map((item) => (
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-paper/75 backdrop-blur-[18px] border-b border-ink">
+      <div className="flex items-center gap-2.5">
+        <div className="w-7 h-7 bg-ink text-paper grid place-items-center font-serif italic text-lg font-light">
+          a
+        </div>
+        <span className="font-heading font-extrabold text-base tracking-tight uppercase">
+          aibromotion<span className="font-serif italic text-accent font-light">/</span>studio
+        </span>
+      </div>
+
+      <div className="hidden md:flex font-mono text-[11px] font-medium tracking-[0.14em] uppercase">
+        {NAV_LINKS.map((item) => (
           <a
             key={item.id}
             href={`#${item.id}`}
             onClick={(e) => handleClick(e, item.id)}
-            className="relative font-body text-xs md:text-sm uppercase tracking-[0.15em] hover:opacity-60 transition-opacity"
+            className="px-3.5 py-2.5 border border-ink border-r-0 last:border-r transition-all hover:bg-ink hover:text-paper"
           >
             {item.label}
-            {activeSection === item.id && (
-              <motion.div
-                layoutId="nav-underline"
-                className="absolute -bottom-2 left-0 right-0 h-px bg-black"
-                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-              />
-            )}
           </a>
         ))}
+        <a
+          href="#contact"
+          onClick={(e) => handleClick(e, "contact")}
+          className="px-3.5 py-2.5 border border-accent bg-accent text-ink transition-all hover:brightness-110"
+        >
+          Связаться ↗
+        </a>
+      </div>
+
+      <div className="hidden lg:block font-mono text-[11px] font-medium tracking-[0.14em] uppercase text-muted">
+        {time}
       </div>
     </nav>
   );

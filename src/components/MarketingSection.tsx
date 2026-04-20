@@ -208,7 +208,7 @@ function StackedCard({
 
   /* Text colors adapt to light/dark card */
   const textPrimary = light ? "text-black" : "text-white";
-  const textMuted = light ? "text-black/40" : "text-white/40";
+  void (light ? "text-black/40" : "text-white/40");
   const textBody = light ? "text-black/55" : "text-white/55";
   const textDim = light ? "text-black/35" : "text-white/35";
 
@@ -321,7 +321,7 @@ function MobileCard({
   const { bg, rgba, light } = CARD_STYLES[index];
 
   const textPrimary = light ? "text-black" : "text-white";
-  const textMuted = light ? "text-black/40" : "text-white/40";
+  void (light ? "text-black/40" : "text-white/40");
   const textBody = light ? "text-black/55" : "text-white/55";
   const textDim = light ? "text-black/35" : "text-white/35";
 

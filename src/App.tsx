@@ -1,15 +1,18 @@
 import { ReactLenis } from "lenis/react";
 import { Nav } from "@/components/Nav";
 import { Header } from "@/components/Header";
-
+import { TickerSection } from "@/components/TickerSection";
+import { ManifestoSection } from "@/components/ManifestoSection";
 import { CreativeTitle } from "@/components/CreativeTitle";
-import { ProductGrid } from "@/components/ProductGrid";
-import { NewsletterCTA } from "@/components/NewsletterCTA";
-import { MarketingSection } from "@/components/MarketingSection";
+import { ShowreelSection } from "@/components/ShowreelSection";
+import { ServicesSection } from "@/components/ServicesSection";
+import { CasesSection } from "@/components/CasesSection";
+import { ProcessSection } from "@/components/ProcessSection";
+import { StackSection } from "@/components/StackSection";
 import { AutomationSection } from "@/components/AutomationSection";
-import { AboutSection } from "@/components/AboutSection";
-
-import { Footer } from "@/components/Footer";
+import { TeamSection } from "@/components/TeamSection";
+import { StatsSection } from "@/components/StatsSection";
+import { ContactSection } from "@/components/ContactSection";
 
 export default function App() {
   return (
@@ -22,30 +25,21 @@ export default function App() {
         wheelMultiplier: 1,
       }}
     >
-      {/* Footer sits behind everything */}
-      <Footer />
-
-      {/* Main content sits on top, lifts away to reveal footer */}
-      <div
-        className="relative bg-white"
-        style={{
-          zIndex: 1,
-          marginBottom: "var(--footer-h)",
-          boxShadow: "0 40px 80px rgba(0,0,0,0.3)",
-        }}
-      >
+      <div className="bg-paper">
         <Nav />
-        <div className="max-w-[1800px] mx-auto">
-          <Header />
-          <main>
-            <CreativeTitle />
-            <ProductGrid />
-            <NewsletterCTA />
-          </main>
-        </div>
-        <MarketingSection />
+        <Header />
+        <TickerSection />
+        <ManifestoSection />
+        <CreativeTitle />
+        <ShowreelSection />
+        <ServicesSection />
+        <CasesSection />
+        <ProcessSection />
         <AutomationSection />
-        <AboutSection />
+        <StackSection />
+        <TeamSection />
+        <StatsSection />
+        <ContactSection />
       </div>
     </ReactLenis>
   );
