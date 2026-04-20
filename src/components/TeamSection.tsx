@@ -4,9 +4,9 @@ import { motion, useInView } from "framer-motion";
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const TEAM = [
-  { n: "Макс", r: "Creative Director · Founder", src: "/media/team-max.png", i: "01" },
-  { n: "Антон", r: "Head of Production", src: "/media/team-toha.png", i: "02" },
-  { n: "Тёма", r: "Head of AI / Engineering", src: "/media/team-tema.png", i: "03" },
+  { n: "Макс", r: "Creative Director · Founder", src: "/media/team-max.webp", i: "01" },
+  { n: "Антон", r: "Head of Production", src: "/media/team-toha.webp", i: "02" },
+  { n: "Тёма", r: "Head of AI / Engineering", src: "/media/team-tema.webp", i: "03" },
 ];
 
 export function TeamSection() {

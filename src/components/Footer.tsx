@@ -7,7 +7,7 @@ export function Footer() {
     >
       {/* Background image */}
       <img
-        src="/media/footer-bg.jpg"
+        src="/media/footer-bg.webp"
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
         style={{ objectPosition: "center 15%" }}

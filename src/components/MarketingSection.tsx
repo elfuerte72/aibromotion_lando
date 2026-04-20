@@ -74,11 +74,11 @@ const CARD_STYLES: { bg: string; rgba: string; light?: boolean }[] = [
 ];
 
 const CARD_IMAGES = [
-  "/media/Two Men.jpeg",
-  "/media/964c5da6e66e6d71869cbc6c4bb2b0fd_6e6167af_87f0_4657_bdb1_31baef96928d.png",
-  "/media/cdd847e9817c8fd18eac9ff176d4f849_25093256_5f0f_4b21_b93a_ec120e75d2a9.png",
-  "/media/Валли 1.png",
-  "/media/0c13e9670a4ad31341ced75d22fc0aab_9ccd4ab1_ce0e_476b_b655_d2498ef3674d.png",
+  "/media/Two Men.webp",
+  "/media/964c5da6e66e6d71869cbc6c4bb2b0fd_6e6167af_87f0_4657_bdb1_31baef96928d.webp",
+  "/media/cdd847e9817c8fd18eac9ff176d4f849_25093256_5f0f_4b21_b93a_ec120e75d2a9.webp",
+  "/media/Валли 1.webp",
+  "/media/0c13e9670a4ad31341ced75d22fc0aab_9ccd4ab1_ce0e_476b_b655_d2498ef3674d.webp",
 ];
 
 /* ── Hooks ────────────────────────────────────────────── */

@@ -5,7 +5,7 @@ const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const CASES = [
   { n: "01", t: "NEON FRESH", sub: "6-episodic campaign", client: "Neon Beverage Co.", tags: ["Video", "Creative"], year: "2026", media: "/media/heroes.mp4" },
-  { n: "02", t: "CURATOR-01", sub: "AI avatar host", client: "Arche Gallery", tags: ["AI Avatar", "Voice"], year: "2025", media: "/media/hero.png", isImg: true },
+  { n: "02", t: "CURATOR-01", sub: "AI avatar host", client: "Arche Gallery", tags: ["AI Avatar", "Voice"], year: "2025", media: "/media/hero.webp", isImg: true },
   { n: "03", t: "RUN/42", sub: "42-variant paid ads", client: "Kairos Runwear", tags: ["Marketing", "Video"], year: "2025", media: "/media/basket.mp4" },
   { n: "04", t: "FORMA SALES", sub: "AI sales agent", client: "Forma Furniture", tags: ["Automation"], year: "2025", media: "/media/result.mp4" },
   { n: "05", t: "MERIDIAN", sub: "performance series", client: "Meridian Fit", tags: ["Video", "AI"], year: "2024", media: "/media/timeline.mp4" },

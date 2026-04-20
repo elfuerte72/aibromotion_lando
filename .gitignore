@@ -33,3 +33,4 @@ Screenshot*.png
 
 # AI Factory
 .ai-factory/
+.vercel

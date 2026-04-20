@@ -6,21 +6,21 @@ const TEAM = [
     role: "AI & Автоматизация",
     label: "Тех. директор:",
     caption: "Строит системы, которые работают за вас",
-    photo: "/media/Макс.png",
+    photo: "/media/Макс.webp",
   },
   {
     name: "Антон",
     role: "Маркетинг & Креатив",
     label: "Маркетолог:",
     caption: "Превращает идеи в стратегии, которые работают",
-    photo: "/media/Тоха.png",
+    photo: "/media/Тоха.webp",
   },
   {
     name: "Артем",
     role: "Видео & Контент",
     label: "Монтажёр:",
     caption: "Собирает кадры в истории, которые запоминаются",
-    photo: "/media/Тема.png",
+    photo: "/media/Тема.webp",
   },
 ];
 

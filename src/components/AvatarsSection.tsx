@@ -4,10 +4,10 @@ import { motion, useInView } from "framer-motion";
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const AVATARS = [
-  { name: "ARINA V.3", role: "Host · RU/EN", src: "/media/hero.png" },
-  { name: "MAXIM AI", role: "Sales · RU", src: "/media/team-max.png" },
-  { name: "TEMA NEO", role: "Teacher · Multi", src: "/media/team-tema.png" },
-  { name: "ANTON-7", role: "News · RU/EN/ES", src: "/media/team-toha.png" },
+  { name: "ARINA V.3", role: "Host · RU/EN", src: "/media/hero.webp" },
+  { name: "MAXIM AI", role: "Sales · RU", src: "/media/team-max.webp" },
+  { name: "TEMA NEO", role: "Teacher · Multi", src: "/media/team-tema.webp" },
+  { name: "ANTON-7", role: "News · RU/EN/ES", src: "/media/team-toha.webp" },
 ];
 
 export function AvatarsSection() {

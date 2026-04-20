@@ -146,7 +146,8 @@ function ServiceCard({
   isHero?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const _isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+  void _isInView;
 
   const numericMatch = service.metric.match(/\d+/);
   const numericValue = numericMatch ? parseInt(numericMatch[0]) : 0;
@@ -206,7 +207,8 @@ function ServiceCard({
 
 function ProcessSteps() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const _isInView = useInView(ref, { once: true, margin: "-15% 0px" });
+  void _isInView;
 
   return (
     <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
@@ -231,7 +233,8 @@ function ProcessSteps() {
 
 function TrustNumbers() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const _isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  void _isInView;
 
   return (
     <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 border-t border-ink">
@@ -492,7 +495,8 @@ function Integrations() {
 
 function MacBookShowcase() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const _isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  void _isInView;
 
   return (
     <div
@@ -557,7 +561,8 @@ const SHOWCASE_BULLETS = [
 
 function ShowcaseText() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const _isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  void _isInView;
 
   return (
     <div ref={ref} className="flex flex-col justify-center py-4">
