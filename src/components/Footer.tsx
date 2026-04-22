@@ -1,84 +1,170 @@
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+
+type ContactLinkProps = {
+  label: string;
+  value?: string;
+  href: string;
+  target?: string;
+};
+
+function ContactLink({ label, value, href, target }: ContactLinkProps) {
+  return (
+    <li>
+      <a
+        href={href}
+        target={target}
+        rel={target === "_blank" ? "noopener noreferrer" : undefined}
+        className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-white/55 hover:text-white transition-colors"
+      >
+        <span className="h-px w-8 bg-white/30 group-hover:bg-accent group-hover:w-16 transition-all duration-500" />
+        {value ? `${label} — ${value}` : label}
+        <span
+          aria-hidden
+          className="transition-transform duration-300 group-hover:translate-x-1"
+        >
+          ↗
+        </span>
+      </a>
+    </li>
+  );
+}
+
 export function Footer() {
+  const ref = useRef<HTMLElement>(null);
+  const year = new Date().getFullYear();
+
+  // Reveal driven by footer entering the viewport
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end end"],
+  });
+  const revealProgress = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const ctaOpacity = useTransform(revealProgress, [0, 0.45], [0, 1]);
+  const ctaY = useTransform(revealProgress, [0, 0.45], [40, 0]);
+  const videoScale = useTransform(revealProgress, [0, 1], [1.08, 1]);
+  const flareOpacity = useTransform(revealProgress, [0, 0.7], [0.35, 1]);
 
   return (
     <footer
-      className="fixed bottom-0 left-0 w-full text-white overflow-hidden"
-      style={{ height: "var(--footer-h)", zIndex: 0 }}
+      ref={ref}
+      id="contact"
+      className="relative bg-[#0E0E0C] text-white overflow-hidden"
+      style={{ minHeight: "clamp(620px, 92vh, 900px)" }}
     >
-      {/* Background image */}
-      <img
-        src="/media/footer-bg.webp"
-        alt=""
+      {/* ─── Background layers ─────────────────────────────── */}
+      <motion.video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/media/footer-bg.webp"
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 15%" }}
-        loading="lazy"
-        decoding="async"
+        style={{
+          filter: "grayscale(1) contrast(1.15) brightness(0.55)",
+          scale: videoScale,
+        }}
+      >
+        <source src="/media/ready.mp4" type="video/mp4" />
+      </motion.video>
+
+      {/* Ink veil */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "rgba(14,14,12,0.58)" }}
       />
 
-      {/* Gradient overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#252525] via-[#252525]/70 to-black/40" />
+      {/* Accent duotone wash */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none mix-blend-soft-light"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,74,28,0.18) 0%, rgba(255,74,28,0) 45%, rgba(255,74,28,0.28) 100%)",
+        }}
+      />
 
-      {/* Extra bottom fade for seamless blend into contact rows */}
-      <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#252525] to-transparent" />
+      {/* Top fade into ink */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, #0E0E0C 0%, rgba(14,14,12,0) 100%)",
+        }}
+      />
 
-      <div className="relative z-10 max-w-[1800px] mx-auto h-full flex flex-col justify-between">
-        {/* Top: spacer for image visibility */}
-        <div className="flex-1" />
+      {/* Radial accent flare bottom-right */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: flareOpacity,
+          background:
+            "radial-gradient(62% 82% at 96% 108%, rgba(255,74,28,0.42) 0%, rgba(255,74,28,0.08) 45%, rgba(255,74,28,0) 70%)",
+          filter: "blur(4px)",
+        }}
+      />
 
-        {/* Contact row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-white/10">
-          <div className="px-6 py-5 md:py-6 md:border-r border-white/10 text-center md:text-left">
-            <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-1">
-              Email
-            </p>
-            <a
-              href="mailto:aibromotion@yandex.com"
-              className="font-body text-sm text-white/70 hover:text-white transition-colors"
-            >
-              aibromotion@yandex.com
-            </a>
-          </div>
-          <div className="px-6 py-5 md:py-6 md:border-r border-white/10 text-center border-t md:border-t-0 border-white/10">
-            <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-1">
-              Телефон
-            </p>
-            <a
-              href="tel:+79217771343"
-              className="font-body text-sm text-white/70 hover:text-white transition-colors"
-            >
-              8 921 777-13-43
-            </a>
-          </div>
-          <div className="px-6 py-5 md:py-6 text-center md:text-right border-t md:border-t-0 border-white/10">
-            <p className="font-body text-[10px] uppercase tracking-[0.2em] text-white/30 mb-1">
-              Мессенджер
-            </p>
-            <a
-              href="https://max.ru/u/f9LHodD0cOI_SmX9Co8Gc-HUzTV_MKEmatXDazJ0SxWhKfTQmuXx1gyLWfs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-body text-sm text-white/70 hover:text-white transition-colors"
-            >
-              <img
-                src="/media/max-logo.webp"
-                alt="Max"
-                className="w-5 h-5 rounded"
-              />
-              Max
-            </a>
-          </div>
+      {/* Film grain boost */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-[0.06] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
+
+      {/* ─── Content ───────────────────────────────────────── */}
+      <div className="relative z-10 flex flex-col min-h-[inherit]">
+        {/* Top hairline marker */}
+        <div className="flex items-center justify-end px-5 md:px-10 h-10 border-b border-white/10 font-mono text-[10px] uppercase tracking-[0.28em]">
+          <span className="text-white/40">{year}</span>
         </div>
 
-        {/* Bottom bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 px-6 py-5 md:px-16 border-t border-white/10">
-          <img
-            src="/media/aibromotion-logo.png"
-            alt="AIBROMOTION"
-            className="h-[clamp(1.5rem,4vw,3rem)] w-auto opacity-20"
-          />
-          <p className="font-body text-[10px] md:text-xs uppercase tracking-[0.1em] text-white/30">
-            © {new Date().getFullYear()} ALL RIGHTS RESERVED
-          </p>
+        {/* Main content */}
+        <div className="flex-1 flex flex-col justify-between px-6 md:px-12 py-14 md:py-24">
+          <motion.div style={{ opacity: ctaOpacity, y: ctaY }}>
+            <a href="mailto:aibromotion@yandex.com" className="block">
+              <p className="font-serif italic text-white text-[clamp(44px,7.5vw,128px)] leading-[0.95] tracking-[-0.03em]">
+                Покажем,
+                <br />
+                <span className="text-accent">что умеет AI.</span>
+              </p>
+            </a>
+
+            <ul className="mt-10 md:mt-14 flex flex-col gap-4 md:gap-5">
+              <ContactLink
+                label="написать"
+                value="aibromotion@yandex.com"
+                href="mailto:aibromotion@yandex.com"
+              />
+              <ContactLink
+                label="позвонить"
+                value="+7 921 777-13-43"
+                href="tel:+79217771343"
+              />
+              <ContactLink
+                label="max"
+                href="https://max.ru/u/f9LHodD0cOI_SmX9Co8Gc-HUzTV_MKEmatXDazJ0SxWhKfTQmuXx1gyLWfs"
+                target="_blank"
+              />
+              <ContactLink
+                label="telegram"
+                href="https://t.me/topanton1"
+                target="_blank"
+              />
+            </ul>
+          </motion.div>
+
+        </div>
+
+        {/* Colophon row */}
+        <div className="flex items-center justify-center px-5 md:px-10 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
+          <span>© {year} AIBROMOTION — all rights reserved</span>
         </div>
       </div>
     </footer>

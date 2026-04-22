@@ -31,7 +31,7 @@ export function Header() {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-end mb-6">
         <h1
           ref={titleRef}
-          className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(60px,11vw,220px)] hero-title"
+          className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(56px,10vw,200px)] hero-title"
         >
           <div className="overflow-hidden relative">
             <span className="hero-line hero-l1 block">Снимаем.</span>

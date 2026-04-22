@@ -4,9 +4,9 @@ import { motion, useInView } from "framer-motion";
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const TEAM = [
-  { n: "Макс", r: "Creative Director · Founder", src: "/media/team-max.webp", i: "01" },
-  { n: "Антон", r: "Head of Production", src: "/media/team-toha.webp", i: "02" },
-  { n: "Тёма", r: "Head of AI / Engineering", src: "/media/team-tema.webp", i: "03" },
+  { n: "Макс", r: "Технический директор", src: "/media/team-max.webp", i: "01" },
+  { n: "Антон", r: "Маркетолог, креатор", src: "/media/team-toha.webp", i: "02" },
+  { n: "Артём", r: "Монтажёр", src: "/media/team-tema.webp", i: "03" },
 ];
 
 export function TeamSection() {
@@ -70,14 +70,23 @@ function TeamCard({
         alt={m.n}
         className="absolute inset-0 w-full h-full object-cover object-[center_20%] grayscale-[0.4] contrast-[1.05] transition-all duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.15,1)] group-hover:grayscale-0 group-hover:scale-[1.04]"
       />
-      <div className="absolute left-3.5 right-3.5 bottom-3.5 flex justify-between items-end gap-3 mix-blend-difference text-white">
-        <div>
+      {/* Bottom gradient — keeps name/role readable on any photo */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.78) 100%)",
+        }}
+      />
+      <div className="absolute left-3.5 right-3.5 bottom-3.5 flex justify-between items-end gap-3">
+        <div className="text-white transition-colors duration-300 group-hover:text-accent" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.45)" }}>
           <div className="font-heading font-bold text-[22px] tracking-[-0.02em] uppercase">{m.n}</div>
-          <div className="font-mono text-[10px] font-medium tracking-[0.14em] uppercase opacity-80 mt-1">
+          <div className="font-mono text-[10px] font-medium tracking-[0.14em] uppercase mt-1 opacity-90">
             {m.r}
           </div>
         </div>
-        <div className="font-mono text-[11px] font-medium tracking-[0.14em]">[{m.i}]</div>
+        <div className="font-mono text-[11px] font-medium tracking-[0.14em] text-white/70">[{m.i}]</div>
       </div>
     </motion.div>
   );

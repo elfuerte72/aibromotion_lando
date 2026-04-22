@@ -10,7 +10,7 @@ import { ProcessSection } from "@/components/ProcessSection";
 import { StackSection } from "@/components/StackSection";
 import { AutomationSection } from "@/components/AutomationSection";
 import { TeamSection } from "@/components/TeamSection";
-import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
 
 export default function App() {
   return (
@@ -35,7 +35,7 @@ export default function App() {
         <AutomationSection />
         <StackSection />
         <TeamSection />
-        <ContactSection />
+        <Footer />
       </div>
     </ReactLenis>
   );
