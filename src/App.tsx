@@ -7,7 +7,6 @@ import { CreativeTitle } from "@/components/CreativeTitle";
 import { ShowreelSection } from "@/components/ShowreelSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ProcessSection } from "@/components/ProcessSection";
-import { StackSection } from "@/components/StackSection";
 import { AutomationSection } from "@/components/AutomationSection";
 import { TeamSection } from "@/components/TeamSection";
 import { Footer } from "@/components/Footer";
@@ -33,7 +32,6 @@ export default function App() {
         <CreativeTitle />
         <ShowreelSection />
         <AutomationSection />
-        <StackSection />
         <TeamSection />
         <Footer />
       </div>

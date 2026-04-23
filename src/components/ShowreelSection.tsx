@@ -4,10 +4,10 @@ import { motion, useInView } from "framer-motion";
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const MINIS = [
-  { v: "/media/heroes.mp4", l: "Heroes Campaign" },
   { v: "/media/result.mp4", l: "Forma Sales Bot" },
+  { v: "/media/truck-holding.mp4", l: "Трак Холдинг" },
   { v: "/media/basket.mp4", l: "Retail AI" },
-  { v: "/media/robot.mp4", l: "Robot Spot" },
+  { v: "/media/spot-new.mp4", l: "Stories" },
 ];
 
 export function ShowreelSection() {
@@ -41,7 +41,7 @@ export function ShowreelSection() {
       {/* Main video frame */}
       <div ref={ref} className="relative mx-6 aspect-[21/9] overflow-hidden border border-white/15">
         <video
-          src="/media/timeline.mp4"
+          src="/media/showreel-main.mp4"
           autoPlay
           muted
           loop

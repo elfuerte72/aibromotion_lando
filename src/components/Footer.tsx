@@ -66,7 +66,7 @@ export function Footer() {
           scale: videoScale,
         }}
       >
-        <source src="/media/ready.mp4" type="video/mp4" />
+        <source src="/media/footer-reel.mp4" type="video/mp4" />
       </motion.video>
 
       {/* Ink veil */}
