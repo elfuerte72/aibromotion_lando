@@ -26,7 +26,7 @@ npx vitest run       # Run all tests once (CI mode)
 - Vite 8 with `@tailwindcss/vite` plugin
 - Tailwind CSS v4 (config in `src/index.css` via `@theme`, NOT `tailwind.config.ts`)
 - Framer Motion 12 for scroll animations (`useScroll`, `useTransform`, `useInView`, `useVelocity`)
-- Lenis for smooth scrolling (wraps entire app via `<ReactLenis root>`, lerp 0.1, duration 1.2)
+- Lenis for smooth scrolling (wraps entire app via `<ReactLenis root>`, lerp 0.1, duration 1.2). **Disabled on touch and `prefers-reduced-motion`** — see `src/App.tsx` `ScrollContainer`
 - Tegaki for handwriting animations (`TegakiRenderer` from `tegaki/react`, custom Caveat Cyrillic font bundle in `src/fonts/caveat-cyrillic/`)
 - shadcn/ui (new-york style, `components.json` configured, `@/components/ui/` path)
 - Path alias: `@/` → `./src/`
@@ -34,10 +34,9 @@ npx vitest run       # Run all tests once (CI mode)
 
 ## Architecture
 
-**Layout pattern — "sticky footer reveal":**
-- `Footer` is `position: fixed; bottom: 0; z-index: 0` with `--footer-h` (600px mobile / 560px desktop)
-- Main content sits on top (`z-index: 1`) with `margin-bottom: var(--footer-h)` and `box-shadow`
-- As user scrolls past main content, footer is revealed underneath
+**Footer background plate:**
+- Desktop: background `<video>` (footer-reel.mp4) with parallax scale driven by `useScroll`
+- Touch (phones, tablets, or `prefers-reduced-motion`): poster-only (`footer-bg.webp`) — no `<video>` is mounted. See `useIsTouch` gate in `src/components/Footer.tsx`
 
 **Page flow (top to bottom):**
 `Nav` (fixed top, SPB live clock) → `Header` (hero title + portrait) → `TickerSection` (marquee) → `ManifestoSection` → `ServicesSection` → `ProcessSection` ([06] Method) → `CreativeTitle` (tegaki "Креатив") → `ShowreelSection` ([02] Showreel) → `AutomationSection` (tegaki "Автоматизация", service cards, process steps, trust numbers, integrations terminal) → `StackSection` → `TeamSection` → `StatsSection` → `ContactSection`
@@ -61,7 +60,47 @@ Used for section titles ("Креатив", "Маркетинг", "Автомат
 
 All static media lives in `public/media/`. Videos are `.mp4` (H.264, CRF 18), images are `.png`/`.jpg`. Referenced via absolute paths like `/media/hero.png`. Logo SVGs in `public/logos/`.
 
+**Mobile dual-source convention:**
+- Every `foo.mp4` has a sibling `foo-mobile.mp4` (scaled to 768px, CRF 28, no audio)
+- Every key `*.webp` has a matching `*.avif` (libsvtav1, CRF 40)
+- `<video>` uses two `<source>` tags with `media="(max-width: 767px)"` to serve the mobile variant on phones
+- `<img>` wrapped in `<picture>` with an AVIF `<source>` above the WebP fallback
+- Helpers: `toMobileVideo(src)` / `toAvif(src)` in `src/lib/media.ts` derive paths programmatically
+- To regenerate: `ffmpeg -i foo.mp4 -vf scale=768:-2 -c:v libx264 -crf 28 -an foo-mobile.mp4` / `ffmpeg -i foo.webp -c:v libsvtav1 -crf 40 -frames:v 1 foo.avif`
+
 **Important:** Do not use Git LFS — Railway does not reliably pull LFS files during build. Keep all media files under 100 MB (GitHub hard limit). Source `.mov` originals are excluded via `.gitignore`.
+
+## Mobile adaptation
+
+The landing was originally desktop-first; mobile adaptation is "Editorial + Swipe Deck" — kept the cinematic long-scroll but swapped hover-heavy grids for horizontal snap carousels.
+
+**Device detection (`src/lib/useDevice.ts`):**
+- `useIsMobile()` — viewport `<768px`, SSR-safe via `useSyncExternalStore` + `matchMedia`
+- `useIsTouch()` — `(pointer: coarse)` — true on phones *and* tablets
+- `useReducedMotion()` — `(prefers-reduced-motion: reduce)` — re-exported for consistency
+
+**Adaptive components (router pattern `{isMobile ? <Carousel/> : <Grid/>}`):**
+- `ServicesSection` → `ServicesCarousel` (mobile) / `ServicesHoverGrid` (desktop)
+- `TeamSection` → `TeamCarousel` (mobile) / 3-col hover grid (desktop)
+- `ShowreelSection` mini thumbs → `SnapCarousel` (mobile) / grid (desktop)
+- `AutomationSection` hero mockup → `IPhoneShowcase` (mobile) / `MacBookShowcase` (desktop)
+
+**Shared carousel (`src/components/shared/SnapCarousel.tsx`):**
+CSS scroll-snap (`snap-x snap-mandatory`) + IntersectionObserver with threshold `[0, 0.25, 0.5, 0.75, 1]` to track the active slide. Exposes `isActive` to render callbacks — used to pause off-screen videos (battery + decode cost). Keyboard: `ArrowLeft/Right/Home/End`. Indicator: `role="tablist"` with `role="tab"` buttons.
+
+**Nav drawer (`src/components/nav/MobileNav.tsx`):**
+Full-screen drawer behind a burger, body-scroll locked via `overflow: hidden` on `<body>` (Lenis is off on touch). Esc closes. `env(safe-area-inset-*)` applied to top bar and drawer.
+
+**Lenis + reduced-motion gates (`src/App.tsx`):**
+Lenis only wraps the app when `!isTouch && !prefersReducedMotion`. Anchor scroll falls back to `scrollIntoView({ behavior: 'smooth' })`.
+
+**Tegaki reduced-motion fallback:**
+`CreativeTitle` and `AutomationTitle` render a static `<h2>` in the same size/colour instead of the handwriting animation when `prefers-reduced-motion: reduce`.
+
+**Mobile-only optimizations:**
+- `Footer` serves poster-only (`footer-bg.avif/webp`) instead of a `<video>` on touch — saves ~4MB cellular + continuous decode
+- `Services`/`Showreel` carousels play **only** the active slide's video; the others are paused and rewound
+- `<details>` disclosure wraps the integrations terminal in `AutomationSection` on mobile to keep the section scannable
 
 ## Conventions
 

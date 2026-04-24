@@ -1,5 +1,11 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  useReducedMotion,
+} from "framer-motion";
 import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
 import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
 
@@ -7,6 +13,7 @@ export function CreativeTitle() {
   const ref = useRef<HTMLDivElement>(null);
   const tegakiRef = useRef<TegakiRendererHandle>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const prefersReducedMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -25,30 +32,46 @@ export function CreativeTitle() {
     >
       <div className="max-w-6xl mx-auto text-center">
         <div className="relative inline-block">
-          <TegakiRenderer
-            ref={tegakiRef}
-            font={caveatCyrillic}
-            time={
-              isInView
-                ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
-                : { mode: "controlled", value: 0 }
-            }
-            style={{
-              fontSize: "clamp(4rem, 12vw, 10rem)",
-              lineHeight: 1,
-              color: "var(--accent)",
-            }}
-            effects={{
-              pressureWidth: { strength: 0.6 },
-              taper: { startLength: 0.1, endLength: 0.15 },
-            }}
-          >
-            Креатив
-          </TegakiRenderer>
+          {prefersReducedMotion ? (
+            // Reduced-motion: skip handwriting animation — render static
+            // glyph in the same font/size/colour to preserve layout.
+            <h2
+              className="font-serif italic"
+              style={{
+                fontSize: "clamp(3.5rem, 14vw, 10rem)",
+                lineHeight: 1,
+                color: "var(--accent)",
+                margin: 0,
+              }}
+            >
+              Креатив
+            </h2>
+          ) : (
+            <TegakiRenderer
+              ref={tegakiRef}
+              font={caveatCyrillic}
+              time={
+                isInView
+                  ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
+                  : { mode: "controlled", value: 0 }
+              }
+              style={{
+                fontSize: "clamp(3.5rem, 14vw, 10rem)",
+                lineHeight: 1,
+                color: "var(--accent)",
+              }}
+              effects={{
+                pressureWidth: { strength: 0.6 },
+                taper: { startLength: 0.1, endLength: 0.15 },
+              }}
+            >
+              Креатив
+            </TegakiRenderer>
+          )}
         </div>
 
         <motion.p
-          className="font-mono text-sm md:text-base text-muted mt-4 max-w-lg mx-auto tracking-wide"
+          className="font-mono text-sm md:text-base text-muted mt-4 max-w-sm sm:max-w-lg mx-auto tracking-wide"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
           Продакшен, визуальные истории и AI-ускоренный контент

@@ -46,11 +46,15 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
   }
 
   body {
     font-feature-settings: "ss01", "ss02", "cv11";
+    /* Keep horizontal overflow clipping on body only — html must stay
+       free of overflow to avoid breaking position:sticky (Team avatars,
+       nav scroll spy) and iOS Safari smooth scroll. */
+    overflow-x: hidden;
+    overflow-anchor: none;
   }
 
   /* Film grain overlay */
@@ -70,6 +74,23 @@
     0%, 100% { transform: translate(0, 0); }
     33% { transform: translate(-1%, 1.5%); }
     66% { transform: translate(1.5%, -1%); }
+  }
+
+  /* Respect user motion preferences: disable the film-grain overlay and
+     any global motion utilities for folks who opt out. */
+  @media (prefers-reduced-motion: reduce) {
+    body::after {
+      display: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   html.lenis, html.lenis body {
@@ -96,6 +117,18 @@
   img {
     display: block;
     max-width: 100%;
+  }
+
+  /* Keyboard focus — visible 2px accent ring, no mouse focus ring.
+     Uses `:focus-visible` so only keyboard/tab navigation triggers it.
+     2px outline + 1px offset keeps the ring readable on both paper
+     (light bg) and ink (dark footer) surfaces. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 }
 

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useIsTouch } from "@/lib/useDevice";
 
 type ContactLinkProps = {
   label: string;
@@ -15,10 +16,10 @@ function ContactLink({ label, value, href, target }: ContactLinkProps) {
         href={href}
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
-        className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-white/55 hover:text-white transition-colors"
+        className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.28em] text-white/55 hover:text-white transition-colors min-h-11 py-2"
       >
-        <span className="h-px w-8 bg-white/30 group-hover:bg-accent group-hover:w-16 transition-all duration-500" />
-        {value ? `${label} — ${value}` : label}
+        <span className="h-px w-8 bg-white/30 group-hover:bg-accent group-hover:w-16 transition-all duration-500 shrink-0" />
+        <span className="break-all">{value ? `${label} — ${value}` : label}</span>
         <span
           aria-hidden
           className="transition-transform duration-300 group-hover:translate-x-1"
@@ -33,6 +34,7 @@ function ContactLink({ label, value, href, target }: ContactLinkProps) {
 export function Footer() {
   const ref = useRef<HTMLElement>(null);
   const year = new Date().getFullYear();
+  const isTouch = useIsTouch();
 
   // Reveal driven by footer entering the viewport
   const { scrollYProgress } = useScroll({
@@ -50,24 +52,45 @@ export function Footer() {
       ref={ref}
       id="contact"
       className="relative bg-[#0E0E0C] text-white overflow-hidden"
-      style={{ minHeight: "clamp(620px, 92vh, 900px)" }}
+      style={{ minHeight: "clamp(520px, 78svh, 900px)" }}
     >
       {/* ─── Background layers ─────────────────────────────── */}
-      <motion.video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/media/footer-bg.webp"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          filter: "grayscale(1) contrast(1.15) brightness(0.55)",
-          scale: videoScale,
-        }}
-      >
-        <source src="/media/footer-reel.mp4" type="video/mp4" />
-      </motion.video>
+      {isTouch ? (
+        // On touch devices we serve the poster-only (no `<video>`). A
+        // muted autoplay loop is ~3-4MB of cellular traffic and decodes
+        // continuously even behind other sections — not worth the cost
+        // for a grayscale background plate.
+        <picture aria-hidden>
+          <source srcSet="/media/footer-bg.avif" type="image/avif" />
+          <img
+            src="/media/footer-bg.webp"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: "grayscale(1) contrast(1.15) brightness(0.55)" }}
+          />
+        </picture>
+      ) : (
+        <motion.video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/media/footer-bg.webp"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            filter: "grayscale(1) contrast(1.15) brightness(0.55)",
+            scale: videoScale,
+          }}
+        >
+          <source
+            src="/media/footer-reel-mobile.mp4"
+            type="video/mp4"
+            media="(max-width: 767px)"
+          />
+          <source src="/media/footer-reel.mp4" type="video/mp4" />
+        </motion.video>
+      )}
 
       {/* Ink veil */}
       <div
@@ -126,17 +149,17 @@ export function Footer() {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col justify-between px-6 md:px-12 py-14 md:py-24">
+        <div className="flex-1 flex flex-col justify-between px-5 sm:px-6 md:px-12 py-12 sm:py-14 md:py-24">
           <motion.div style={{ opacity: ctaOpacity, y: ctaY }}>
             <a href="mailto:aibromotion@yandex.com" className="block">
-              <p className="font-serif italic text-white text-[clamp(44px,7.5vw,128px)] leading-[0.95] tracking-[-0.03em]">
+              <p className="font-serif italic text-white text-[clamp(40px,11vw,128px)] leading-[0.95] tracking-[-0.03em]">
                 Покажем,
                 <br />
                 <span className="text-accent">что умеет AI.</span>
               </p>
             </a>
 
-            <ul className="mt-10 md:mt-14 flex flex-col gap-4 md:gap-5">
+            <ul className="mt-8 sm:mt-10 md:mt-14 flex flex-col gap-4 md:gap-5">
               <ContactLink
                 label="написать"
                 value="aibromotion@yandex.com"
@@ -163,7 +186,14 @@ export function Footer() {
         </div>
 
         {/* Colophon row */}
-        <div className="flex items-center justify-center px-5 md:px-10 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35">
+        <div
+          className="flex items-center justify-center px-5 md:px-10 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35"
+          style={{
+            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+            paddingLeft: "calc(env(safe-area-inset-left, 0px) + 1.25rem)",
+            paddingRight: "calc(env(safe-area-inset-right, 0px) + 1.25rem)",
+          }}
+        >
           <span>© {year} AIBROMOTION — all rights reserved</span>
         </div>
       </div>

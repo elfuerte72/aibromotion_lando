@@ -8,6 +8,8 @@ import {
 } from "framer-motion";
 import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
 import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
+import { useIsMobile, useReducedMotion } from "@/lib/useDevice";
+import { IPhoneShowcase } from "./automation/iPhoneShowcase";
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -97,7 +99,7 @@ function AnimatedCounter({
 
   const springValue = useSpring(0, {
     stiffness: 50,
-    damping: 25,
+    damping: 30,
     restDelta: 0.5,
   });
 
@@ -157,10 +159,10 @@ function ServiceCard({
   if (isHero) {
     return (
       <div
-        className="border border-ink p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 min-h-[200px]"
+        className="border border-ink p-6 sm:p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 min-h-[200px]"
       >
         <div className="md:max-w-[55%]">
-          <h3 className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.4rem,2.8vw,2rem)] mb-4">
+          <h3 className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.2rem,5vw,2rem)] mb-4">
             {service.title}
           </h3>
           <p className="text-sm leading-relaxed text-ink/50 max-w-lg">
@@ -181,7 +183,7 @@ function ServiceCard({
 
   return (
     <div
-      className="border border-ink p-8 md:p-10 flex flex-col justify-between min-h-[320px]"
+      className="border border-ink p-6 sm:p-8 md:p-10 flex flex-col justify-between min-h-[280px] sm:min-h-[320px]"
     >
       <div>
         <h3 className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.2rem,2.2vw,1.6rem)] mb-4">
@@ -241,7 +243,7 @@ function TrustNumbers() {
       {TRUST_NUMBERS.map((item, i) => (
         <div
           key={item.label}
-          className="border-r border-ink px-8 py-12 md:py-16 text-center last:border-r-0 max-md:border-r-0 max-md:border-b max-md:border-ink"
+          className="border-r border-ink px-6 sm:px-8 py-8 md:py-16 text-center last:border-r-0 max-md:border-r-0 max-md:border-b max-md:border-ink"
         >
           <span className="font-serif italic font-light text-accent leading-none block text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.03em]">
             <AnimatedCounter value={item.value} suffix={item.suffix} delay={0.3 + i * 0.15} />
@@ -367,119 +369,148 @@ function useTerminalSequence(items: string[], isInView: boolean) {
 function Integrations() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const isMobile = useIsMobile();
+  // On mobile the terminal is hidden behind a <details> toggle; don't
+  // start the typing sequence until the user opens it. Keep desktop
+  // behaviour unchanged — terminal runs as soon as it's in view.
+  const [terminalOpen, setTerminalOpen] = useState(!isMobile);
+  const terminalActive = isInView && (!isMobile || terminalOpen);
   const { lines, commandTyped, command, phase } = useTerminalSequence(
     INTEGRATIONS,
-    isInView
+    terminalActive
   );
 
   const allDone = phase === "done";
 
-  return (
-    <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-px bg-ink">
-      {/* Left — Terminal */}
-      <div className="bg-paper p-6 md:p-10">
-        <div className="w-full border border-ink overflow-hidden font-mono">
-          {/* Terminal title bar */}
-          <div className="flex items-center gap-2 px-4 py-3 border-b border-ink bg-ink text-paper">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent" />
-            <span className="w-2.5 h-2.5 rounded-full bg-muted" />
-            <span className="w-2.5 h-2.5 rounded-full bg-muted" />
-            <span className="text-[10px] uppercase tracking-[0.15em] text-paper/50 ml-3">
-              integrations
-            </span>
-          </div>
-
-          {/* Terminal body */}
-          <div className="px-5 py-5 space-y-1.5 bg-paper">
-            {/* Command line */}
-            <div className="flex items-center gap-2 text-xs md:text-sm">
-              <span className="text-accent select-none">$</span>
-              <span className="text-ink/70">
-                {command.slice(0, commandTyped)}
-              </span>
-              {phase === "command" && (
-                <span
-                  className="inline-block w-[6px] h-[14px] bg-accent ml-px"
-                  style={{ animation: "termBlink 0.8s step-end infinite" }}
-                />
-              )}
-            </div>
-
-            {/* Integration lines */}
-            {lines.map((line, i) => {
-              if (line.state === "idle") return null;
-
-              const isDone = line.state === "done";
-              const displayName = isDone
-                ? line.name
-                : line.name.slice(0, line.typedChars);
-
-              const padded = displayName.padEnd(16, " ");
-
-              return (
-                <div key={i} className="flex items-center gap-2 text-xs md:text-sm">
-                  <span className={`select-none transition-colors duration-200 ${isDone ? "text-accent" : "text-ink/20"}`}>
-                    {isDone ? "✓" : "⠋"}
-                  </span>
-                  <span className="text-ink/60 whitespace-pre" style={{ minWidth: "10ch" }}>
-                    {padded}
-                  </span>
-                  <span className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-muted" : "text-ink/15"}`}>
-                    {isDone ? "connected" : "connecting..."}
-                  </span>
-                </div>
-              );
-            })}
-
-            {/* Final status */}
-            {allDone && (
-              <motion.div
-                className="flex items-center gap-2 text-xs md:text-sm pt-3 mt-3 border-t border-ink/10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, ease: [...EASE] }}
-              >
-                <span className="text-accent select-none">$</span>
-                <span className="text-muted">
-                  {INTEGRATIONS.length} services ready
-                </span>
-                <span
-                  className="inline-block w-[6px] h-[14px] bg-accent ml-px"
-                  style={{ animation: "termBlink 0.8s step-end infinite" }}
-                />
-              </motion.div>
-            )}
-          </div>
-        </div>
+  const terminalBody = (
+    <div className="w-full border border-ink overflow-hidden font-mono">
+      {/* Terminal title bar */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-ink bg-ink text-paper">
+        <span className="w-2.5 h-2.5 rounded-full bg-accent" />
+        <span className="w-2.5 h-2.5 rounded-full bg-muted" />
+        <span className="w-2.5 h-2.5 rounded-full bg-muted" />
+        <span className="text-[10px] uppercase tracking-[0.15em] text-paper/50 ml-3">
+          integrations
+        </span>
       </div>
 
-      {/* Right — Quote */}
-      <motion.div
-        className="bg-paper flex flex-col justify-center p-8 md:p-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
-      >
-        <blockquote>
-          <p className="font-serif italic font-light text-[clamp(1.1rem,2.2vw,1.6rem)] leading-[1.35] text-ink/80 mb-6 tracking-[-0.02em]">
-            &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
-          </p>
-          <footer className="text-sm text-muted">
-            <cite className="not-italic font-heading font-bold uppercase tracking-[-0.02em]">
-              — Jensen Huang
-            </cite>
-            <span className="block font-mono text-[10px] uppercase tracking-[0.15em] text-muted/60 mt-1">
-              CEO NVIDIA
-            </span>
-          </footer>
-        </blockquote>
-
-        <div className="mt-8 pt-6 border-t border-ink/10">
-          <p className="text-sm leading-relaxed text-ink/45 max-w-sm">
-            Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
-          </p>
+      {/* Terminal body */}
+      <div className="px-5 py-5 space-y-1.5 bg-paper">
+        <div className="flex items-center gap-2 text-xs md:text-sm">
+          <span className="text-accent select-none">$</span>
+          <span className="text-ink/70">
+            {command.slice(0, commandTyped)}
+          </span>
+          {phase === "command" && (
+            <span
+              className="inline-block w-[6px] h-[14px] bg-accent ml-px"
+              style={{ animation: "termBlink 0.8s step-end infinite" }}
+            />
+          )}
         </div>
-      </motion.div>
+
+        {lines.map((line, i) => {
+          if (line.state === "idle") return null;
+          const isDone = line.state === "done";
+          const displayName = isDone
+            ? line.name
+            : line.name.slice(0, line.typedChars);
+          const padded = displayName.padEnd(16, " ");
+          return (
+            <div key={i} className="flex items-center gap-2 text-xs md:text-sm">
+              <span className={`select-none transition-colors duration-200 ${isDone ? "text-accent" : "text-ink/20"}`}>
+                {isDone ? "✓" : "⠋"}
+              </span>
+              <span className="text-ink/60 whitespace-pre" style={{ minWidth: "10ch" }}>
+                {padded}
+              </span>
+              <span className={`text-[10px] uppercase tracking-[0.1em] transition-colors duration-200 ${isDone ? "text-muted" : "text-ink/15"}`}>
+                {isDone ? "connected" : "connecting..."}
+              </span>
+            </div>
+          );
+        })}
+
+        {allDone && (
+          <motion.div
+            className="flex items-center gap-2 text-xs md:text-sm pt-3 mt-3 border-t border-ink/10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, ease: [...EASE] }}
+          >
+            <span className="text-accent select-none">$</span>
+            <span className="text-muted">
+              {INTEGRATIONS.length} services ready
+            </span>
+            <span
+              className="inline-block w-[6px] h-[14px] bg-accent ml-px"
+              style={{ animation: "termBlink 0.8s step-end infinite" }}
+            />
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+
+  const quotePanel = (
+    <motion.div
+      className="bg-paper flex flex-col justify-center p-8 md:p-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.9, delay: 0.3, ease: [...EASE] }}
+    >
+      <blockquote>
+        <p className="font-serif italic font-light text-[clamp(1.1rem,2.2vw,1.6rem)] leading-[1.35] text-ink/80 mb-6 tracking-[-0.02em]">
+          &ldquo;AI не заменит ваш бизнес. Но бизнес, который использует AI, заменит ваш.&rdquo;
+        </p>
+        <footer className="text-sm text-muted">
+          <cite className="not-italic font-heading font-bold uppercase tracking-[-0.02em]">
+            — Jensen Huang
+          </cite>
+          <span className="block font-mono text-[10px] uppercase tracking-[0.15em] text-muted/60 mt-1">
+            CEO NVIDIA
+          </span>
+        </footer>
+      </blockquote>
+
+      <div className="mt-8 pt-6 border-t border-ink/10">
+        <p className="text-sm leading-relaxed text-ink/45 max-w-sm">
+          Мы подключаем ваш бизнес к AI — от мессенджеров и CRM до маркетплейсов. Вы получаете результат, а не технические сложности.
+        </p>
+      </div>
+    </motion.div>
+  );
+
+  return (
+    <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-px bg-ink">
+      <div className="bg-paper p-6 md:p-10">
+        {isMobile ? (
+          <details
+            open={terminalOpen}
+            onToggle={(e) => {
+              const open = (e.currentTarget as HTMLDetailsElement).open;
+              console.debug("[Integrations] terminal toggled", { open });
+              setTerminalOpen(open);
+            }}
+            className="w-full"
+          >
+            <summary className="list-none cursor-pointer select-none flex items-center justify-between gap-3 border border-ink px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ink marker:hidden [&::-webkit-details-marker]:hidden">
+              <span>Показать, как мы подключаемся</span>
+              <span
+                aria-hidden
+                className="transition-transform duration-300 group-open:rotate-90"
+              >
+                ↓
+              </span>
+            </summary>
+            <div className="mt-3">{terminalBody}</div>
+          </details>
+        ) : (
+          terminalBody
+        )}
+      </div>
+
+      {quotePanel}
 
       <style>{`
         @keyframes termBlink {
@@ -514,13 +545,20 @@ function MacBookShowcase() {
       >
         <div className="relative w-full h-full rounded-[10px] border-2 border-[#121212] overflow-hidden bg-paper-2">
           <video
-            src="/media/automation-demo.mp4"
             autoPlay
             loop
             muted
             playsInline
+            preload="metadata"
             className="w-full h-full object-cover"
-          />
+          >
+            <source
+              src="/media/automation-demo-mobile.mp4"
+              type="video/mp4"
+              media="(max-width: 767px)"
+            />
+            <source src="/media/automation-demo.mp4" type="video/mp4" />
+          </video>
         </div>
         <div
           className="absolute right-0 bottom-0 left-0 h-6"
@@ -597,6 +635,7 @@ function AutomationTitle() {
   const ref = useRef<HTMLDivElement>(null);
   const tegakiRef = useRef<TegakiRendererHandle>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const reducedMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -613,26 +652,40 @@ function AutomationTitle() {
     >
       <div className="max-w-6xl mx-auto text-center">
         <div className="relative inline-block">
-          <TegakiRenderer
-            ref={tegakiRef}
-            font={caveatCyrillic}
-            time={
-              isInView
-                ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
-                : { mode: "controlled", value: 0 }
-            }
-            style={{
-              fontSize: "clamp(4rem, 12vw, 10rem)",
-              lineHeight: 1,
-              color: "var(--accent)",
-            }}
-            effects={{
-              pressureWidth: { strength: 0.6 },
-              taper: { startLength: 0.1, endLength: 0.15 },
-            }}
-          >
-            Автоматизация
-          </TegakiRenderer>
+          {reducedMotion ? (
+            // Static fallback — Tegaki's per-stroke animation is expensive
+            // and motion-sensitive users shouldn't pay that cost.
+            <h2
+              className="font-serif italic font-light text-accent leading-none"
+              style={{
+                fontSize: "clamp(4rem, 12vw, 10rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Автоматизация
+            </h2>
+          ) : (
+            <TegakiRenderer
+              ref={tegakiRef}
+              font={caveatCyrillic}
+              time={
+                isInView
+                  ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
+                  : { mode: "controlled", value: 0 }
+              }
+              style={{
+                fontSize: "clamp(4rem, 12vw, 10rem)",
+                lineHeight: 1,
+                color: "var(--accent)",
+              }}
+              effects={{
+                pressureWidth: { strength: 0.6 },
+                taper: { startLength: 0.1, endLength: 0.15 },
+              }}
+            >
+              Автоматизация
+            </TegakiRenderer>
+          )}
         </div>
 
         <motion.p
@@ -649,6 +702,7 @@ function AutomationTitle() {
 /* ── Main section ─────────────────────────────────────── */
 
 export function AutomationSection() {
+  const isMobile = useIsMobile();
 
   return (
     <section
@@ -659,25 +713,25 @@ export function AutomationSection() {
       <AutomationTitle />
 
       {/* ── Headline ── */}
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="py-24 md:py-36">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6">
+        <div className="py-16 sm:py-24 md:py-36">
           <p className="font-heading font-extrabold uppercase leading-[1.1] text-center max-w-5xl mx-auto tracking-[-0.03em] text-[clamp(1.75rem,4.5vw,4rem)]">
             Мы автоматизируем бизнес<br />Создаём AI-агентов<br />Под ключ
           </p>
         </div>
       </div>
 
-      {/* ── MacBook showcase ── */}
-      <div className="max-w-[90rem] mx-auto px-6 md:px-12 mb-24 md:mb-32">
+      {/* ── Showcase — MacBook on desktop, iPhone on mobile ── */}
+      <div className="max-w-[90rem] mx-auto px-5 sm:px-6 md:px-12 mb-16 sm:mb-24 md:mb-32">
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-8 md:gap-16 items-center">
-          <MacBookShowcase />
+          {isMobile ? <IPhoneShowcase /> : <MacBookShowcase />}
           <ShowcaseText />
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6">
         {/* ── Service cards — bento grid ── */}
-        <div className="space-y-px mb-20">
+        <div className="space-y-px mb-16 sm:mb-20">
           <ServiceCard service={SERVICES[3]} index={0} isHero />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink">
             {SERVICES.slice(0, 3).map((service, i) => (
@@ -689,7 +743,7 @@ export function AutomationSection() {
         </div>
 
         {/* ── Statement ── */}
-        <div className="py-16 md:py-24">
+        <div className="py-12 sm:py-16 md:py-24">
           <p className="font-heading font-extrabold uppercase leading-[1.1] max-w-5xl mx-auto text-center tracking-[-0.03em] text-[clamp(1.5rem,4vw,3.75rem)]">
             Ваша команда занимается стратегией — рутину берёт на себя AI
           </p>

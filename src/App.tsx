@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ReactLenis } from "lenis/react";
 import { Nav } from "@/components/Nav";
 import { Header } from "@/components/Header";
@@ -10,8 +11,29 @@ import { ProcessSection } from "@/components/ProcessSection";
 import { AutomationSection } from "@/components/AutomationSection";
 import { TeamSection } from "@/components/TeamSection";
 import { Footer } from "@/components/Footer";
+import { useIsTouch, useReducedMotion } from "@/lib/useDevice";
 
-export default function App() {
+/**
+ * Conditionally wraps children in Lenis. On touch devices (phones / tablets)
+ * and when the user has requested reduced motion we render the native scroll
+ * — Lenis on touch fights with iOS addressbar and snap-scroll carousels,
+ * and burns CPU on low-end Androids.
+ */
+function ScrollContainer({ children }: { children: ReactNode }) {
+  const isTouch = useIsTouch();
+  const reducedMotion = useReducedMotion();
+
+  if (isTouch || reducedMotion) {
+    if (typeof window !== "undefined") {
+      console.debug("[App] scroll=native", { isTouch, reducedMotion });
+    }
+    return <>{children}</>;
+  }
+
+  if (typeof window !== "undefined") {
+    console.debug("[App] scroll=lenis", { isTouch, reducedMotion });
+  }
+
   return (
     <ReactLenis
       root
@@ -19,9 +41,19 @@ export default function App() {
         lerp: 0.1,
         duration: 1.2,
         smoothWheel: true,
-        wheelMultiplier: 1,
+        wheelMultiplier: 0.8,
+        syncTouch: false,
+        touchMultiplier: 1.2,
       }}
     >
+      {children}
+    </ReactLenis>
+  );
+}
+
+export default function App() {
+  return (
+    <ScrollContainer>
       <div className="bg-paper">
         <Nav />
         <Header />
@@ -35,6 +67,6 @@ export default function App() {
         <TeamSection />
         <Footer />
       </div>
-    </ReactLenis>
+    </ScrollContainer>
   );
 }

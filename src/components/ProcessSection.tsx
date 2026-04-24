@@ -12,17 +12,17 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <section className="py-[140px] px-6 border-b border-ink">
+    <section className="py-[80px] sm:py-[100px] lg:py-[140px] px-5 sm:px-6 border-b border-ink">
       <div className="mb-[60px]">
         <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-muted mb-4">
           [06] Method
         </div>
-        <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(56px,9vw,160px)]">
+        <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(44px,11vw,160px)]">
           Процесс <span className="font-serif italic font-light tracking-[-0.03em]">без лишнего.</span>
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 border-t border-ink">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-ink">
         {STEPS.map((s, i) => (
           <ProcessStep key={s.n} step={s} index={i} />
         ))}
@@ -47,14 +47,14 @@ function ProcessStep({
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.9, delay: index * 0.08, ease }}
-      className="group relative p-6 pt-9 pb-[100px] border-r border-ink min-h-[400px] overflow-hidden transition-all duration-500 hover:bg-ink hover:text-paper max-lg:border-r-0 max-lg:border-b max-lg:border-ink last:lg:border-r-0"
+      className="group relative p-6 pt-8 pb-20 sm:pb-[100px] border-r border-ink min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] overflow-hidden transition-all duration-500 hover:bg-ink hover:text-paper max-lg:border-r-0 max-lg:border-b max-lg:border-ink last:lg:border-r-0"
     >
       {/* Big outline number */}
-      <div className="font-heading font-extrabold text-[160px] tracking-[-0.06em] leading-[0.8] outline-text mb-6 transition-all duration-500 group-hover:[&]:[-webkit-text-stroke-color:var(--accent)]">
+      <div className="font-heading font-extrabold text-[clamp(72px,22vw,160px)] tracking-[-0.06em] leading-[0.8] outline-text mb-6 transition-all duration-500 group-hover:[&]:[-webkit-text-stroke-color:var(--accent)]">
         {s.n}
       </div>
 
-      <h4 className="font-heading font-bold text-[28px] tracking-[-0.02em] uppercase mb-3.5">
+      <h4 className="font-heading font-bold text-[clamp(22px,5.5vw,28px)] tracking-[-0.02em] uppercase mb-3.5">
         {s.t}
       </h4>
       <p className="text-sm leading-relaxed max-w-[280px]">{s.d}</p>

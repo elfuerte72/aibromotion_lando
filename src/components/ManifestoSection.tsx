@@ -34,14 +34,14 @@ function Reveal({
 
 export function ManifestoSection() {
   return (
-    <section className="py-[140px] px-6 border-b border-ink">
-      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-[72px] items-start">
+    <section className="py-[80px] sm:py-[100px] lg:py-[140px] px-5 sm:px-6 border-b border-ink">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 md:gap-16 lg:gap-[72px] items-start">
         {/* Left — big heading */}
         <div>
           <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-muted mb-4">
             [01] Manifesto — 2026
           </div>
-          <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(48px,7vw,120px)]">
+          <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(40px,11vw,120px)]">
             <Reveal><div>Хороший</div></Reveal>
             <Reveal delay={100}>
               <div>
@@ -68,11 +68,11 @@ export function ManifestoSection() {
           </div>
 
           {/* Stat strip */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 border-t border-ink">
+          <div className="mt-12 grid grid-cols-2 border-t border-ink">
             {STATS.map((s, i) => (
               <Reveal key={s.t} delay={200 + i * 100}>
                 <div className="pt-6 px-5 border-r border-ink last:border-r-0 max-lg:border-b max-lg:border-ink max-lg:pb-6">
-                  <div className="font-serif italic font-light text-[clamp(40px,4vw,72px)] text-accent tracking-[-0.03em]">
+                  <div className="font-serif italic font-light text-[clamp(32px,7vw,72px)] text-accent tracking-[-0.03em]">
                     {s.n}
                   </div>
                   <div className="font-mono text-[11px] font-medium tracking-[0.14em] uppercase text-muted mt-1.5">

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light only" />
     <title>AIBROMOTION — Креативная студия · Видеопродакшн · AI</title>
     <meta name="description" content="Креативная студия, видеопродакшн и лаборатория ИИ-инструментов. Съёмка, маркетинг, AI-аватары, автоматизация." />
@@ -12,6 +12,16 @@
     <meta property="og:title" content="AIBROMOTION — Креативная студия" />
     <meta property="og:description" content="Видеопродакшн, креатив, маркетинг, AI-аватары и автоматизация — всё под одной крышей." />
     <meta property="og:type" content="website" />
+
+    <!-- LCP preload: hero image (served as AVIF with WebP fallback in <picture>) -->
+    <link
+      rel="preload"
+      as="image"
+      href="/media/hero.avif"
+      type="image/avif"
+      fetchpriority="high"
+      imagesrcset="/media/hero.avif"
+    />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

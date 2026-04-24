@@ -25,13 +25,13 @@ export function Header() {
   const footInView = useInView(footRef, { once: true, margin: "-10%" });
 
   return (
-    <section className="min-h-screen pt-[92px] px-6 pb-6 relative overflow-hidden flex flex-col">
+    <section className="min-h-screen pt-[72px] sm:pt-[84px] lg:pt-[92px] px-5 sm:px-6 pb-5 sm:pb-6 relative overflow-hidden flex flex-col">
 
       {/* Main: title + portrait */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-end mb-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-end mb-6">
         <h1
           ref={titleRef}
-          className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(56px,10vw,200px)] hero-title"
+          className="font-heading font-extrabold uppercase leading-[0.88] sm:leading-[0.84] tracking-[-0.055em] text-[clamp(44px,12vw,200px)] hero-title"
         >
           <div className="overflow-hidden relative">
             <span className="hero-line hero-l1 block">Снимаем.</span>
@@ -51,13 +51,16 @@ export function Header() {
 
         <div
           ref={portraitRef}
-          className="relative aspect-[4/5] border border-ink overflow-hidden hero-portrait"
+          className="relative aspect-[3/4] sm:aspect-[4/5] border border-ink overflow-hidden hero-portrait"
         >
-          <img
-            src="/media/hero.webp"
-            alt=""
-            className="w-full h-full object-cover grayscale-[0.2] contrast-[1.05] scale-[1.08] hero-portrait-img"
-          />
+          <picture>
+            <source srcSet="/media/hero.avif" type="image/avif" />
+            <img
+              src="/media/hero.webp"
+              alt=""
+              className="w-full h-full object-cover grayscale-[0.2] contrast-[1.05] scale-[1.08] hero-portrait-img"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-t from-ink/55 to-transparent pointer-events-none" />
           <span className="absolute top-3.5 left-3.5 font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-paper">
             AIBRO/HERO—01
@@ -68,14 +71,14 @@ export function Header() {
           <span className="absolute bottom-3.5 left-3.5 font-mono text-[10px] font-medium tracking-[0.16em] uppercase text-paper">
             St. Petersburg — 2026
           </span>
-          <div className="absolute left-3.5 bottom-12 right-3.5 text-paper font-serif text-[clamp(24px,2.4vw,40px)] font-light tracking-tight leading-none">
+          <div className="absolute left-3.5 bottom-10 sm:bottom-12 right-3.5 text-paper font-serif text-[clamp(18px,4.5vw,40px)] font-light tracking-tight leading-none">
             Каждый кадр — <em className="italic text-accent">бренд-задача</em>. Каждый пиксель — <em className="italic text-accent">вопрос.</em>
           </div>
         </div>
       </div>
 
       {/* Footer blurbs + CTA */}
-      <div ref={footRef} className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_auto] gap-8 pt-5 border-t border-ink items-end">
+      <div ref={footRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] gap-6 lg:gap-8 pt-5 border-t border-ink items-end">
         {FOOT_TEXTS.map((text, i) => (
           <motion.p
             key={i}
