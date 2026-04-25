@@ -3,11 +3,6 @@ import { motion, useInView } from "framer-motion";
 
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
-const STATS = [
-  { n: "128", t: "проектов" },
-  { n: "6×", t: "средний ROI" },
-];
-
 function Reveal({
   children,
   delay = 0,
@@ -53,34 +48,15 @@ export function ManifestoSection() {
           </h2>
         </div>
 
-        {/* Right — copy + stats */}
+        {/* Right — copy */}
         <div>
           <div className="flex flex-col gap-[18px] text-base leading-relaxed text-ink-2 max-w-[480px]">
             <Reveal delay={100}>
-              <p>Мы не продаём ролики и не продаём «AI-агентов». Мы продаём внимание — единицу, которую сегодня сложнее всего купить и удержать.</p>
+              <p>Мы берём задачу бизнеса и закрываем её полностью — от идеи до реализации.</p>
             </Reveal>
             <Reveal delay={200}>
-              <p>В студии три компетенции: режиссура, performance-маркетинг и инженерия ИИ. Они работают в одной команде, а не в трёх разных подрядчиках.</p>
+              <p>AIbromotion — креативная студия из Тюмени. Мы специализируемся на искусственном интеллекте, потому что убеждены: за ним будущее любого бизнеса. Видео, сайты и автоматизация — всё через призму AI, всё в одной команде.</p>
             </Reveal>
-            <Reveal delay={300}>
-              <p>Если бренду нужна скорость, насмотренность и технология одновременно — это к нам.</p>
-            </Reveal>
-          </div>
-
-          {/* Stat strip */}
-          <div className="mt-12 grid grid-cols-2 border-t border-ink">
-            {STATS.map((s, i) => (
-              <Reveal key={s.t} delay={200 + i * 100}>
-                <div className="pt-6 px-5 border-r border-ink last:border-r-0 max-lg:border-b max-lg:border-ink max-lg:pb-6">
-                  <div className="font-serif italic font-light text-[clamp(32px,7vw,72px)] text-accent tracking-[-0.03em]">
-                    {s.n}
-                  </div>
-                  <div className="font-mono text-[11px] font-medium tracking-[0.14em] uppercase text-muted mt-1.5">
-                    {s.t}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
           </div>
         </div>
       </div>

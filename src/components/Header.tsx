@@ -1,13 +1,4 @@
 import { useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-
-const FOOT_TEXTS = [
-  "Креативная студия, видеопродакшн и лаборатория ИИ-инструментов — всё под одной крышей.",
-  "Работаем с брендами, у которых высокий потолок амбиций и короткий дедлайн.",
-  "Снимаем кино, запускаем performance, обучаем агентов. Один подрядчик на весь стек.",
-];
-
-const ease: [number, number, number, number] = [0.2, 0.85, 0.15, 1];
 
 export function Header() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -21,14 +12,11 @@ export function Header() {
     return () => clearTimeout(t);
   }, []);
 
-  const footRef = useRef<HTMLDivElement>(null);
-  const footInView = useInView(footRef, { once: true, margin: "-10%" });
-
   return (
     <section className="min-h-screen pt-[72px] sm:pt-[84px] lg:pt-[92px] px-5 sm:px-6 pb-5 sm:pb-6 relative overflow-hidden flex flex-col">
 
       {/* Main: title + portrait */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-end mb-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-end">
         <h1
           ref={titleRef}
           className="font-heading font-extrabold uppercase leading-[0.88] sm:leading-[0.84] tracking-[-0.055em] text-[clamp(44px,12vw,200px)] hero-title"
@@ -75,21 +63,6 @@ export function Header() {
             Каждый кадр — <em className="italic text-accent">бренд-задача</em>. Каждый пиксель — <em className="italic text-accent">вопрос.</em>
           </div>
         </div>
-      </div>
-
-      {/* Footer blurbs + CTA */}
-      <div ref={footRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] gap-6 lg:gap-8 pt-5 border-t border-ink items-end">
-        {FOOT_TEXTS.map((text, i) => (
-          <motion.p
-            key={i}
-            className="text-[13px] leading-relaxed max-w-[280px]"
-            initial={{ opacity: 0, y: 24 }}
-            animate={footInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: i * 0.1, ease }}
-          >
-            {text}
-          </motion.p>
-        ))}
       </div>
 
       <style>{`
