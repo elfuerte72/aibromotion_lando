@@ -29,7 +29,7 @@ export function ServicesSection() {
             [03] Services
           </div>
           <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(44px,11vw,160px)]">
-            Шесть<br />
+            Семь<br />
             <span className="font-serif italic font-light tracking-[-0.03em]">дисциплин.</span>
           </h2>
         </div>

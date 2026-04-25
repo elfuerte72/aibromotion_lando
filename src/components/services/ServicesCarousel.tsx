@@ -86,7 +86,21 @@ function ServiceSlide({
             />
           </picture>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-accent to-transparent pointer-events-none" />
+        {s.media?.type === "code" && (
+          // Mobile fallback: статичный финальный код без анимации.
+          // Hover-typing эффект только на десктопе (см. WebCodeTyping).
+          <div className="absolute inset-0 flex flex-col justify-center px-6 pointer-events-none">
+            <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-paper/65 mb-3">
+              // src/Hero.tsx
+            </div>
+            <pre className="font-mono text-[12px] leading-[1.7] text-paper whitespace-pre">
+              {s.media.lines.join("\n")}
+            </pre>
+          </div>
+        )}
+        {s.media?.type !== "code" && (
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-accent to-transparent pointer-events-none" />
+        )}
       </div>
 
       {/* Foreground — text + chips */}

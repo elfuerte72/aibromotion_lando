@@ -10,7 +10,8 @@ export type Service = {
   /** Foreground media revealed on hover (desktop) / shown on the active slide (mobile). */
   media?:
     | { type: "video"; src: string }
-    | { type: "image"; src: string };
+    | { type: "image"; src: string }
+    | { type: "code"; lines: string[] };
   /**
    * Optional ambient background video that plays at rest on the desktop
    * hover grid. When the user hovers, this pauses and the regular `media`
@@ -26,7 +27,7 @@ export const SERVICES: Service[] = [
     t: "Видео",
     body: "Рекламные ролики, AI-аватары, монтаж. Под ключ.",
     tags: ["Ads", "Film", "Motion"],
-    media: { type: "video", src: "/media/heroes-mobile.mp4" },
+    media: { type: "video", src: "/media/heroes.mp4" },
   },
   {
     n: "02",
@@ -62,5 +63,21 @@ export const SERVICES: Service[] = [
     body: "Заявки, документы, отчёты — всё на автопилоте.",
     tags: ["Flow", "n8n", "API"],
     media: { type: "image", src: "/media/service-automation.webp" },
+  },
+  {
+    n: "07",
+    t: "Сайты",
+    body: "Разработка на чистом коде — не Тильда, не шаблон. Уникальный сайт под ваш бизнес.",
+    tags: ["Web", "Code", "UI"],
+    // Live-typing JSX поверх accent-панели — рендерится через `WebCodeTyping`.
+    media: {
+      type: "code",
+      lines: [
+        '<Section variant="hero">',
+        '  <Title>{brand}</Title>',
+        '  <Cta href="/contact">↗</Cta>',
+        "</Section>",
+      ],
+    },
   },
 ];
