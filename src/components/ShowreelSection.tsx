@@ -22,7 +22,7 @@ export function ShowreelSection() {
   return (
     <section id="showreel" className="bg-ink text-paper pt-[72px] sm:pt-[100px] pb-[80px] sm:pb-[120px] border-b border-ink relative overflow-hidden">
       {/* Head */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 px-5 sm:px-6 pb-8 sm:pb-10">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-12 px-5 sm:px-6 pb-8 sm:pb-10">
         <div>
           <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-white/50 mb-4">
             [02] Showreel / 2026
@@ -32,13 +32,13 @@ export function ShowreelSection() {
             <span className="font-serif italic font-light tracking-[-0.03em]">движение.</span>
           </h2>
         </div>
-        <div className="text-white/70 text-[15px] leading-relaxed max-w-[440px] self-end">
+        <div className="text-white/70 text-[15px] leading-relaxed max-w-[440px] self-end lg:justify-self-end">
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.12, ease }}
           >
-            Полторы минуты нарезки работ за последние 14 месяцев. 28 проектов, 4 языка озвучки, ноль компромиссов.
+            Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Горизонтальный и вертикальный форматы.
           </motion.p>
         </div>
       </div>

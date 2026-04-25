@@ -4,7 +4,6 @@ import {
   useScroll,
   useTransform,
   useInView,
-  useSpring,
 } from "framer-motion";
 import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
 import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
@@ -16,28 +15,15 @@ import { IPhoneShowcase } from "./automation/iPhoneShowcase";
 const SERVICES = [
   {
     title: "Умная обработка заявок",
-    desc: "AI сам разбирает входящие заявки, определяет кто готов купить, а кому нужно время. Горячие клиенты сразу попадают к менеджеру, остальные получают автоматические письма.",
-    metric: "4×",
-    metricLabel: "быстрее обработка",
+    desc: "Бот принимает заявку, квалифицирует клиента и передаёт менеджеру только горячих. Холодным — автоматические сообщения.",
   },
   {
     title: "Поддержка клиентов 24/7",
-    desc: "AI-помощник отвечает клиентам мгновенно — в мессенджерах, на сайте, по почте. Понимает суть вопроса и решает его сам. Если не справляется — передаёт живому оператору.",
-    metric: "92%",
-    metricLabel: "вопросов решает AI",
+    desc: "AI отвечает в Telegram и WhatsApp в любое время. Не знает ответа — переключает на живого сотрудника.",
   },
   {
-    title: "Автоматические отчёты",
-    desc: "Каждое утро AI собирает данные из всех ваших систем — продажи, аналитика, таблицы. Формирует понятный отчёт и отправляет в Telegram. Ничего не нужно делать вручную.",
-    metric: "2ч",
-    metricLabel: "экономии каждый день",
-  },
-  {
-    title: "Любая идея — под ключ",
-    desc: "У вас есть задача, которую хочется автоматизировать? Мы создадим решение с нуля: AI-агенты, интеграции, чат-боты — всё что нужно вашему бизнесу. Любая сложность.",
-    metric: "∞",
-    metricLabel: "возможностей",
-    isCustomMetric: true,
+    title: "Автоматизация документов",
+    desc: "Загружаете файл — система извлекает данные и заносит в таблицу. Пример: автоматизация УПД для строительной компании.",
   },
 ];
 
@@ -73,9 +59,9 @@ const INTEGRATIONS = [
 ];
 
 const TRUST_NUMBERS = [
-  { value: 150, suffix: "+", label: "автоматизаций запущено" },
-  { value: 50, suffix: "+", label: "компаний доверяют" },
-  { value: 14, suffix: " дней", label: "среднее время до запуска" },
+  { value: 20, suffix: "+", label: "проектов реализовано" },
+  { value: 5, suffix: "", label: "компаний работают с нами" },
+  { value: 14, suffix: "", label: "от 14 дней — срок запуска" },
 ];
 
 const EASE: [number, number, number, number] = [0.2, 0.85, 0.15, 1];
@@ -85,54 +71,40 @@ const EASE: [number, number, number, number] = [0.2, 0.85, 0.15, 1];
 function AnimatedCounter({
   value,
   suffix = "",
-  isCustom = false,
   delay = 0,
 }: {
   value: number;
   suffix?: string;
-  isCustom?: boolean;
   delay?: number;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const [display, setDisplay] = useState("0" + suffix);
   const hasStarted = useRef(false);
 
-  const springValue = useSpring(0, {
-    stiffness: 50,
-    damping: 30,
-    restDelta: 0.5,
-  });
-
-  const display = useTransform(springValue, (v) =>
-    `${Math.round(v)}${suffix}`
-  );
-
-  if (isInView && !isCustom && !hasStarted.current) {
+  useEffect(() => {
+    if (!isInView || hasStarted.current) return;
     hasStarted.current = true;
-    if (delay > 0) {
-      setTimeout(() => springValue.set(value), delay * 1000);
-    } else {
-      springValue.set(value);
-    }
-  }
 
-  if (isCustom) {
-    return (
-      <motion.span
-        ref={ref}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 0.8, delay, ease: [...EASE] }}
-      >
-        ∞
-      </motion.span>
-    );
-  }
+    const timeout = setTimeout(() => {
+      const start = performance.now();
+      const duration = 1200;
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplay(`${Math.round(eased * value)}${suffix}`);
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, delay * 1000);
+
+    return () => clearTimeout(timeout);
+  }, [isInView, value, suffix, delay]);
 
   return (
-    <motion.span ref={ref} className="tabular-nums">
+    <span ref={ref} className="tabular-nums">
       {display}
-    </motion.span>
+    </span>
   );
 }
 
@@ -140,47 +112,9 @@ function AnimatedCounter({
 
 function ServiceCard({
   service,
-  index,
-  isHero = false,
 }: {
   service: (typeof SERVICES)[number];
-  index: number;
-  isHero?: boolean;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const _isInView = useInView(ref, { once: true, margin: "-15% 0px" });
-  void _isInView;
-
-  const numericMatch = service.metric.match(/\d+/);
-  const numericValue = numericMatch ? parseInt(numericMatch[0]) : 0;
-  const suffix = service.metric.replace(/\d+/, "");
-  const isCustom = "isCustomMetric" in service && service.isCustomMetric;
-
-  if (isHero) {
-    return (
-      <div
-        className="border border-ink p-6 sm:p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6 min-h-[200px]"
-      >
-        <div className="md:max-w-[55%]">
-          <h3 className="font-heading font-extrabold uppercase leading-[1.1] tracking-[-0.03em] text-[clamp(1.2rem,5vw,2rem)] mb-4">
-            {service.title}
-          </h3>
-          <p className="text-sm leading-relaxed text-ink/50 max-w-lg">
-            {service.desc}
-          </p>
-        </div>
-        <div className="md:text-right shrink-0">
-          <span className="font-serif italic font-light text-accent leading-none block text-[clamp(3rem,6vw,5rem)] tracking-[-0.03em]">
-            <AnimatedCounter value={numericValue} suffix={suffix} isCustom={isCustom} delay={0.3} />
-          </span>
-          <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] text-muted mt-2 block">
-            {service.metricLabel}
-          </span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       className="border border-ink p-6 sm:p-8 md:p-10 flex flex-col justify-between min-h-[280px] sm:min-h-[320px]"
@@ -192,14 +126,6 @@ function ServiceCard({
         <p className="text-sm leading-relaxed text-ink/50 max-w-md">
           {service.desc}
         </p>
-      </div>
-      <div className="mt-8 pt-6 border-t border-ink/10">
-        <span className="font-serif italic font-light text-accent leading-none block text-[clamp(2rem,4vw,3.5rem)] tracking-[-0.03em]">
-          <AnimatedCounter value={numericValue} suffix={suffix} isCustom={isCustom} delay={0.4 + index * 0.08} />
-        </span>
-        <span className="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] text-muted mt-2 block">
-          {service.metricLabel}
-        </span>
       </div>
     </div>
   );
@@ -692,7 +618,7 @@ function AutomationTitle() {
           className="font-mono text-sm md:text-base text-muted mt-4 max-w-lg mx-auto tracking-wide"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
-          AI-агенты, интеграции и бизнес-процессы под ключ
+          Строим AI-ботов и автоматизируем процессы для малого и среднего бизнеса. От уведомлений до сложных систем обработки документов.
         </motion.p>
       </div>
     </div>
@@ -730,13 +656,12 @@ export function AutomationSection() {
       </div>
 
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
-        {/* ── Service cards — bento grid ── */}
-        <div className="space-y-px mb-16 sm:mb-20">
-          <ServiceCard service={SERVICES[3]} index={0} isHero />
+        {/* ── Service cards — 3-col grid ── */}
+        <div className="mb-16 sm:mb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink">
-            {SERVICES.slice(0, 3).map((service, i) => (
+            {SERVICES.map((service) => (
               <div key={service.title} className="bg-paper">
-                <ServiceCard service={service} index={i + 1} />
+                <ServiceCard service={service} />
               </div>
             ))}
           </div>
