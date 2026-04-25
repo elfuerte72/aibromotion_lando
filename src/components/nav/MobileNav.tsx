@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
-import { CONTACT_LINK, NAV_LINKS, scrollToAnchor } from "./navLinks";
+import { Logo } from "@/components/Logo";
+import { CONTACT_LINK, NAV_LINKS, scrollToAnchor, scrollToTop } from "./navLinks";
 
 const ease: [number, number, number, number] = [0.2, 0.85, 0.15, 1];
 
@@ -88,16 +89,18 @@ export function MobileNav() {
           paddingRight: "calc(env(safe-area-inset-right, 0px) + 1.25rem)",
         }}
       >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-ink text-paper grid place-items-center font-serif italic text-lg font-light">
-            a
-          </div>
-          <span className="font-heading font-extrabold text-sm tracking-tight uppercase">
-            aibromotion
-            <span className="font-serif italic text-accent font-light">/</span>
-            studio
-          </span>
-        </div>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            close();
+            scrollToTop(lenis);
+          }}
+          aria-label="AIBROMOTION — в начало страницы"
+          className="flex items-center"
+        >
+          <Logo height={40} priority />
+        </a>
 
         <button
           type="button"

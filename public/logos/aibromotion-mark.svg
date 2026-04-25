@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="AIBROMOTION">
+  <!-- Compact lockup — "ai.bro" wordmark + ".MOTION" sub-row.
+       Tagline and divider rule are stripped so the mark stays legible
+       at nav-bar sizes (~36–44px tall). -->
+
+  <!-- "ai" — dark charcoal -->
+  <text x="60" y="238"
+        font-family="'Arial Black', 'Helvetica Inserat', 'Franklin Gothic Heavy', 'Haettenschweiler', 'Inter Tight', system-ui, sans-serif"
+        font-size="200" font-weight="900" fill="#2B2A2C" letter-spacing="-8">ai</text>
+
+  <!-- Vertical hairline separator — keeps the visual "." between ai and bro -->
+  <rect x="258" y="58" width="4" height="185" fill="#2B2A2C" opacity="0.18"/>
+
+  <!-- "bro" — brand red -->
+  <text x="270" y="238"
+        font-family="'Arial Black', 'Helvetica Inserat', 'Franklin Gothic Heavy', 'Haettenschweiler', 'Inter Tight', system-ui, sans-serif"
+        font-size="200" font-weight="900" fill="#B0413E" letter-spacing="-8">bro</text>
+
+  <!-- Red underline beneath "ai" -->
+  <rect x="60" y="258" width="196" height="16" fill="#B0413E" rx="1"/>
+
+  <!-- Dark square separator between the red bar and "MOTION" -->
+  <rect x="258" y="258" width="16" height="16" fill="#2B2A2C"/>
+
+  <!-- "MOTION" — dark, bold caps -->
+  <text x="284" y="274"
+        font-family="'Arial Black', 'Helvetica Inserat', 'Franklin Gothic Heavy', 'Haettenschweiler', 'Inter Tight', system-ui, sans-serif"
+        font-size="58" font-weight="900" fill="#2B2A2C" letter-spacing="6">MOTION</text>
+</svg>

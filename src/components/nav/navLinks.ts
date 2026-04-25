@@ -44,3 +44,13 @@ export function scrollToAnchor(
   // elements OR a manual correction after the scroll.
   el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
+/** Scroll the page to the very top — used by the logo click handler. */
+export function scrollToTop(lenis: Lenis | null | undefined): void {
+  if (typeof window === "undefined") return;
+  if (lenis) {
+    lenis.scrollTo(0, { duration: 1.4 });
+    return;
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}

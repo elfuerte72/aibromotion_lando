@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLenis } from "lenis/react";
-import { CONTACT_LINK, NAV_LINKS, scrollToAnchor } from "./navLinks";
+import { Logo } from "@/components/Logo";
+import { CONTACT_LINK, NAV_LINKS, scrollToAnchor, scrollToTop } from "./navLinks";
 
 /**
  * Desktop / tablet navigation. Identical to the pre-mobile-adaptation
@@ -34,16 +35,17 @@ export function DesktopNav() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-paper/75 backdrop-blur-[18px] border-b border-ink">
-      <div className="flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-ink text-paper grid place-items-center font-serif italic text-lg font-light">
-          a
-        </div>
-        <span className="font-heading font-extrabold text-base tracking-tight uppercase">
-          aibromotion
-          <span className="font-serif italic text-accent font-light">/</span>
-          studio
-        </span>
-      </div>
+      <a
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          scrollToTop(lenis);
+        }}
+        aria-label="AIBROMOTION — в начало страницы"
+        className="flex items-center"
+      >
+        <Logo height={48} priority />
+      </a>
 
       <div className="flex font-mono text-[11px] font-medium tracking-[0.14em] uppercase">
         {NAV_LINKS.map((item) => (
