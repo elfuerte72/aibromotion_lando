@@ -24,12 +24,5 @@ node_modules
 picvid
 
 CLAUDE.md
-AGENTS.md
 *.md
 !README.md
-
-amvera.yml
-amvera*.yml
-Dockerfile
-Caddyfile
-.dockerignore
