@@ -5,8 +5,8 @@ const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const STEPS = [
   { n: "01", t: "Брифинг", d: "Созваниваемся, слушаем задачу, разбираем процессы.", dur: "1–2 дня" },
-  { n: "02", t: "Идея", d: "Готовим сценарий, концепцию или архитектуру решения. Согласовываем до старта.", dur: "3–7 дней" },
-  { n: "03", t: "Продакшн", d: "Снимаем, монтируем, разрабатываем, настраиваем. По вашей задаче.", dur: "1–6 недель" },
+  { n: "02", t: "Идея", d: "Готовим сценарий, концепцию или архитектуру решения. Согласовываем до старта.", dur: "1–4 дня" },
+  { n: "03", t: "Продакшн", d: "Снимаем, монтируем, разрабатываем, настраиваем. По вашей задаче.", dur: "1–4 недели" },
   { n: "04", t: "Запуск", d: "Сдаём результат, обучаем команду, остаёмся на поддержке.", dur: "Постоянно" },
 ];
 
@@ -14,9 +14,6 @@ export function ProcessSection() {
   return (
     <section className="py-[80px] sm:py-[100px] lg:py-[140px] px-5 sm:px-6 border-b border-ink">
       <div className="mb-[60px]">
-        <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-muted mb-4">
-          [06] Method
-        </div>
         <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(44px,11vw,160px)]">
           Процесс <span className="font-serif italic font-light tracking-[-0.03em]">без лишнего.</span>
         </h2>

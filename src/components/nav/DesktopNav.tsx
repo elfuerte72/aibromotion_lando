@@ -61,7 +61,7 @@ export function DesktopNav() {
         <a
           href={`#${CONTACT_LINK.id}`}
           onClick={(e) => handleClick(e, CONTACT_LINK.id)}
-          className="px-3.5 py-2.5 border border-accent bg-accent text-ink transition-all hover:brightness-110"
+          className="cta-pulse px-3.5 py-2.5 border border-accent bg-accent text-ink transition-[filter] hover:brightness-110"
         >
           {CONTACT_LINK.label}
         </a>

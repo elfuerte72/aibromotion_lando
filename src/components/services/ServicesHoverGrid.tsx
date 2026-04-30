@@ -176,16 +176,18 @@ function ServiceHoverCard({
           {s.t}
         </h3>
         <p className="text-sm leading-relaxed mt-5 max-w-[320px]">{s.body}</p>
-        <div className="mt-[18px] flex gap-[5px] flex-wrap">
-          {s.tags.map((t) => (
-            <span
-              key={t}
-              className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase py-1.5 px-2.5 border border-current"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
+        {s.tags.length > 0 && (
+          <div className="mt-[18px] flex gap-[5px] flex-wrap">
+            {s.tags.map((t) => (
+              <span
+                key={t}
+                className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase py-1.5 px-2.5 border border-current"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );

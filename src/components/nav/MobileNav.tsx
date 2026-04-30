@@ -102,30 +102,43 @@ export function MobileNav() {
           <Logo height={40} priority />
         </a>
 
-        <button
-          type="button"
-          aria-label={open ? "Закрыть меню" : "Открыть меню"}
-          aria-expanded={open}
-          aria-controls="mobile-nav-drawer"
-          onClick={() => setOpen((v) => !v)}
-          className="relative w-11 h-11 grid place-items-center border border-ink"
-        >
-          <span className="sr-only">{open ? "Закрыть" : "Меню"}</span>
-          <span aria-hidden className="flex flex-col gap-1.5">
-            <span
-              className="block w-5 h-[2px] bg-ink transition-transform duration-300"
-              style={{ transform: open ? "translateY(7px) rotate(45deg)" : "none" }}
-            />
-            <span
-              className="block w-5 h-[2px] bg-ink transition-opacity duration-200"
-              style={{ opacity: open ? 0 : 1 }}
-            />
-            <span
-              className="block w-5 h-[2px] bg-ink transition-transform duration-300"
-              style={{ transform: open ? "translateY(-7px) rotate(-45deg)" : "none" }}
-            />
-          </span>
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href={`#${CONTACT_LINK.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              close();
+              window.setTimeout(() => scrollToAnchor(CONTACT_LINK.id, lenis), 50);
+            }}
+            className="cta-pulse px-3 h-11 grid place-items-center border border-accent bg-accent text-ink font-mono text-[10px] font-medium tracking-[0.16em] uppercase whitespace-nowrap"
+          >
+            Обсудить
+          </a>
+          <button
+            type="button"
+            aria-label={open ? "Закрыть меню" : "Открыть меню"}
+            aria-expanded={open}
+            aria-controls="mobile-nav-drawer"
+            onClick={() => setOpen((v) => !v)}
+            className="relative w-11 h-11 grid place-items-center border border-ink"
+          >
+            <span className="sr-only">{open ? "Закрыть" : "Меню"}</span>
+            <span aria-hidden className="flex flex-col gap-1.5">
+              <span
+                className="block w-5 h-[2px] bg-ink transition-transform duration-300"
+                style={{ transform: open ? "translateY(7px) rotate(45deg)" : "none" }}
+              />
+              <span
+                className="block w-5 h-[2px] bg-ink transition-opacity duration-200"
+                style={{ opacity: open ? 0 : 1 }}
+              />
+              <span
+                className="block w-5 h-[2px] bg-ink transition-transform duration-300"
+                style={{ transform: open ? "translateY(-7px) rotate(-45deg)" : "none" }}
+              />
+            </span>
+          </button>
+        </div>
       </nav>
 
       {/* Drawer */}

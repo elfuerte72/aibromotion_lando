@@ -7,10 +7,10 @@ import { SnapCarousel } from "./shared/SnapCarousel";
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
 const MINIS = [
-  { v: "/media/result.mp4", l: "Forma Sales Bot" },
-  { v: "/media/truck-holding.mp4", l: "Трак Холдинг" },
-  { v: "/media/basket.mp4", l: "Retail AI" },
-  { v: "/media/spot-new.mp4", l: "Stories" },
+  { v: "/media/result.mp4", l: "Shoozy — магазин одежды" },
+  { v: "/media/truck-holding.mp4", l: "Тракхолдинг — грузоперевозки" },
+  { v: "/media/basket.mp4", l: "Баскетбол — рекламное видео" },
+  { v: "/media/spot-new.mp4", l: "Instagram-контент · AI + монтаж" },
 ];
 
 export function ShowreelSection() {
@@ -28,8 +28,8 @@ export function ShowreelSection() {
             [02] Showreel / 2026
           </div>
           <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(44px,11vw,160px)]">
-            Смотреть<br />
-            <span className="font-serif italic font-light tracking-[-0.03em]">движение.</span>
+            Наши<br />
+            <span className="font-serif italic font-light tracking-[-0.03em]">работы.</span>
           </h2>
         </div>
         <div className="text-white/70 text-[15px] leading-relaxed max-w-[440px] self-end lg:justify-self-end">
@@ -38,7 +38,7 @@ export function ShowreelSection() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.12, ease }}
           >
-            Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Горизонтальный и вертикальный форматы.
+            Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Горизонтальный и вертикальный форматы. Это лишь малая часть того, что мы делаем.
           </motion.p>
         </div>
       </div>

@@ -12,7 +12,7 @@ export const NAV_LINKS: NavLink[] = [
   { id: "team", label: "Команда" },
 ];
 
-export const CONTACT_LINK: NavLink = { id: "contact", label: "Связаться ↗" };
+export const CONTACT_LINK: NavLink = { id: "contact", label: "Обсудить проект ↗" };
 
 /**
  * Scroll to a section. Prefers Lenis when available (smooth mac-feel

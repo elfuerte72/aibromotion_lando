@@ -60,8 +60,8 @@ const INTEGRATIONS = [
 
 const TRUST_NUMBERS = [
   { value: 20, suffix: "+", label: "проектов реализовано" },
-  { value: 5, suffix: "", label: "компаний работают с нами" },
-  { value: 14, suffix: "", label: "от 14 дней — срок запуска" },
+  { value: 10, suffix: "+", label: "компаний работают с нами" },
+  { value: 7, suffix: "", label: "от 7 дней — срок запуска" },
 ];
 
 const EASE: [number, number, number, number] = [0.2, 0.85, 0.15, 1];

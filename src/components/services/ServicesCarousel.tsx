@@ -121,16 +121,18 @@ function ServiceSlide({
           <p className="text-[13px] leading-relaxed mt-3 max-w-[280px]">
             {s.body}
           </p>
-          <div className="mt-3 flex gap-[5px] flex-wrap">
-            {s.tags.map((t) => (
-              <span
-                key={t}
-                className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase py-1 px-2 border border-current"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
+          {s.tags.length > 0 && (
+            <div className="mt-3 flex gap-[5px] flex-wrap">
+              {s.tags.map((t) => (
+                <span
+                  key={t}
+                  className="font-mono text-[10px] font-medium tracking-[0.12em] uppercase py-1 px-2 border border-current"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </article>

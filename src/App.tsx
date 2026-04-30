@@ -9,6 +9,7 @@ import { ShowreelSection } from "@/components/ShowreelSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ProcessSection } from "@/components/ProcessSection";
 import { AutomationSection } from "@/components/AutomationSection";
+import { TrustedSection } from "@/components/TrustedSection";
 import { TeamSection } from "@/components/TeamSection";
 import { Footer } from "@/components/Footer";
 import { useIsTouch, useReducedMotion } from "@/lib/useDevice";
@@ -64,6 +65,7 @@ export default function App() {
         <CreativeTitle />
         <ShowreelSection />
         <AutomationSection />
+        <TrustedSection />
         <TeamSection />
         <Footer />
       </div>

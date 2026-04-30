@@ -74,7 +74,7 @@ export function CreativeTitle() {
           className="font-mono text-sm md:text-base text-muted mt-4 max-w-sm sm:max-w-lg mx-auto tracking-wide"
           style={{ opacity: subtitleOpacity, y: subtitleY }}
         >
-          Продакшен, визуальные истории и AI-ускоренный контент
+          Продакшен и визуальные истории
         </motion.p>
       </div>
     </div>

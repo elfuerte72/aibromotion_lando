@@ -187,7 +187,7 @@ export function Footer() {
 
         {/* Colophon row */}
         <div
-          className="flex items-center justify-center px-5 md:px-10 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35"
+          className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-6 px-5 md:px-10 py-4 font-mono text-[10px] uppercase tracking-[0.22em] text-white/35 text-center"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
             paddingLeft: "calc(env(safe-area-inset-left, 0px) + 1.25rem)",
@@ -195,6 +195,9 @@ export function Footer() {
           }}
         >
           <span>© {year} AIBROMOTION — all rights reserved</span>
+          <span className="text-white/30 normal-case tracking-[0.14em]">
+            ИП Топилин Антон Валерьевич · ИНН 723006005500
+          </span>
         </div>
       </div>
     </footer>
