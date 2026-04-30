@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Single-page landing for **AIBROMOTION** — an AI-powered motion/video production and automation company. Cinematic aesthetic with warm paper tones and dark footer reveal. Russian-language content.
 
-Deployed on **Railway** (static site via Caddy) from `main` branch. GitHub repo: `elfuerte72/aibromotion_lando`. Development happens on `dev` branch (or feature branches like `claude-design`), merged into `main` for production.
+Deployed on **Amvera** (Docker + Caddy serving the Vite-built `dist/`) — see `Dockerfile`, `Caddyfile`, `amvera.yml`. Production deploys are pushed via `git push amvera master`; the `master` branch on the Amvera remote is the deploy trigger. Development happens on feature branches (e.g. `feature/mobile-adaptation`), merged into `main` for the GitHub mirror.
 
 ## Commands
 
@@ -39,16 +39,13 @@ npx vitest run       # Run all tests once (CI mode)
 - Touch (phones, tablets, or `prefers-reduced-motion`): poster-only (`footer-bg.webp`) — no `<video>` is mounted. See `useIsTouch` gate in `src/components/Footer.tsx`
 
 **Page flow (top to bottom):**
-`Nav` (fixed top, SPB live clock) → `Header` (hero title + portrait) → `TickerSection` (marquee) → `ManifestoSection` → `ServicesSection` → `ProcessSection` ([06] Method) → `CreativeTitle` (tegaki "Креатив") → `ShowreelSection` ([02] Showreel) → `AutomationSection` (tegaki "Автоматизация", service cards, process steps, trust numbers, integrations terminal) → `StackSection` → `TeamSection` → `StatsSection` → `ContactSection`
+`Nav` (fixed top, SPB live clock) → `Header` (hero title + portrait) → `TickerSection` (marquee) → `ManifestoSection` → `ServicesSection` → `ProcessSection` ([06] Method) → `CreativeTitle` (tegaki "Креатив") → `ShowreelSection` ([02] Showreel) → `AutomationSection` (tegaki "Автоматизация", service cards, process steps, trust numbers, integrations terminal) → `TrustedSection` ("Нам доверяют" — client logos with ink → color hover) → `TeamSection` → `Footer`
 
 **Tegaki handwriting animation pattern:**
-Used for section titles ("Креатив", "Маркетинг", "Автоматизация"). Each uses `TegakiRenderer` with `font={caveatCyrillic}`, `useInView` trigger, accent color, and consistent effects (`pressureWidth: 0.6`, taper start/end). Time toggles between `controlled` (paused) and `uncontrolled` (speed 1, delay 0.2) based on viewport visibility.
+Used for section titles ("Креатив", "Автоматизация"). Each uses `TegakiRenderer` with `font={caveatCyrillic}`, `useInView` trigger, accent color, and consistent effects (`pressureWidth: 0.6`, taper start/end). Time toggles between `controlled` (paused) and `uncontrolled` (speed 1, delay 0.2) based on viewport visibility.
 
 **Scroll animation system:**
-- `ScrollReveal` — wrapper with 6 variants: `fade-up`, `fade`, `clip-reveal`, `scale`, `slide-left`, `slide-right`. Uses `useInView` with `once: true`
-- `StatementBlock` / `NewsletterCTA` — word-by-word opacity reveal tied to `scrollYProgress`
-- `MediaCell` — parallax depth via `useTransform` on y and scale
-- `LogoMarquee` — velocity-based skew effect via `useVelocity` + `useSpring`
+- `useScroll` + `useTransform` drive parallax/reveal in `Header`, `Footer`, `AutomationSection`, `ShowreelSection` and the manifesto/process blocks
 - Film grain overlay applied globally via `body::after` CSS pseudo-element
 
 **Design tokens** (defined in `src/index.css` `@theme`)
@@ -68,7 +65,7 @@ All static media lives in `public/media/`. Videos are `.mp4` (H.264, CRF 18), im
 - Helpers: `toMobileVideo(src)` / `toAvif(src)` in `src/lib/media.ts` derive paths programmatically
 - To regenerate: `ffmpeg -i foo.mp4 -vf scale=768:-2 -c:v libx264 -crf 28 -an foo-mobile.mp4` / `ffmpeg -i foo.webp -c:v libsvtav1 -crf 40 -frames:v 1 foo.avif`
 
-**Important:** Do not use Git LFS — Railway does not reliably pull LFS files during build. Keep all media files under 100 MB (GitHub hard limit). Source `.mov` originals are excluded via `.gitignore`.
+**Important:** Do not use Git LFS — Amvera builds from a plain git push, and we want the Docker build context to stay reproducible without LFS smudge. Keep all media files under 100 MB (GitHub hard limit). Source `.mov` originals are excluded via `.gitignore`.
 
 ## Mobile adaptation
 
@@ -95,7 +92,24 @@ Full-screen drawer behind a burger, body-scroll locked via `overflow: hidden` on
 Lenis only wraps the app when `!isTouch && !prefersReducedMotion`. Anchor scroll falls back to `scrollIntoView({ behavior: 'smooth' })`.
 
 **Tegaki reduced-motion fallback:**
-`CreativeTitle` and `AutomationTitle` render a static `<h2>` in the same size/colour instead of the handwriting animation when `prefers-reduced-motion: reduce`.
+`CreativeTitle` and the automation title render a static `<h2>` in the same size/colour instead of the handwriting animation when `prefers-reduced-motion: reduce`.
+
+## Deployment (Amvera)
+
+The repo deploys to Amvera via a Docker image built on push to the `master` branch of the Amvera git remote.
+
+```bash
+# one-time
+git remote add amvera https://git.msk0.amvera.ru/<user>/<project>
+
+# every deploy
+git push amvera master
+```
+
+- `Dockerfile` — two stages: `node:20-alpine` builds the Vite bundle, `caddy:2-alpine` serves `/srv` on port 80.
+- `Caddyfile` — SPA fallback (`try_files {path} /index.html`), long-cache for hashed assets in `/assets/*`, no-cache for HTML, gzip + zstd compression, basic security headers.
+- `amvera.yml` — declares the Docker toolchain, points at `Dockerfile`, exposes container/service port `80` and uses `/data` as the persistent mount (unused by the static site, but Amvera always reserves it).
+- `.dockerignore` — keeps `node_modules`, `dist`, `.git`, `.claude`, `.ai-factory`, `.vercel`, `.playwright-mcp`, `.env*`, `*.mov` and editor junk out of the build context.
 
 **Mobile-only optimizations:**
 - `Footer` serves poster-only (`footer-bg.avif/webp`) instead of a `<video>` on touch — saves ~4MB cellular + continuous decode

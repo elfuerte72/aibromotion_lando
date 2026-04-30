@@ -33,4 +33,9 @@ Screenshot*.png
 
 # AI Factory
 .ai-factory/
-.vercel
+
+# Claude Code skills (local)
+.claude/skills/
+
+# Amvera build cache (if any)
+.amvera/
