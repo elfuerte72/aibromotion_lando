@@ -195,8 +195,15 @@ export function Footer() {
           }}
         >
           <span>© {year} AIBROMOTION — all rights reserved</span>
-          <span className="text-white/30 normal-case tracking-[0.14em]">
-            ИП Топилин Антон Валерьевич · ИНН 723006005500
+          <span className="text-white/30 normal-case tracking-[0.14em] flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <span>ИП Топилин Антон Валерьевич · ИНН 723006005500</span>
+            <span aria-hidden className="hidden sm:inline text-white/20">·</span>
+            <a
+              href="/privacy.html"
+              className="uppercase tracking-[0.22em] text-white/45 hover:text-white transition-colors"
+            >
+              Политика конфиденциальности
+            </a>
           </span>
         </div>
       </div>

@@ -9,8 +9,6 @@ type Brand = {
   logoColor: string;
   /** Per-logo height tuning so wordmark + mark variants visually align in the wall. */
   scale: string;
-  /** Если true, при hover ячейка инвертируется в ink (для брендов с белым/светлым логотипом). */
-  darkHover?: boolean;
 };
 
 const BRANDS: Brand[] = [
@@ -37,7 +35,6 @@ const BRANDS: Brand[] = [
     logoInk: "/logos/clients/ruseco.png",
     logoColor: "/logos/clients/ruseco-color.png",
     scale: "max-h-[52%] sm:max-h-[56%]",
-    darkHover: true,
   },
 ];
 
@@ -82,21 +79,15 @@ export function TrustedSection() {
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.1 + i * 0.07, ease }}
-            className={`group relative aspect-[4/3] sm:aspect-[3/2] flex items-center justify-center border-r border-b border-ink/15 overflow-hidden transition-colors duration-500 ${
-              b.darkHover ? "hover:bg-ink" : "hover:bg-paper-2"
-            }`}
+            className="group relative aspect-[4/3] sm:aspect-[3/2] flex items-center justify-center border-r border-b border-ink/15 overflow-hidden transition-colors duration-500 hover:bg-paper-2"
           >
             <span
               aria-hidden
-              className={`absolute top-3.5 left-3.5 w-2 h-2 rounded-full transition-colors ${
-                b.darkHover ? "bg-ink/45 group-hover:bg-accent" : "bg-ink/45 group-hover:bg-accent"
-              }`}
+              className="absolute top-3.5 left-3.5 w-2 h-2 rounded-full bg-ink/45 group-hover:bg-accent transition-colors"
             />
             <span
               aria-hidden
-              className={`absolute top-3.5 right-3.5 font-mono text-[10px] tracking-[0.18em] uppercase transition-colors ${
-                b.darkHover ? "text-ink/35 group-hover:text-paper/40" : "text-ink/35"
-              }`}
+              className="absolute top-3.5 right-3.5 font-mono text-[10px] tracking-[0.18em] uppercase text-ink/35 transition-colors"
             >
               0{i + 1}
             </span>
@@ -123,9 +114,7 @@ export function TrustedSection() {
 
             <span
               aria-hidden
-              className={`absolute bottom-3.5 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.22em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out whitespace-nowrap ${
-                b.darkHover ? "text-paper/80" : "text-ink/70"
-              }`}
+              className="absolute bottom-3.5 left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.22em] uppercase text-ink/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out whitespace-nowrap"
             >
               {b.name}
             </span>
