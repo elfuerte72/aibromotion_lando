@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Single-page landing for **AIBROMOTION** — an AI-powered motion/video production and automation company. Cinematic aesthetic with warm paper tones and dark footer reveal. Russian-language content.
 
-Deployed on **Amvera** (Docker + Caddy serving the Vite-built `dist/`) — see `Dockerfile`, `Caddyfile`, `amvera.yml`. Production deploys are pushed via `git push amvera master`; the `master` branch on the Amvera remote is the deploy trigger. Development happens on feature branches (e.g. `feature/mobile-adaptation`), merged into `main` for the GitHub mirror.
+Deployed on **Amvera** (Docker + nginx serving the Vite-built `dist/`) — see `Dockerfile`, `nginx.conf`, `amvera.yml`. Production deploys are pushed via `git push amvera HEAD:master`; the `master` branch on the Amvera remote is the deploy trigger. Development happens on feature branches (e.g. `feature/mobile-adaptation`), merged into `main` for the GitHub mirror.
 
 ## Commands
 
@@ -106,10 +106,10 @@ git remote add amvera https://git.msk0.amvera.ru/<user>/<project>
 git push amvera master
 ```
 
-- `Dockerfile` — two stages: `node:20-alpine` builds the Vite bundle, `caddy:2-alpine` serves `/srv` on port 80.
-- `Caddyfile` — SPA fallback (`try_files {path} /index.html`), long-cache for hashed assets in `/assets/*`, no-cache for HTML, gzip + zstd compression, basic security headers.
+- `Dockerfile` — two stages: `node:20-alpine` builds the Vite bundle, `nginx:alpine` serves `/usr/share/nginx/html` on port 80.
+- `nginx.conf` — SPA fallback (`try_files $uri $uri/ /index.html`), long-cache for hashed `/assets/*`, 30-day cache for media/fonts, no-cache for HTML, gzip, basic security headers.
 - `amvera.yml` — declares the Docker toolchain, points at `Dockerfile`, exposes container/service port `80` and uses `/data` as the persistent mount (unused by the static site, but Amvera always reserves it).
-- `.dockerignore` — keeps `node_modules`, `dist`, `.git`, `.claude`, `.ai-factory`, `.vercel`, `.playwright-mcp`, `.env*`, `*.mov` and editor junk out of the build context.
+- `.dockerignore` — keeps `node_modules`, `.git`, `.claude`, `.ai-factory`, `.vercel`, `.playwright-mcp`, `.env*`, `*.mov` and editor junk out of the build context. **Never** add `dist` here — kaniko applies `.dockerignore` to cross-stage `COPY --from=builder` and would copy nothing.
 
 **Mobile-only optimizations:**
 - `Footer` serves poster-only (`footer-bg.avif/webp`) instead of a `<video>` on touch — saves ~4MB cellular + continuous decode
