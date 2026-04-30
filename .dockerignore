@@ -3,8 +3,6 @@
 .github
 
 node_modules
-dist
-build
 
 .vscode
 .idea
