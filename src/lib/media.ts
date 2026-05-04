@@ -13,8 +13,19 @@ export function toMobileVideo(src: string): string {
   return src.replace(/\.mp4$/, "-mobile.mp4");
 }
 
-/** Derive the AVIF companion for a given `.webp` URL. */
+/** Derive the AVIF companion for a given `.webp` or `.png` URL. */
 export function toAvif(src: string): string {
-  if (!src.endsWith(".webp")) return src;
-  return src.replace(/\.webp$/, ".avif");
+  return src.replace(/\.(webp|png)$/, ".avif");
+}
+
+/**
+ * Derive the `*-poster.jpg` / `*-poster.avif` paths for a given `.mp4`.
+ * Convention: `foo.mp4` → `foo-poster.jpg` (+ `.avif` companion).
+ */
+export function toPoster(src: string): { jpg: string; avif: string } {
+  const base = src.replace(/(-mobile)?\.mp4$/, "");
+  return {
+    jpg: `${base}-poster.jpg`,
+    avif: `${base}-poster.avif`,
+  };
 }

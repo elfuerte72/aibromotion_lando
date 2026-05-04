@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { toAvif, toMobileVideo } from "@/lib/media";
+import { toAvif, toPoster } from "@/lib/media";
 import { SnapCarousel } from "../shared/SnapCarousel";
 import type { Service } from "./serviceData";
 
@@ -36,20 +35,6 @@ function ServiceSlide({
   service: Service;
   isActive: boolean;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Play only the active slide's video. Others pause + rewind.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (isActive) {
-      v.currentTime = 0;
-      void v.play().catch(() => {});
-    } else {
-      v.pause();
-    }
-  }, [isActive]);
-
   return (
     <article
       data-active={isActive ? "true" : "false"}
@@ -58,22 +43,19 @@ function ServiceSlide({
       {/* Media layer — visible by default, saturates when active */}
       <div className="absolute inset-0 bg-accent">
         {s.media?.type === "video" && (
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 w-full h-full object-cover mix-blend-multiply [filter:grayscale(100%)_contrast(1.1)_brightness(1.05)] data-[active=true]:[filter:grayscale(0%)_contrast(1.05)_brightness(1)] transition-[filter] duration-500"
-            data-active={isActive ? "true" : "false"}
-          >
-            <source
-              src={toMobileVideo(s.media.src)}
-              type="video/mp4"
-              media="(max-width: 767px)"
+          // Mobile: статичный постер вместо autoplay-видео — никакого
+          // decode-cost при скролле, никакой неясной "иконки видео".
+          <picture>
+            <source srcSet={toPoster(s.media.src).avif} type="image/avif" />
+            <img
+              src={toPoster(s.media.src).jpg}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              data-active={isActive ? "true" : "false"}
+              className="absolute inset-0 w-full h-full object-cover mix-blend-multiply [filter:grayscale(100%)_contrast(1.1)_brightness(1.05)] data-[active=true]:[filter:grayscale(0%)_contrast(1.05)_brightness(1)] transition-[filter] duration-500"
             />
-            <source src={s.media.src} type="video/mp4" />
-          </video>
+          </picture>
         )}
         {s.media?.type === "image" && (
           <picture>
@@ -103,7 +85,7 @@ function ServiceSlide({
         )}
       </div>
 
-      {/* Foreground — text + chips */}
+      {/* Foreground — text + chips. pointer-events disabled so taps reach the video poster behind. */}
       <div className="relative z-[1] flex flex-col justify-between h-full p-6 pt-8">
         <div className="flex justify-between items-start">
           <span className="font-mono text-xs font-medium tracking-[0.16em] text-paper/80">

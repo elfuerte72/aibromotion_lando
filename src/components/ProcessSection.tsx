@@ -1,7 +1,4 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-
-const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
+import { Reveal } from "./shared/Reveal";
 
 const STEPS = [
   { n: "01", t: "Брифинг", d: "Созваниваемся, слушаем задачу, разбираем процессы.", dur: "1–2 дня" },
@@ -35,15 +32,10 @@ function ProcessStep({
   step: (typeof STEPS)[number];
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
-
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.9, delay: index * 0.08, ease }}
+    <Reveal
+      delay={index * 80}
+      duration={900}
       className="group relative p-6 pt-8 pb-20 sm:pb-[100px] border-r border-ink min-h-[280px] sm:min-h-[340px] lg:min-h-[400px] overflow-hidden transition-all duration-500 hover:bg-ink hover:text-paper max-lg:border-r-0 max-lg:border-b max-lg:border-ink last:lg:border-r-0"
     >
       {/* Big outline number */}
@@ -65,6 +57,6 @@ function ProcessStep({
       <span className="absolute bottom-6 right-6 w-11 h-11 border border-current grid place-items-center transition-all duration-400 group-hover:bg-accent group-hover:text-ink group-hover:border-accent group-hover:rotate-[-45deg]">
         ↗
       </span>
-    </motion.div>
+    </Reveal>
   );
 }

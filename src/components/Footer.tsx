@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useIsTouch } from "@/lib/useDevice";
+import { useIsMobile, useIsTouch } from "@/lib/useDevice";
 
 type ContactLinkProps = {
   label: string;
@@ -35,6 +35,7 @@ export function Footer() {
   const ref = useRef<HTMLElement>(null);
   const year = new Date().getFullYear();
   const isTouch = useIsTouch();
+  const isMobile = useIsMobile();
 
   // Reveal driven by footer entering the viewport
   const { scrollYProgress } = useScroll({
@@ -46,6 +47,12 @@ export function Footer() {
   const ctaY = useTransform(revealProgress, [0, 0.45], [40, 0]);
   const videoScale = useTransform(revealProgress, [0, 1], [1.08, 1]);
   const flareOpacity = useTransform(revealProgress, [0, 0.7], [0.35, 1]);
+
+  // Mobile: bypass per-frame MotionValue commits — show CTA/flare in
+  // their final state. The useScroll subscription is cheap; what hurt
+  // was the DOM style updates on every scroll tick.
+  const ctaStyle = isMobile ? { opacity: 1, y: 0 } : { opacity: ctaOpacity, y: ctaY };
+  const flareStyle = isMobile ? { opacity: 1 } : { opacity: flareOpacity };
 
   return (
     <footer
@@ -124,7 +131,7 @@ export function Footer() {
         aria-hidden
         className="absolute inset-0 pointer-events-none"
         style={{
-          opacity: flareOpacity,
+          ...flareStyle,
           background:
             "radial-gradient(62% 82% at 96% 108%, rgba(255,74,28,0.42) 0%, rgba(255,74,28,0.08) 45%, rgba(255,74,28,0) 70%)",
           filter: "blur(4px)",
@@ -150,7 +157,7 @@ export function Footer() {
 
         {/* Main content */}
         <div className="flex-1 flex flex-col justify-between px-5 sm:px-6 md:px-12 py-12 sm:py-14 md:py-24">
-          <motion.div style={{ opacity: ctaOpacity, y: ctaY }}>
+          <motion.div style={ctaStyle}>
             <a href="mailto:aibromotion@yandex.com" className="block">
               <p className="font-serif italic text-white text-[clamp(40px,11vw,128px)] leading-[0.95] tracking-[-0.03em]">
                 Покажем,

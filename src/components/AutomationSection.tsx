@@ -1,14 +1,16 @@
-import { useRef, useState, useEffect } from "react";
+import { lazy, Suspense, useRef, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useInView,
 } from "framer-motion";
-import { TegakiRenderer, type TegakiRendererHandle } from "tegaki/react";
-import caveatCyrillic from "@/fonts/caveat-cyrillic/bundle";
 import { useIsMobile, useReducedMotion } from "@/lib/useDevice";
 import { IPhoneShowcase } from "./automation/iPhoneShowcase";
+
+// Tegaki + 251KB Caveat TTF + glyph JSON live in a separate chunk —
+// mobile and reduced-motion users never trigger this import.
+const AutomationTegaki = lazy(() => import("./automation/AutomationTegaki"));
 
 /* ── Data ─────────────────────────────────────────────── */
 
@@ -79,10 +81,14 @@ function AnimatedCounter({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const [display, setDisplay] = useState("0" + suffix);
+  const isMobile = useIsMobile();
+  // Mobile: показываем финальное значение сразу — никаких 3 параллельных
+  // RAF-подсчётов на каждый scroll-tick рядом с другими тяжёлыми секциями.
+  const [display, setDisplay] = useState(isMobile ? `${value}${suffix}` : `0${suffix}`);
   const hasStarted = useRef(false);
 
   useEffect(() => {
+    if (isMobile) return;
     if (!isInView || hasStarted.current) return;
     hasStarted.current = true;
 
@@ -99,7 +105,7 @@ function AnimatedCounter({
     }, delay * 1000);
 
     return () => clearTimeout(timeout);
-  }, [isInView, value, suffix, delay]);
+  }, [isInView, value, suffix, delay, isMobile]);
 
   return (
     <span ref={ref} className="tabular-nums">
@@ -424,7 +430,8 @@ function Integrations() {
               <span>Показать, как мы подключаемся</span>
               <span
                 aria-hidden
-                className="transition-transform duration-300 group-open:rotate-90"
+                data-arrow
+                className="inline-block transition-transform duration-300"
               >
                 ↓
               </span>
@@ -443,6 +450,7 @@ function Integrations() {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
         }
+        details[open] > summary [data-arrow] { transform: rotate(180deg); }
       `}</style>
     </div>
   );
@@ -557,11 +565,26 @@ function ShowcaseText() {
 
 /* ── Tegaki title ────────────────────────────────────── */
 
+function AutomationStaticTitle() {
+  return (
+    <h2
+      className="font-serif italic font-light text-accent leading-none"
+      style={{
+        fontSize: "clamp(4rem, 12vw, 10rem)",
+        letterSpacing: "-0.02em",
+      }}
+    >
+      Автоматизация
+    </h2>
+  );
+}
+
 function AutomationTitle() {
   const ref = useRef<HTMLDivElement>(null);
-  const tegakiRef = useRef<TegakiRendererHandle>(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
   const reducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+  const skipTegaki = isMobile || reducedMotion;
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -571,6 +594,11 @@ function AutomationTitle() {
   const subtitleOpacity = useTransform(scrollYProgress, [0.5, 0.75], [0, 1]);
   const subtitleY = useTransform(scrollYProgress, [0.5, 0.75], [15, 0]);
 
+  // Mobile: subtitle visible immediately, no per-frame scroll commits.
+  const subtitleStyle = isMobile
+    ? { opacity: 1, y: 0 }
+    : { opacity: subtitleOpacity, y: subtitleY };
+
   return (
     <div
       ref={ref}
@@ -578,45 +606,18 @@ function AutomationTitle() {
     >
       <div className="max-w-6xl mx-auto text-center">
         <div className="relative inline-block">
-          {reducedMotion ? (
-            // Static fallback — Tegaki's per-stroke animation is expensive
-            // and motion-sensitive users shouldn't pay that cost.
-            <h2
-              className="font-serif italic font-light text-accent leading-none"
-              style={{
-                fontSize: "clamp(4rem, 12vw, 10rem)",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              Автоматизация
-            </h2>
+          {skipTegaki ? (
+            <AutomationStaticTitle />
           ) : (
-            <TegakiRenderer
-              ref={tegakiRef}
-              font={caveatCyrillic}
-              time={
-                isInView
-                  ? { mode: "uncontrolled", speed: 1, delay: 0.2 }
-                  : { mode: "controlled", value: 0 }
-              }
-              style={{
-                fontSize: "clamp(4rem, 12vw, 10rem)",
-                lineHeight: 1,
-                color: "var(--accent)",
-              }}
-              effects={{
-                pressureWidth: { strength: 0.6 },
-                taper: { startLength: 0.1, endLength: 0.15 },
-              }}
-            >
-              Автоматизация
-            </TegakiRenderer>
+            <Suspense fallback={<AutomationStaticTitle />}>
+              <AutomationTegaki isInView={isInView} />
+            </Suspense>
           )}
         </div>
 
         <motion.p
           className="font-mono text-sm md:text-base text-muted mt-4 max-w-lg mx-auto tracking-wide"
-          style={{ opacity: subtitleOpacity, y: subtitleY }}
+          style={subtitleStyle}
         >
           Строим AI-ботов и автоматизируем процессы для малого и среднего бизнеса. От уведомлений до сложных систем обработки документов.
         </motion.p>
@@ -629,6 +630,8 @@ function AutomationTitle() {
 
 export function AutomationSection() {
   const isMobile = useIsMobile();
+
+  if (isMobile) return <AutomationSectionMobile />;
 
   return (
     <section
@@ -647,10 +650,10 @@ export function AutomationSection() {
         </div>
       </div>
 
-      {/* ── Showcase — MacBook on desktop, iPhone on mobile ── */}
+      {/* ── Showcase — MacBook on desktop ── */}
       <div className="max-w-[90rem] mx-auto px-5 sm:px-6 md:px-12 mb-16 sm:mb-24 md:mb-32">
         <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-8 md:gap-16 items-center">
-          {isMobile ? <IPhoneShowcase /> : <MacBookShowcase />}
+          <MacBookShowcase />
           <ShowcaseText />
         </div>
       </div>
@@ -689,6 +692,98 @@ export function AutomationSection() {
           <Integrations />
         </div>
 
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Mobile-first вариант секции «Автоматизация»: тот же контент, но
+ * сжат до одного-двух экранов сверху + всё остальное скрыто за
+ * единственным `<details>`. Раньше секция занимала ~3000–3500 px
+ * длинного скролла с тяжёлым layout/decode на каждый pixel — это
+ * был главный источник лагов на телефоне.
+ */
+function AutomationSectionMobile() {
+  return (
+    <section id="automation" className="bg-paper border-b border-ink">
+      <AutomationTitle />
+
+      {/* Compact headline */}
+      <div className="px-5 py-10">
+        <p className="font-heading font-extrabold uppercase leading-[1.05] text-center tracking-[-0.03em] text-[clamp(1.5rem,7vw,2.25rem)]">
+          Мы автоматизируем бизнес<br />и создаём AI-агентов под ключ
+        </p>
+      </div>
+
+      {/* Showcase: iPhone + bullets */}
+      <div className="px-5 pb-10">
+        <IPhoneShowcase />
+        <div className="mt-8">
+          <ShowcaseText />
+        </div>
+      </div>
+
+      {/* Service cards — компактный stack */}
+      <div className="px-5 pb-10">
+        <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted mb-4">
+          Услуги
+        </div>
+        <div className="flex flex-col gap-px bg-ink">
+          {SERVICES.map((service) => (
+            <div key={service.title} className="bg-paper p-5">
+              <h3 className="font-heading font-extrabold uppercase leading-[1.15] tracking-[-0.025em] text-[17px] mb-2">
+                {service.title}
+              </h3>
+              <p className="text-[13px] leading-relaxed text-ink/65">
+                {service.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Statement */}
+      <div className="px-5 py-10 border-t border-b border-ink/15">
+        <p className="font-heading font-extrabold uppercase leading-[1.1] text-center tracking-[-0.03em] text-[clamp(1.25rem,6vw,1.85rem)]">
+          Ваша команда занимается стратегией — рутину берёт на себя&nbsp;AI
+        </p>
+      </div>
+
+      {/* Подробнее: всё остальное (process + trust numbers + integrations) */}
+      <div className="px-5 py-8">
+        <details className="group">
+          <summary className="list-none cursor-pointer select-none flex items-center justify-between gap-3 border border-ink px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink marker:hidden [&::-webkit-details-marker]:hidden">
+            <span>Подробнее о процессе и интеграциях</span>
+            <span aria-hidden data-arrow className="inline-block transition-transform duration-300">↓</span>
+          </summary>
+
+          <div className="mt-6 space-y-10">
+            {/* Process */}
+            <div>
+              <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted mb-4">
+                Как работаем
+              </div>
+              <ProcessSteps />
+            </div>
+
+            {/* Trust numbers */}
+            <div>
+              <div className="font-mono text-[11px] tracking-[0.2em] uppercase text-muted mb-4">
+                Цифры
+              </div>
+              <TrustNumbers />
+            </div>
+
+            {/* Integrations */}
+            <div>
+              <Integrations />
+            </div>
+          </div>
+        </details>
+        <style>{`
+          details[open] > summary [data-arrow] { transform: rotate(180deg); }
+        `}</style>
       </div>
     </section>
   );

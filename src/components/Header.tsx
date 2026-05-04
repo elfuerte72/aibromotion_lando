@@ -11,7 +11,7 @@ export function Header() {
   }, []);
 
   return (
-    <section className="min-h-screen pt-[72px] sm:pt-[84px] lg:pt-[92px] px-5 sm:px-6 pb-5 sm:pb-6 relative overflow-hidden flex flex-col justify-end">
+    <section className="min-h-screen [padding-top:calc(env(safe-area-inset-top,0px)+72px)] sm:pt-[84px] lg:pt-[92px] px-5 sm:px-6 pb-8 sm:pb-6 relative overflow-hidden flex flex-col justify-end">
       <h1
         ref={titleRef}
         className="font-heading font-extrabold uppercase leading-[0.88] sm:leading-[0.84] tracking-[-0.055em] text-[clamp(44px,12vw,200px)] hero-title"

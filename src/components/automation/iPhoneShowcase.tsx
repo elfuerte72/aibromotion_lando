@@ -1,9 +1,9 @@
+import { TapToPlayVideo } from "../shared/TapToPlayVideo";
+
 /**
  * Portrait "iPhone" mockup — mobile replacement for the MacBook chrome
- * in `AutomationSection`. Uses the same `automation-demo.mp4`. Since the
- * source is landscape, we `object-cover` it inside a 9:19.5 frame — the
- * center of the action remains visible. On ≥md the desktop `MacBookShowcase`
- * is rendered instead.
+ * in `AutomationSection`. Uses tap-to-play poster: never auto-decodes,
+ * stays as a static image until the user explicitly plays it.
  *
  * Kept intentionally simple — no mock status bar etc.; the focus is on
  * the content inside the screen, not frame fidelity.
@@ -16,26 +16,16 @@ export function IPhoneShowcase() {
 
       {/* Inner bezel */}
       <div className="absolute inset-[6px] rounded-[36px] overflow-hidden bg-[#0d0d0d] border border-[#121212]">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source
-            src="/media/automation-demo-mobile.mp4"
-            type="video/mp4"
-            media="(max-width: 767px)"
-          />
-          <source src="/media/automation-demo.mp4" type="video/mp4" />
-        </video>
+        <TapToPlayVideo
+          src="/media/automation-demo.mp4"
+          label="Воспроизвести демо автоматизации"
+          className="absolute inset-0"
+        />
 
         {/* Dynamic-island style pill */}
         <div
           aria-hidden
-          className="absolute top-2 left-1/2 -translate-x-1/2 w-[34%] h-[18px] bg-black rounded-full"
+          className="absolute top-2 left-1/2 -translate-x-1/2 w-[34%] h-[18px] bg-black rounded-full z-10"
         />
       </div>
 

@@ -36,8 +36,15 @@ export function TickerSection() {
           animation: tickerScroll var(--ticker-speed) linear infinite;
           will-change: transform;
         }
+        /* Mobile: marquee — это бесконечный composite на main thread,
+           ощущается как фриз при скролле. Останавливаем, оставляем
+           один статичный кадр со сдвигом. */
         @media (max-width: 767px) {
-          .ticker-track { --ticker-speed: 48s; }
+          .ticker-track {
+            animation: none;
+            transform: translateX(-12%);
+            will-change: auto;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
           .ticker-track {

@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { useIsMobile, useIsTouch } from "@/lib/useDevice";
-import { toMobileVideo } from "@/lib/media";
+import { toMobileVideo, toPoster } from "@/lib/media";
 import { SnapCarousel } from "./shared/SnapCarousel";
+import { TapToPlayVideo } from "./shared/TapToPlayVideo";
 
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
@@ -33,35 +34,46 @@ export function ShowreelSection() {
           </h2>
         </div>
         <div className="text-white/70 text-[15px] leading-relaxed max-w-[440px] self-end lg:justify-self-end">
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.12, ease }}
-          >
-            Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Горизонтальный и вертикальный форматы. Это лишь малая часть того, что мы делаем.
-          </motion.p>
+          {isMobile ? (
+            <p>
+              Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Это лишь малая часть того, что мы делаем.
+            </p>
+          ) : (
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.9, delay: 0.12, ease }}
+            >
+              Нарезка реальных работ за 2025–2026. Рекламные ролики для производства, логистики и строительного бизнеса. Горизонтальный и вертикальный форматы. Это лишь малая часть того, что мы делаем.
+            </motion.p>
+          )}
         </div>
       </div>
 
       {/* Main video frame */}
       <div ref={ref} className="relative mx-5 sm:mx-6 aspect-video sm:aspect-[16/9] lg:aspect-[21/9] overflow-hidden border border-white/15">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.85] contrast-[1.05]"
-        >
-          <source
-            src="/media/showreel-main-mobile.mp4"
-            type="video/mp4"
-            media="(max-width: 767px)"
+        {isMobile ? (
+          // Mobile: poster + tap-to-play. Никакого autoplay декода
+          // на тяжёлом 6.3MB ролике пока пользователь не нажмёт.
+          <TapToPlayVideo
+            src="/media/showreel-main.mp4"
+            label="Воспроизвести showreel"
+            className="absolute inset-0"
+            videoClassName="brightness-[0.85] contrast-[1.05]"
           />
-          <source src="/media/showreel-main.mp4" type="video/mp4" />
-        </video>
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover brightness-[0.85] contrast-[1.05]"
+          >
+            <source src="/media/showreel-main.mp4" type="video/mp4" />
+          </video>
+        )}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,rgba(0,0,0,0.65)_90%)] pointer-events-none" />
-
       </div>
 
       {/* Mini thumbnails — carousel on mobile, grid ≥md */}
@@ -74,8 +86,8 @@ export function ShowreelSection() {
             slideClassName="w-[72vw] max-w-[320px] aspect-video shrink-0 snap-start"
             trackClassName="gap-3 px-5 pb-4"
             indicatorClassName="px-5 mt-3 text-paper/70"
-            renderItem={(m, i, isActive) => (
-              <MiniSlide mini={m} index={i} isActive={isActive} />
+            renderItem={(m, i) => (
+              <MiniSlideStatic mini={m} index={i} />
             )}
           />
         </div>
@@ -96,50 +108,27 @@ export function ShowreelSection() {
   );
 }
 
-function MiniSlide({
+function MiniSlideStatic({
   mini,
   index,
-  isActive,
 }: {
   mini: { v: string; l: string };
   index: number;
-  isActive: boolean;
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Only the active slide plays — saves battery + avoids the 4-video
-  // decode tax from the desktop grid.
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (isActive) {
-      void v.play().catch(() => {});
-    } else {
-      v.pause();
-    }
-  }, [isActive]);
-
+  const poster = toPoster(mini.v);
   return (
-    <div
-      data-active={isActive ? "true" : "false"}
-      className="relative w-full h-full overflow-hidden border border-white/12"
-    >
-      <video
-        ref={videoRef}
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover grayscale-[0.4] brightness-75 transition-all duration-500 data-[active=true]:grayscale-0 data-[active=true]:brightness-100"
-        data-active={isActive ? "true" : "false"}
-      >
-        <source
-          src={toMobileVideo(mini.v)}
-          type="video/mp4"
-          media="(max-width: 767px)"
+    <div className="relative w-full h-full overflow-hidden border border-white/12">
+      <picture>
+        <source srcSet={poster.avif} type="image/avif" />
+        <img
+          src={poster.jpg}
+          alt={mini.l}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <source src={mini.v} type="video/mp4" />
-      </video>
+      </picture>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none" />
       <div className="absolute left-2.5 bottom-2.5 font-mono text-[10px] font-medium tracking-[0.14em] uppercase text-paper">
         [0{index + 1}] {mini.l}
       </div>
@@ -185,8 +174,6 @@ function MiniTile({
     >
       <video
         ref={videoRef}
-        // autoPlay only for mouse-first devices; touch gets poster-first
-        // and explicit tap-to-play per plan §2.9.
         autoPlay={!isTouch}
         muted
         loop

@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useIsMobile, useIsTouch } from "@/lib/useDevice";
 import { toAvif } from "@/lib/media";
 import { TeamCarousel, type TeamMember } from "./team/TeamCarousel";
+import { Reveal } from "./shared/Reveal";
 
 const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
 
@@ -13,17 +14,12 @@ const TEAM: TeamMember[] = [
 ];
 
 export function TeamSection() {
-  const headRef = useRef<HTMLDivElement>(null);
-  const headInView = useInView(headRef, { once: true, margin: "-10%" });
   const isMobile = useIsMobile();
 
   return (
     <section id="team" className="py-[80px] sm:py-[100px] lg:py-[140px] border-b border-ink">
       {/* Head */}
-      <div
-        ref={headRef}
-        className="px-5 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-[48px] sm:mb-[60px] items-end"
-      >
+      <div className="px-5 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-[48px] sm:mb-[60px] items-end">
         <div>
           <div className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase text-muted mb-4">
             [08] Команда
@@ -34,13 +30,9 @@ export function TeamSection() {
           </h2>
         </div>
         <div className="max-w-[440px] text-[15px] leading-relaxed">
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={headInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, delay: 0.12, ease }}
-          >
+          <Reveal as="p" delay={120} duration={900}>
             Ядро — три человека. Вокруг — сеть специалистов на проект: операторы, саунд, моушен, колорист, продюсеры, инженеры ИИ.
-          </motion.p>
+          </Reveal>
         </div>
       </div>
 

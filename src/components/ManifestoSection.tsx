@@ -1,31 +1,4 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-
-const ease: [number, number, number, number] = [0.2, 0.8, 0.15, 1];
-
-function Reveal({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.9, delay: delay / 1000, ease }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+import { Reveal } from "./shared/Reveal";
 
 export function ManifestoSection() {
   return (
@@ -37,25 +10,25 @@ export function ManifestoSection() {
             [01] Manifesto — 2026
           </div>
           <h2 className="font-heading font-extrabold uppercase leading-[0.84] tracking-[-0.055em] text-[clamp(40px,11vw,120px)]">
-            <Reveal><div>Хороший</div></Reveal>
-            <Reveal delay={100}>
+            <Reveal duration={900}><div>Хороший</div></Reveal>
+            <Reveal duration={900} delay={100}>
               <div>
                 <span className="font-serif italic font-light text-accent tracking-[-0.03em]">контент</span> —
               </div>
             </Reveal>
-            <Reveal delay={200}><div>тот, который</div></Reveal>
-            <Reveal delay={300}><div className="outline-text">не пролистывают.</div></Reveal>
+            <Reveal duration={900} delay={200}><div>тот, который</div></Reveal>
+            <Reveal duration={900} delay={300}><div className="outline-text">не пролистывают.</div></Reveal>
           </h2>
         </div>
 
         {/* Right — copy */}
         <div>
           <div className="flex flex-col gap-[18px] text-base leading-relaxed text-ink-2 max-w-[480px]">
-            <Reveal delay={100}>
-              <p>Мы берём задачу бизнеса и закрываем её полностью — от идеи до реализации.</p>
+            <Reveal delay={100} as="p">
+              Мы берём задачу бизнеса и закрываем её полностью — от идеи до реализации.
             </Reveal>
-            <Reveal delay={200}>
-              <p>AIBROMOTION — креативная студия из Тюмени. Мы специализируемся на искусственном интеллекте, потому что убеждены: за ним будущее любого бизнеса. Видео, сайты и автоматизация — всё через призму AI, всё в одной команде.</p>
+            <Reveal delay={200} as="p">
+              AIBROMOTION — креативная студия из Тюмени. Мы специализируемся на искусственном интеллекте, потому что убеждены: за ним будущее любого бизнеса. Видео, сайты и автоматизация — всё через призму AI, всё в одной команде.
             </Reveal>
           </div>
         </div>

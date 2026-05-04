@@ -195,7 +195,7 @@ export function SnapCarousel<T>({
               aria-selected={i === activeIndex}
               aria-label={`Перейти к слайду ${i + 1}`}
               onClick={() => scrollToIndex(i)}
-              className={`transition-colors duration-200 ${
+              className={`min-h-11 min-w-11 grid place-items-center -mx-1 transition-colors duration-200 ${
                 i === activeIndex ? "text-accent" : "text-muted/70"
               }`}
             >
