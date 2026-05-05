@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
+import { Logo } from "@/components/Logo";
 
 /**
  * Mobile hero. One screen, no video, no Tegaki — just a tight typographic
- * statement + primary CTA. Animation is a single CSS slide-up triggered
- * after mount (no IntersectionObserver / framer-motion).
+ * statement. Primary CTA is the global StickyMobileCTA, so the hero
+ * doesn't repeat it.
  */
 export function MobileHero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -16,18 +17,11 @@ export function MobileHero() {
   }, []);
 
   return (
-    <section className="relative min-h-[100svh] [padding-top:calc(env(safe-area-inset-top,0px)+72px)] px-5 pb-10 flex flex-col justify-between bg-paper text-ink">
-      <header className="flex items-center justify-between gap-4">
-        <a
-          href="#"
-          aria-label="AIBROMOTION"
-          className="font-heading font-extrabold uppercase tracking-[-0.02em] text-[15px]"
-        >
-          AIBROMOTION
+    <section className="relative [padding-top:calc(env(safe-area-inset-top,0px)+20px)] px-5 pt-5 pb-12 bg-paper text-ink">
+      <header className="flex items-center mb-6">
+        <a href="#" aria-label="AIBROMOTION — в начало страницы" className="flex items-center">
+          <Logo variant="mark" height={56} priority />
         </a>
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">
-          [01] / Hello
-        </span>
       </header>
 
       <div>
@@ -36,7 +30,7 @@ export function MobileHero() {
         </div>
         <h1
           ref={titleRef}
-          className="mobile-hero-title font-heading font-extrabold uppercase leading-[0.9] tracking-[-0.045em] text-[clamp(44px,13.5vw,64px)]"
+          className="mobile-hero-title font-heading font-extrabold uppercase leading-[0.9] tracking-[-0.045em] text-[clamp(36px,11vw,54px)]"
         >
           <div className="overflow-hidden relative">
             <span className="hero-line hero-l1 block">Снимаем.</span>
@@ -47,7 +41,7 @@ export function MobileHero() {
             </span>
           </div>
           <div className="overflow-hidden relative">
-            <span className="hero-line hero-l3 block outline-text">Запускаем.</span>
+            <span className="hero-line hero-l3 block">Запускаем.</span>
           </div>
           <div className="overflow-hidden relative">
             <span className="hero-line hero-l4 block">Автоматизируем.</span>
@@ -57,14 +51,6 @@ export function MobileHero() {
         <p className="mt-6 max-w-[28ch] text-[15px] leading-[1.45] text-ink-2">
           Производственная студия и AI-команда. Делаем видео и автоматизируем процессы для растущего бизнеса.
         </p>
-
-        <a
-          href="#mobile-contact"
-          className="mt-8 inline-flex items-center justify-center gap-3 min-h-[52px] px-6 rounded-full bg-ink text-paper font-heading font-semibold uppercase tracking-[0.06em] text-[14px] active:scale-[0.98] transition-transform"
-        >
-          Обсудить проект
-          <span aria-hidden className="text-accent">↗</span>
-        </a>
       </div>
 
       <style>{`

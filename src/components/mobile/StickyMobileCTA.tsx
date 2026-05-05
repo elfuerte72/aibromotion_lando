@@ -47,10 +47,9 @@ export function StickyMobileCTA() {
         <a
           href="#mobile-contact"
           tabIndex={hidden ? -1 : 0}
-          className="flex items-center justify-center gap-3 min-h-[52px] px-6 rounded-full bg-accent text-paper font-heading font-semibold uppercase tracking-[0.06em] text-[14px] shadow-[0_8px_24px_-8px_rgba(255,74,28,0.6)] active:scale-[0.985] transition-transform"
+          className="flex items-center justify-center min-h-[52px] px-6 rounded-full bg-accent text-paper font-heading font-extrabold uppercase tracking-[-0.025em] text-[16px] shadow-[0_4px_12px_-6px_rgba(0,0,0,0.35)] active:scale-[0.985] transition-transform"
         >
           Обсудить проект
-          <span aria-hidden>↗</span>
         </a>
       </div>
     </div>

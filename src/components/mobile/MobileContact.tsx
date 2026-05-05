@@ -1,5 +1,3 @@
-import { Reveal } from "@/components/shared/Reveal";
-
 type ContactLink = {
   label: string;
   value?: string;
@@ -20,9 +18,8 @@ const LINKS: ContactLink[] = [
 
 /**
  * Mobile contact section + footer rolled into one. Anchor target for
- * the hero CTA (`#mobile-contact`) and the StickyMobileCTA. Background
- * is solid ink (no `<video>`) — saves the ~4MB cellular cost of the
- * desktop footer reel and the constant decode tax.
+ * the StickyMobileCTA (`#mobile-contact`). Solid ink background, no
+ * `<video>`, no reveals, no scroll FX.
  */
 export function MobileContact() {
   const year = new Date().getFullYear();
@@ -42,28 +39,20 @@ export function MobileContact() {
       />
 
       <div className="relative">
-        <Reveal as="div" delay={0} duration={700}>
-          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper/55 mb-4">
-            [06] Контакт
-          </div>
-          <a href="mailto:aibromotion@yandex.com" className="block">
-            <p className="font-serif italic text-paper text-[clamp(40px,12vw,68px)] leading-[0.95] tracking-[-0.03em]">
-              Покажем,
-              <br />
-              <span className="text-accent">что умеет AI.</span>
-            </p>
-          </a>
-        </Reveal>
+        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-paper/55 mb-4">
+          Контакт
+        </div>
+        <a href="mailto:aibromotion@yandex.com" className="block">
+          <p className="font-serif italic text-paper text-[clamp(40px,12vw,68px)] leading-[0.95] tracking-[-0.03em]">
+            Покажем,
+            <br />
+            <span className="text-accent">что умеет AI.</span>
+          </p>
+        </a>
 
         <ul className="mt-10 flex flex-col gap-1">
-          {LINKS.map((l, i) => (
-            <Reveal
-              key={l.label}
-              as="li"
-              delay={120 + i * 60}
-              offsetY={12}
-              duration={550}
-            >
+          {LINKS.map((l) => (
+            <li key={l.label}>
               <a
                 href={l.href}
                 target={l.external ? "_blank" : undefined}
@@ -79,12 +68,12 @@ export function MobileContact() {
                 </span>
                 <span aria-hidden className="ml-auto text-paper/55">↗</span>
               </a>
-            </Reveal>
+            </li>
           ))}
         </ul>
 
         <div className="mt-12 pt-6 border-t border-paper/15 flex flex-col gap-2 font-mono text-[9.5px] uppercase tracking-[0.2em] text-paper/40">
-          <span>© {year} AIBROMOTION — all rights reserved</span>
+          <span>© {year} AIBROMOTION — все права защищены</span>
           <span className="normal-case tracking-[0.12em]">
             ИП Топилин Антон Валерьевич · ИНН 723006005500
           </span>
