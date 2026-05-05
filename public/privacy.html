@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light only" />
+    <meta name="robots" content="index, follow" />
+    <title>Политика конфиденциальности — AIBROMOTION</title>
+    <meta name="description" content="Политика обработки персональных данных AIBROMOTION (ИП Топилин Антон Валерьевич)." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+      :root {
+        --paper: #efeae0;
+        --paper-2: #e6dfd1;
+        --ink: #0e0e0c;
+        --ink-2: #1c1c1a;
+        --muted: #6f6a60;
+        --accent: #ff4a1c;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.55;
+      }
+
+      ::selection { background: var(--accent); color: var(--paper); }
+
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 24px;
+        border-bottom: 1px solid rgba(14, 14, 12, 0.12);
+        background: rgba(239, 234, 224, 0.92);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .top a {
+        color: var(--ink);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        transition: color 0.3s ease;
+      }
+      .top a:hover { color: var(--accent); }
+      .top a .arrow { transition: transform 0.3s ease; }
+      .top a:hover .arrow { transform: translateX(-3px); }
+
+      .top .brand-link {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 0;
+      }
+      .top .brand-logo {
+        display: block;
+        height: 26px;
+        width: auto;
+        user-select: none;
+        opacity: 0.85;
+        transition: opacity 0.25s ease;
+      }
+      .top .brand-link:hover .brand-logo { opacity: 1; }
+
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 80px 24px 140px;
+      }
+
+      .marker {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 20px;
+      }
+
+      h1 {
+        font-family: "Inter Tight", system-ui, sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: clamp(40px, 8vw, 92px);
+        line-height: 0.92;
+        letter-spacing: -0.045em;
+        margin: 0 0 20px;
+      }
+
+      h1 .italic {
+        font-family: "Fraunces", Georgia, serif;
+        font-style: italic;
+        font-weight: 300;
+        text-transform: lowercase;
+        letter-spacing: -0.025em;
+      }
+
+      .lead {
+        max-width: 640px;
+        font-size: 17px;
+        line-height: 1.55;
+        color: var(--ink-2);
+        margin: 0 0 12px;
+      }
+
+      .meta {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 30px 0 60px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(14, 14, 12, 0.15);
+      }
+
+      h2 {
+        font-family: "Inter Tight", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: clamp(22px, 3vw, 28px);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        margin: 56px 0 18px;
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+      }
+
+      h2 .num {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      p, li { font-size: 15.5px; line-height: 1.7; color: var(--ink-2); }
+      p { margin: 0 0 14px; }
+
+      ul, ol { padding-left: 22px; margin: 0 0 14px; }
+      li { margin-bottom: 8px; }
+
+      a {
+        color: var(--ink);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(14, 14, 12, 0.35);
+        transition: color 0.2s ease, text-decoration-color 0.2s ease;
+      }
+      a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+      strong { font-weight: 600; color: var(--ink); }
+
+      .contact-card {
+        margin-top: 60px;
+        padding: 28px;
+        border: 1px solid rgba(14, 14, 12, 0.18);
+        background: var(--paper-2);
+      }
+      .contact-card .marker { margin-bottom: 12px; }
+      .contact-card p { margin: 0 0 4px; }
+
+      footer.legal {
+        margin-top: 80px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(14, 14, 12, 0.15);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        justify-content: space-between;
+      }
+
+      @media (max-width: 600px) {
+        main { padding: 56px 20px 96px; }
+        h2 { flex-direction: column; gap: 4px; }
+        .top .brand-logo { height: 22px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a href="/">
+        <span class="arrow">←</span>
+        <span>На главную</span>
+      </a>
+      <a href="/" class="brand-link" aria-label="AIBROMOTION — на главную">
+        <img
+          src="/logos/aibromotion-mark.svg"
+          alt="AIBROMOTION"
+          class="brand-logo"
+          width="572"
+          height="260"
+          decoding="async"
+          draggable="false"
+        />
+      </a>
+    </header>
+
+    <main>
+      <p class="marker">[10] Privacy</p>
+      <h1>Политика<br /><span class="italic">конфиденциальности.</span></h1>
+      <p class="lead">
+        Сайт AIBROMOTION — статичный лендинг без форм регистрации, авторизации или
+        обратной связи. Мы не используем cookie, веб-аналитику и пиксели рекламных
+        сетей. Этот документ описывает то немногое, что всё-таки происходит с вашими
+        данными, когда вы открываете сайт или связываетесь с нами по контактам,
+        указанным на странице. Документ составлен в соответствии с Федеральным законом
+        № 152-ФЗ «О персональных данных».
+      </p>
+      <p class="meta">Редакция от 30 апреля 2026 г.</p>
+
+      <h2><span class="num">01</span> Оператор</h2>
+      <p>
+        Оператором, осуществляющим обработку персональных данных, является
+        <strong>ИП Топилин Антон Валерьевич</strong> (далее — «Оператор», «мы»).
+      </p>
+      <ul>
+        <li>ИНН: 723006005500</li>
+        <li>Электронная почта: <a href="mailto:aibromotion@yandex.com">aibromotion@yandex.com</a></li>
+        <li>Телефон: <a href="tel:+79217771343">+7 921 777-13-43</a></li>
+      </ul>
+
+      <h2><span class="num">02</span> Что мы получаем и от кого</h2>
+      <p>
+        На сайте нет форм, полей ввода и регистрации. Сайт сам не запрашивает у вас
+        никаких персональных данных. Тем не менее в трёх ситуациях данные всё-таки
+        попадают к нам или к нашим подрядчикам:
+      </p>
+      <ul>
+        <li>
+          <strong>Когда вы пишете нам сами.</strong> Если вы переходите по ссылкам
+          mailto, tel, Telegram или MAX, размещённым на сайте, и пишете нам — мы
+          получаем то, что вы прислали: ваше имя, контакт (email, номер, никнейм),
+          текст сообщения, при необходимости — реквизиты для договора. Мы используем
+          эти данные только для ответа и работы по проекту.
+        </li>
+        <li>
+          <strong>Технические логи хостинга.</strong> Сайт размещён на платформе
+          Railway. Веб-сервер автоматически фиксирует IP-адрес, заголовки браузера
+          (User-Agent), URL запроса и время. Это стандартные служебные записи,
+          необходимые для работы сайта и защиты от атак.
+        </li>
+        <li>
+          <strong>Запрос шрифтов с Google Fonts.</strong> Мы подключаем шрифты с
+          серверов <code>fonts.googleapis.com</code> и <code>fonts.gstatic.com</code>
+          (Google LLC, США). При этом ваш браузер передаёт Google свой IP-адрес и
+          заголовки. Мы не получаем и не храним эти данные. Подробности — в политике
+          Google по адресу
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">
+            policies.google.com/privacy</a>.
+        </li>
+      </ul>
+      <p>
+        Cookie-файлы, локальное хранилище браузера, веб-аналитика (Яндекс Метрика,
+        Google Analytics) и пиксели рекламных сетей на сайте <strong>не используются</strong>.
+      </p>
+
+      <h2><span class="num">03</span> Цели обработки</h2>
+      <p>Полученные данные мы используем только для:</p>
+      <ul>
+        <li>ответа на ваше обращение и обсуждения проекта;</li>
+        <li>заключения и исполнения договора, выставления счетов и отчётности;</li>
+        <li>обеспечения работы сайта и его защиты от злоупотреблений;</li>
+        <li>исполнения требований законодательства Российской Федерации.</li>
+      </ul>
+
+      <h2><span class="num">04</span> Правовые основания</h2>
+      <ul>
+        <li>согласие, которое вы даёте, отправляя нам сообщение по любому из указанных каналов связи;</li>
+        <li>необходимость исполнения договора, стороной которого вы являетесь (п. 5 ч. 1 ст. 6 № 152-ФЗ);</li>
+        <li>законный интерес оператора в надлежащей работе сайта и защите от злоупотреблений (п. 7 ч. 1 ст. 6 № 152-ФЗ);</li>
+        <li>требования действующего законодательства Российской Федерации.</li>
+      </ul>
+
+      <h2><span class="num">05</span> Сроки хранения</h2>
+      <p>
+        Переписка и контактные данные, не приведшие к договорным отношениям,
+        удаляются в течение 12 месяцев с момента последнего общения. Данные,
+        связанные с заключённым договором, хранятся в течение срока его действия и
+        пяти лет после завершения — в соответствии с требованиями налогового и
+        бухгалтерского учёта. Технические логи хостинга хранятся в стандартные сроки,
+        установленные платформой Railway, и используются только для диагностики
+        работоспособности и безопасности.
+      </p>
+
+      <h2><span class="num">06</span> Передача третьим лицам</h2>
+      <p>Мы не продаём персональные данные. Данные могут передаваться:</p>
+      <ul>
+        <li>
+          провайдерам инфраструктуры, без которых сайт и переписка работать не могут:
+          хостинг (Railway), почтовый сервис (Яндекс), мессенджеры, через которые мы
+          получили обращение (Telegram, MAX). Эти сервисы обрабатывают данные на
+          основании собственных условий и политик;
+        </li>
+        <li>
+          Google LLC — в части IP-адреса, передаваемого браузером при запросе
+          шрифтов (см. раздел 02);
+        </li>
+        <li>
+          бухгалтерскому и юридическому подрядчикам — в объёме, необходимом для
+          оформления договора и отчётности, при наличии обязательств о
+          конфиденциальности;
+        </li>
+        <li>
+          государственным органам — в случаях и в порядке, прямо предусмотренных законом.
+        </li>
+      </ul>
+
+      <h2><span class="num">07</span> Защита данных</h2>
+      <p>
+        Мы применяем разумные организационные и технические меры: HTTPS на сайте,
+        ограничение доступа к переписке, регулярное обновление программного
+        обеспечения и парольную дисциплину.
+      </p>
+
+      <h2><span class="num">08</span> Ваши права</h2>
+      <p>Вы вправе:</p>
+      <ul>
+        <li>получать сведения об обработке ваших данных;</li>
+        <li>требовать уточнения, блокирования или уничтожения данных, если они неполны, устарели, неточны, незаконно получены или не являются необходимыми для целей обработки;</li>
+        <li>отозвать согласие на обработку в любой момент;</li>
+        <li>обжаловать действия Оператора в Роскомнадзоре или в судебном порядке.</li>
+      </ul>
+      <p>
+        Чтобы воспользоваться этими правами, направьте запрос на
+        <a href="mailto:aibromotion@yandex.com">aibromotion@yandex.com</a>. Ответ
+        даётся в срок, не превышающий 30 дней.
+      </p>
+
+      <h2><span class="num">09</span> Изменения политики</h2>
+      <p>
+        Мы можем обновлять эту политику. Актуальная редакция всегда доступна по
+        адресу <a href="/privacy.html">/privacy.html</a>. Дата вступления в силу
+        указана в начале документа.
+      </p>
+
+      <div class="contact-card">
+        <p class="marker">Связаться с оператором</p>
+        <p><a href="mailto:aibromotion@yandex.com">aibromotion@yandex.com</a></p>
+        <p><a href="tel:+79217771343">+7 921 777-13-43</a></p>
+      </div>
+
+      <footer class="legal">
+        <span>© AIBROMOTION — все права защищены</span>
+        <span>ИП Топилин А.В. · ИНН 723006005500</span>
+      </footer>
+    </main>
+  </body>
+</html>

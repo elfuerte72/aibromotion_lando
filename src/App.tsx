@@ -1,52 +1,28 @@
-import { ReactLenis } from "lenis/react";
-import { Nav } from "@/components/Nav";
-import { Header } from "@/components/Header";
+import { lazy, Suspense } from "react";
+import { useIsMobile } from "@/lib/useDevice";
+import MobileLanding from "@/components/mobile/MobileLanding";
 
-import { CreativeTitle } from "@/components/CreativeTitle";
-import { ProductGrid } from "@/components/ProductGrid";
-import { NewsletterCTA } from "@/components/NewsletterCTA";
-import { MarketingSection } from "@/components/MarketingSection";
-import { AutomationSection } from "@/components/AutomationSection";
-import { AboutSection } from "@/components/AboutSection";
-
-import { Footer } from "@/components/Footer";
+/**
+ * Top-level fork: phones (≤767px) get the standalone `<MobileLanding/>`
+ * — a separate document with no Lenis, no Tegaki, no `<video>`. Tablets
+ * and desktops get the cinematic long-scroll, lazily code-split so the
+ * mobile bundle never pays for it.
+ *
+ * Linear / Vercel / Stripe pattern: ship a different document on mobile,
+ * not a CSS-shrunk desktop.
+ */
+const DesktopApp = lazy(() => import("./DesktopApp"));
 
 export default function App() {
-  return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.1,
-        duration: 1.2,
-        smoothWheel: true,
-        wheelMultiplier: 1,
-      }}
-    >
-      {/* Footer sits behind everything */}
-      <Footer />
+  const isMobile = useIsMobile();
 
-      {/* Main content sits on top, lifts away to reveal footer */}
-      <div
-        className="relative bg-white"
-        style={{
-          zIndex: 1,
-          marginBottom: "var(--footer-h)",
-          boxShadow: "0 40px 80px rgba(0,0,0,0.3)",
-        }}
-      >
-        <Nav />
-        <div className="max-w-[1800px] mx-auto">
-          <Header />
-          <main>
-            <CreativeTitle />
-            <ProductGrid />
-            <NewsletterCTA />
-          </main>
-        </div>
-        <MarketingSection />
-        <AutomationSection />
-        <AboutSection />
-      </div>
-    </ReactLenis>
+  if (isMobile) {
+    return <MobileLanding />;
+  }
+
+  return (
+    <Suspense fallback={<div className="bg-paper min-h-screen" />}>
+      <DesktopApp />
+    </Suspense>
   );
 }
